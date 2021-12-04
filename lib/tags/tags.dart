@@ -1,28 +1,19 @@
-import 'package:automator/shared/custom/header.dart';
-import 'package:file_picker/file_picker.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/translations.dart';
+import 'dart:io';
 
-class TagsPage extends StatefulWidget {
-  const TagsPage({Key? key}) : super(key: key);
+class Tag {
+  const Tag._();
 
-  @override
-  _TagsPageState createState() => _TagsPageState();
-}
+  static Future<List<String>> getTags(File source) async {
+    List<String> tags = [];
+    final lines = await source.readAsLines();
+    for (final line in lines) {
+      if (!line.startsWith("#") || !line.contains("dynamic_tags")) {
+        String tag = line.substring(0, line.indexOf('='));
+        tag = tag.trim();
+        tags.add(tag);
+      }
+    }
 
-class _TagsPageState extends State<TagsPage> {
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Header(
-          title: Translations.of(context)!.navigation_tags,
-          actions: Header.getDefault(context, onAdd: () {}, onImport: () async {
-            final result = await FilePicker.platform.pickFiles();
-            if (result != null) {}
-          }),
-        ),
-      ],
-    );
+    return tags;
   }
 }
