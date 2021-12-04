@@ -1,0 +1,10 @@
+{
+    "app_name": "Automator",
+    "navigation_characters": "Characters",
+    "navigation_tags": "Tags",
+    "button_add": "Add",
+    "button_edit": "Edit",
+    "button_remove": "Remove",
+    "button_import": "Import",
+    "button_export": "Export"
+}
