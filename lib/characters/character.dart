@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/widgets.dart';
 import 'package:flutter_gen/gen_l10n/translations.dart';
 
@@ -71,8 +73,6 @@ class Character {
   String ideology;
   List<Position> positions;
   List<String> traits;
-  String? allowedCondition;
-  String? availableCondition;
   bool headOfState;
 
   Character({
@@ -83,4 +83,11 @@ class Character {
     this.traits = const [],
     this.headOfState = false,
   });
+
+  static Future<List<String>> getNamesFromCSV(File source) async {
+    final lines = await source.readAsString();
+    List<String> names = lines.split(',');
+    names = names.map((name) => name.trim()).toList();
+    return names;
+  }
 }

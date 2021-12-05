@@ -2,6 +2,7 @@ import 'package:automator/characters/character.dart';
 import 'package:automator/core/ideologies.dart';
 import 'package:automator/shared/custom/checkbox_form.dart';
 import 'package:automator/shared/custom/dropdown_field.dart';
+import 'package:automator/shared/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/translations.dart';
 
@@ -13,17 +14,16 @@ class CharacterEditor extends StatefulWidget {
 }
 
 class _CharacterEditorState extends State<CharacterEditor> {
-  String _name = "";
-  String _tag = "";
+  final _nameController = TextEditingController();
+  final _tagController = TextEditingController();
   List<Position> _positions = [];
+  Map<Position, String> _customTraits = {};
   Ideology _ideology = Ideology.vanguardist;
   bool _headOfState = false;
   bool _fieldMarshal = false;
   bool _corpCommander = false;
   bool _admiral = false;
   bool _randomTraits = true;
-
-  InputBorder get _inputBorder => const OutlineInputBorder();
 
   void _modifyPosition(Position position) {
     final positions = _positions;
@@ -35,33 +35,45 @@ class _CharacterEditorState extends State<CharacterEditor> {
     setState(() => _positions = positions);
   }
 
-  String get nameToken {
-    return _name.replaceAll(" ", "_").toLowerCase();
-  }
-
-  List<Widget> get _preview {
-    return [
-      if (nameToken.isNotEmpty && _tag.isNotEmpty)
-        Text('${_tag.toUpperCase()}_$nameToken = {'),
-      if (nameToken.isNotEmpty) Text('\tname = "$_name"'),
-      if (_headOfState)
-        Text(
-            '\tcountry_leader = {\n\t\t\t\tideology = ${_ideology.token}\n\t\t\t\texpire = "1965.1.1"\n\t}'),
+  List<Widget> get _traits {
+    return <Widget>[
+      Text(
+        Translations.of(context)!.hint_traits,
+        style: const TextStyle(
+          fontWeight: FontWeight.w600,
+          fontSize: 16,
+        ),
+      ),
+      SizedBox(height: ThemeComponents.spacing),
+      for (final position in _positions)
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            TextFormField(
+              decoration: InputDecoration(
+                border: ThemeComponents.inputBorder,
+                hintText: position.getLocalization(context),
+              ),
+              onChanged: (text) {
+                _customTraits[position] = text;
+              },
+            ),
+            SizedBox(height: ThemeComponents.spacing),
+          ],
+        )
     ];
   }
 
   List<Widget> get _form {
-    return [
+    return <Widget>[
       TextFormField(
         decoration: InputDecoration(
-          border: _inputBorder,
+          border: ThemeComponents.inputBorder,
           hintText: Translations.of(context)!.hint_name,
         ),
-        onChanged: (name) {
-          setState(() => _name = name);
-        },
+        controller: _nameController,
       ),
-      const SizedBox(height: 16),
+      SizedBox(height: ThemeComponents.spacing),
       Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -69,16 +81,14 @@ class _CharacterEditorState extends State<CharacterEditor> {
             flex: 1,
             child: TextFormField(
               decoration: InputDecoration(
-                border: _inputBorder,
+                border: ThemeComponents.inputBorder,
                 hintText: Translations.of(context)!.hint_tag,
               ),
-              onChanged: (tag) {
-                setState(() => _tag = tag);
-              },
+              controller: _tagController,
               maxLength: 3,
             ),
           ),
-          const SizedBox(width: 16),
+          SizedBox(width: ThemeComponents.spacing),
           Expanded(
             flex: 2,
             child: DropdownInputField<Ideology>(
@@ -95,7 +105,7 @@ class _CharacterEditorState extends State<CharacterEditor> {
           ),
         ],
       ),
-      const SizedBox(height: 16),
+      SizedBox(height: ThemeComponents.spacing),
       Text(
         Translations.of(context)!.hint_positions,
         style: const TextStyle(
@@ -134,13 +144,13 @@ class _CharacterEditorState extends State<CharacterEditor> {
         },
         title: Text(Translations.of(context)!.hint_admiral),
       ),
-      const SizedBox(height: 16),
+      SizedBox(height: ThemeComponents.spacing),
       Wrap(
         alignment: WrapAlignment.start,
         runSpacing: 8,
         spacing: 8,
         children: Position.values.map((position) {
-          return ChoiceChip(
+          return FilterChip(
             label: Text(position.getLocalization(context)),
             selected: _positions.contains(position),
             onSelected: (_) {
@@ -149,9 +159,10 @@ class _CharacterEditorState extends State<CharacterEditor> {
           );
         }).toList(),
       ),
-      const SizedBox(height: 16),
+      SizedBox(height: ThemeComponents.spacing),
       CheckboxForm(
         value: _randomTraits,
+        enabled: _positions.isNotEmpty,
         onChanged: (selected) {
           setState(() => _randomTraits = selected ?? true);
         },
@@ -162,13 +173,10 @@ class _CharacterEditorState extends State<CharacterEditor> {
 
   @override
   Widget build(BuildContext context) {
-    final width = MediaQuery.of(context).size.width;
-    final height = MediaQuery.of(context).size.height;
-
     return Scaffold(
       appBar: AppBar(actions: [
         Padding(
-          padding: const EdgeInsets.all(8),
+          padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
           child: ElevatedButton(
             onPressed: () {},
             child: Text(
@@ -177,31 +185,43 @@ class _CharacterEditorState extends State<CharacterEditor> {
           ),
         )
       ]),
-      body: Padding(
-        padding: const EdgeInsets.all(16),
-        child: width >= height
-            ? Row(
-                children: [
-                  Expanded(
-                    child: SingleChildScrollView(
+      body: _randomTraits || _positions.isEmpty
+          ? SingleChildScrollView(
+              child: Padding(
+                padding: ThemeComponents.defaultPadding,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: _form,
+                ),
+              ),
+            )
+          : Row(
+              children: [
+                Expanded(
+                  child: SingleChildScrollView(
+                    child: Padding(
+                      padding: ThemeComponents.defaultPadding,
                       child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: _form,
                       ),
                     ),
                   ),
-                  const SizedBox(width: 32),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: _preview,
+                ),
+                const SizedBox(width: 16),
+                Expanded(
+                  child: SingleChildScrollView(
+                    child: Padding(
+                      padding: ThemeComponents.defaultPadding,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: _traits,
+                      ),
                     ),
-                  )
-                ],
-              )
-            : Column(
-                children: _form,
-              ),
-      ),
+                  ),
+                )
+              ],
+            ),
     );
   }
 }
