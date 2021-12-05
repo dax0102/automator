@@ -36,16 +36,11 @@ class _TagsPageState extends State<TagsPage> {
           ),
         ),
         Expanded(
-          child: GridView.builder(
-            gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                maxCrossAxisExtent: 2),
-            itemCount: _tags.length,
-            itemBuilder: (context, index) {
-              return Container(
-                alignment: Alignment.center,
-                child: Text(_tags[index]),
-              );
-            },
+          child: GridView.count(
+            crossAxisCount: 4,
+            children: _tags.map((tag) {
+              return Text(tag);
+            }).toList(),
           ),
         )
       ],
