@@ -1,8 +1,10 @@
 import 'package:automator/characters/character.dart';
 import 'package:automator/core/ideologies.dart';
 import 'package:automator/shared/theme.dart';
+import 'package:automator/traits/traits_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/translations.dart';
+import 'package:provider/provider.dart';
 
 class CharacterImport extends StatefulWidget {
   const CharacterImport({
@@ -28,25 +30,52 @@ class _CharacterImportState extends State<CharacterImport> {
   Map<String, bool> _corpCommander = {};
   Map<String, bool> _admiral = {};
 
+  void _onSave() {
+    final List<Character> characters = [];
+    for (String name in widget.names) {
+      Character character = Character(
+          name: name,
+          tag: widget.tag,
+          ideology: '${_ideologies[name]!.token}_subtype',
+          positions: _positions[name] ?? [],
+          headOfState: _headOfState[name] ?? false,
+          fieldMarshal: _fieldMarshal[name] ?? false,
+          corpCommander: _corpCommander[name] ?? false,
+          admiral: _admiral[name] ?? false,
+          traits: _positions[name]?.map(
+                (position) {
+                  return Character.randomTrait(
+                      position,
+                      Provider.of<TraitsNotifier>(context).traits[position] ??
+                          []);
+                },
+              ).toList() ??
+              []);
+      characters.add(character);
+    }
+  }
+
   Future<Ideology?> _showIdeologyPicker(Ideology ideology) async {
     return await showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text(Translations.of(context)!.dialog_select_ideology),
-          content: Column(
-            children: Ideology.values.map(
-              (_ideology) {
-                return RadioListTile<Ideology>(
-                  groupValue: ideology,
-                  title: Text(_ideology.getLocalization(context)),
-                  value: _ideology,
-                  onChanged: (checked) {
-                    Navigator.pop(context, _ideology);
-                  },
-                );
-              },
-            ).toList(),
+          content: SingleChildScrollView(
+            child: Column(
+              children: Ideology.values.map(
+                (_ideology) {
+                  return RadioListTile<Ideology>(
+                    groupValue: ideology,
+                    title: Text(_ideology.getLocalization(context)),
+                    value: _ideology,
+                    onChanged: (checked) {
+                      Navigator.pop(context, _ideology);
+                    },
+                  );
+                },
+              ).toList(),
+            ),
           ),
         );
       },
@@ -64,14 +93,30 @@ class _CharacterImportState extends State<CharacterImport> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        actions: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            child: ElevatedButton(
+              onPressed: _onSave,
+              child: Text(Translations.of(context)!.button_save),
+            ),
+          )
+        ],
+      ),
       body: SingleChildScrollView(
         child: Padding(
           padding: ThemeComponents.defaultPadding,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(Translations.of(context)!.concat_for_tag(widget.tag)),
+              Text(
+                Translations.of(context)!.concat_for_tag(widget.tag),
+                style: const TextStyle(
+                  fontWeight: FontWeight.w500,
+                  fontSize: 18,
+                ),
+              ),
               SizedBox(height: ThemeComponents.spacing),
               Table(
                 border: TableBorder.all(
@@ -207,11 +252,13 @@ class _CharacterImportState extends State<CharacterImport> {
                         child: Checkbox(
                           activeColor: Theme.of(context).colorScheme.primary,
                           value: _fieldMarshal[name] ?? false,
-                          onChanged: (checked) {
-                            final fieldMarshal = _fieldMarshal;
-                            fieldMarshal[name] = checked ?? false;
-                            setState(() => _fieldMarshal = fieldMarshal);
-                          },
+                          onChanged: _corpCommander[name] == true
+                              ? null
+                              : (checked) {
+                                  final fieldMarshal = _fieldMarshal;
+                                  fieldMarshal[name] = checked ?? false;
+                                  setState(() => _fieldMarshal = fieldMarshal);
+                                },
                         ),
                       ),
                       TableCell(
@@ -219,11 +266,14 @@ class _CharacterImportState extends State<CharacterImport> {
                         child: Checkbox(
                           activeColor: Theme.of(context).colorScheme.primary,
                           value: _corpCommander[name] ?? false,
-                          onChanged: (checked) {
-                            final corpCommander = _corpCommander;
-                            corpCommander[name] = checked ?? false;
-                            setState(() => _corpCommander = corpCommander);
-                          },
+                          onChanged: _fieldMarshal[name] == true
+                              ? null
+                              : (checked) {
+                                  final corpCommander = _corpCommander;
+                                  corpCommander[name] = checked ?? false;
+                                  setState(
+                                      () => _corpCommander = corpCommander);
+                                },
                         ),
                       ),
                       TableCell(

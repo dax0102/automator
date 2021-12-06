@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:automator/shared/custom/header.dart';
+import 'package:automator/shared/theme.dart';
 import 'package:automator/tags/tags.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -18,32 +19,29 @@ class _TagsPageState extends State<TagsPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Header(
-          title: Translations.of(context)!.navigation_tags,
-          actions: Header.getDefault(
-            context,
-            onAdd: () {},
-            onImport: () async {
-              final result = await FilePicker.platform.pickFiles();
-              if (result != null) {
-                final file = File(result.files.single.path!);
-                final tags = await Tag.getTags(file);
-                setState(() => _tags = tags);
-              }
-            },
-          ),
+    return Padding(
+      padding: ThemeComponents.defaultPadding,
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            Header(
+              title: Translations.of(context)!.navigation_tags,
+              actions: Header.getDefault(
+                context,
+                onAdd: () {},
+                onImport: () async {
+                  final result = await FilePicker.platform.pickFiles();
+                  if (result != null) {
+                    final file = File(result.files.single.path!);
+                    final tags = await Tag.getTags(file);
+                    setState(() => _tags = tags);
+                  }
+                },
+              ),
+            ),
+          ],
         ),
-        Expanded(
-          child: GridView.count(
-            crossAxisCount: 4,
-            children: _tags.map((tag) {
-              return Text(tag);
-            }).toList(),
-          ),
-        )
-      ],
+      ),
     );
   }
 }
