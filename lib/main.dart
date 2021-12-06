@@ -1,3 +1,4 @@
+import 'package:automator/characters/characters_notifier.dart';
 import 'package:automator/characters/characters_page.dart';
 import 'package:automator/core/navigation.dart';
 import 'package:automator/localization/locales.dart';
@@ -23,6 +24,7 @@ class Automator extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => TraitsNotifier()),
+        ChangeNotifierProvider(create: (_) => CharactersNotifier()),
       ],
       child: MaterialApp(
         theme: dark,

@@ -20,9 +20,6 @@ class CharacterImport extends StatefulWidget {
 }
 
 class _CharacterImportState extends State<CharacterImport> {
-  static get _cellAlignment => TableCellVerticalAlignment.middle;
-  static get _textAlignment => TextAlign.center;
-
   Map<String, Ideology> _ideologies = {};
   Map<String, List<Position>> _positions = {};
   Map<String, bool> _headOfState = {};
@@ -36,7 +33,7 @@ class _CharacterImportState extends State<CharacterImport> {
       Character character = Character(
           name: name,
           tag: widget.tag,
-          ideology: '${_ideologies[name]!.token}_subtype',
+          ideology: _ideologies[name] ?? Ideology.values.first,
           positions: _positions[name] ?? [],
           headOfState: _headOfState[name] ?? false,
           fieldMarshal: _fieldMarshal[name] ?? false,
@@ -130,52 +127,52 @@ class _CharacterImportState extends State<CharacterImport> {
                 children: [
                   TableRow(children: [
                     TableCell(
-                      verticalAlignment: _cellAlignment,
+                      verticalAlignment: ThemeComponents.cellAlignment,
                       child: Text(
                         Translations.of(context)!.hint_name,
-                        textAlign: _textAlignment,
+                        textAlign: ThemeComponents.textAlignment,
                       ),
                     ),
                     TableCell(
-                      verticalAlignment: _cellAlignment,
+                      verticalAlignment: ThemeComponents.cellAlignment,
                       child: Text(
                         Translations.of(context)!.hint_ideology,
-                        textAlign: _textAlignment,
+                        textAlign: ThemeComponents.textAlignment,
                       ),
                     ),
                     TableCell(
-                      verticalAlignment: _cellAlignment,
+                      verticalAlignment: ThemeComponents.cellAlignment,
                       child: Text(
                         Translations.of(context)!.hint_positions,
-                        textAlign: _textAlignment,
+                        textAlign: ThemeComponents.textAlignment,
                       ),
                     ),
                     TableCell(
-                      verticalAlignment: _cellAlignment,
+                      verticalAlignment: ThemeComponents.cellAlignment,
                       child: Text(
                         Translations.of(context)!.hint_head_of_state,
-                        textAlign: _textAlignment,
+                        textAlign: ThemeComponents.textAlignment,
                       ),
                     ),
                     TableCell(
-                      verticalAlignment: _cellAlignment,
+                      verticalAlignment: ThemeComponents.cellAlignment,
                       child: Text(
                         Translations.of(context)!.hint_field_marshal,
-                        textAlign: _textAlignment,
+                        textAlign: ThemeComponents.textAlignment,
                       ),
                     ),
                     TableCell(
-                      verticalAlignment: _cellAlignment,
+                      verticalAlignment: ThemeComponents.cellAlignment,
                       child: Text(
                         Translations.of(context)!.hint_corps_commander,
-                        textAlign: _textAlignment,
+                        textAlign: ThemeComponents.textAlignment,
                       ),
                     ),
                     TableCell(
-                      verticalAlignment: _cellAlignment,
+                      verticalAlignment: ThemeComponents.cellAlignment,
                       child: Text(
                         Translations.of(context)!.hint_admiral,
-                        textAlign: _textAlignment,
+                        textAlign: ThemeComponents.textAlignment,
                       ),
                     ),
                   ]),
@@ -236,7 +233,7 @@ class _CharacterImportState extends State<CharacterImport> {
                         ),
                       ),
                       TableCell(
-                        verticalAlignment: _cellAlignment,
+                        verticalAlignment: ThemeComponents.cellAlignment,
                         child: Checkbox(
                           activeColor: Theme.of(context).colorScheme.primary,
                           value: _headOfState[name] ?? false,
@@ -248,7 +245,7 @@ class _CharacterImportState extends State<CharacterImport> {
                         ),
                       ),
                       TableCell(
-                        verticalAlignment: _cellAlignment,
+                        verticalAlignment: ThemeComponents.cellAlignment,
                         child: Checkbox(
                           activeColor: Theme.of(context).colorScheme.primary,
                           value: _fieldMarshal[name] ?? false,
@@ -262,7 +259,7 @@ class _CharacterImportState extends State<CharacterImport> {
                         ),
                       ),
                       TableCell(
-                        verticalAlignment: _cellAlignment,
+                        verticalAlignment: ThemeComponents.cellAlignment,
                         child: Checkbox(
                           activeColor: Theme.of(context).colorScheme.primary,
                           value: _corpCommander[name] ?? false,
@@ -277,7 +274,7 @@ class _CharacterImportState extends State<CharacterImport> {
                         ),
                       ),
                       TableCell(
-                        verticalAlignment: _cellAlignment,
+                        verticalAlignment: ThemeComponents.cellAlignment,
                         child: Checkbox(
                           activeColor: Theme.of(context).colorScheme.primary,
                           value: _admiral[name] ?? false,
