@@ -20,10 +20,12 @@ class CharacterEditor extends StatefulWidget {
 class _CharacterEditorState extends State<CharacterEditor> {
   final _nameController = TextEditingController();
   final _tagController = TextEditingController();
+  bool _importedTraits = false;
   bool _customPaths = false;
   List<Position> _positions = [];
   List<String> _leaderTraits = [];
   List<String> _commanderTraits = [];
+  List<String> _admiralTraits = [];
   List<String> _ministerTraits = [];
   Ideology _ideology = Ideology.vanguardist;
   bool _headOfState = false;
@@ -31,6 +33,17 @@ class _CharacterEditorState extends State<CharacterEditor> {
   bool _corpCommander = false;
   bool _admiral = false;
   bool _randomTraits = true;
+  bool _civilianPortrait = false;
+  bool _armyPortrait = false;
+  bool _navyPortrait = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _importedTraits =
+        Provider.of<TraitsNotifier>(context, listen: false).traits.isNotEmpty;
+    _randomTraits = _importedTraits;
+  }
 
   void _onSave() {
     final character = Character(
@@ -45,6 +58,9 @@ class _CharacterEditorState extends State<CharacterEditor> {
       fieldMarshal: _fieldMarshal,
       corpCommander: _corpCommander,
       admiral: _admiral,
+      civilianPortrait: _civilianPortrait,
+      armyPortrait: _armyPortrait,
+      navyPortrait: _navyPortrait,
     );
     Provider.of<CharactersNotifier>(context, listen: false).put(character);
     Navigator.pop(context);
@@ -93,59 +109,6 @@ class _CharacterEditorState extends State<CharacterEditor> {
     setState(() => _positions = positions);
   }
 
-  List<Widget> get _traits {
-    return <Widget>[
-      Text(
-        Translations.of(context)!.hint_traits,
-        style: const TextStyle(
-          fontWeight: FontWeight.w600,
-          fontSize: 16,
-        ),
-      ),
-      SizedBox(height: ThemeComponents.spacing),
-      Consumer<TraitsNotifier>(
-        builder: (context, notifier, _) {
-          return Column(
-            children: [
-              for (final position in _positions)
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    notifier.traits[position] == null
-                        ? TextFormField(
-                            decoration: InputDecoration(
-                              border: ThemeComponents.inputBorder,
-                              hintText: position.getLocalization(context),
-                            ),
-                            onChanged: (text) {
-                              if (!_ministerTraits.contains(text)) {
-                                _ministerTraits.add(text);
-                              }
-                            },
-                          )
-                        : DropdownInputField<String>(
-                            selected: _ministerTraits.firstWhere(
-                                (trait) => trait.startsWith(position.prefix),
-                                orElse: () {
-                              return notifier.traits[position]!.first;
-                            }),
-                            items: notifier.traits[position]!,
-                            onChange: (trait) {
-                              if (!_ministerTraits.contains(trait)) {
-                                _ministerTraits.add(trait);
-                              }
-                            },
-                          ),
-                    SizedBox(height: ThemeComponents.spacing),
-                  ],
-                )
-            ],
-          );
-        },
-      )
-    ];
-  }
-
   List<Widget> get _form {
     return <Widget>[
       TextFormField(
@@ -188,6 +151,35 @@ class _CharacterEditorState extends State<CharacterEditor> {
         ],
       ),
       SizedBox(height: ThemeComponents.spacing),
+      Text(
+        Translations.of(context)!.hint_portraits,
+        style: const TextStyle(
+          fontWeight: FontWeight.w600,
+          fontSize: 16,
+        ),
+      ),
+      const SizedBox(height: 8),
+      CheckboxForm(
+        value: _civilianPortrait,
+        onChanged: (checked) {
+          setState(() => _civilianPortrait = checked ?? false);
+        },
+        title: Text(Translations.of(context)!.hint_civillian),
+      ),
+      CheckboxForm(
+        value: _armyPortrait,
+        onChanged: (checked) {
+          setState(() => _armyPortrait = checked ?? false);
+        },
+        title: Text(Translations.of(context)!.hint_army),
+      ),
+      CheckboxForm(
+        value: _navyPortrait,
+        onChanged: (checked) {
+          setState(() => _navyPortrait = checked ?? false);
+        },
+        title: Text(Translations.of(context)!.hint_navy),
+      ),
       CheckboxForm(
         value: _customPaths,
         onChanged: (checked) {
@@ -209,71 +201,47 @@ class _CharacterEditorState extends State<CharacterEditor> {
         value: _headOfState,
         onChanged: (selected) {
           setState(() => _headOfState = selected ?? false);
+          if (selected == false) {
+            _leaderTraits.clear();
+          }
         },
       ),
+      if (_headOfState) _hosTraits,
       CheckboxForm(
         title: Text(Translations.of(context)!.hint_field_marshal),
         value: _fieldMarshal,
         enabled: !_corpCommander,
         onChanged: (selected) {
           setState(() => _fieldMarshal = selected ?? false);
+          if (selected == false) {
+            _commanderTraits.clear();
+          }
         },
       ),
-      if (_fieldMarshal)
-        Wrap(
-          spacing: 8,
-          runSpacing: 8,
-          children: [
-            ..._commanderTraits.map((trait) {
-              return Chip(
-                label: Text(trait),
-                onDeleted: () {
-                  final List<String> traits = _commanderTraits;
-                  if (traits.contains(trait)) {
-                    traits.remove(trait);
-                    setState(() => _commanderTraits = traits);
-                  }
-                },
-              );
-            }).toList(),
-            ActionChip(
-              avatar: const Icon(Icons.add),
-              label: Text(Translations.of(context)!.button_add_trait),
-              onPressed: () async {
-                final result = await _triggerInput();
-                if (result != null) {
-                  final traits = _commanderTraits;
-                  if (!traits.contains(result)) {
-                    traits.add(result);
-                    setState(() => _commanderTraits = traits);
-                  } else {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text(
-                            Translations.of(context)!.feedback_trait_exists),
-                      ),
-                    );
-                  }
-                }
-              },
-            ),
-          ],
-        ),
+      if (_fieldMarshal) _armyTraits,
       CheckboxForm(
         title: Text(Translations.of(context)!.hint_corps_commander),
         value: _corpCommander,
         enabled: !_fieldMarshal,
         onChanged: (selected) {
           setState(() => _corpCommander = selected ?? false);
+          if (selected == false) {
+            _commanderTraits.clear();
+          }
         },
       ),
+      if (_corpCommander) _armyTraits,
       CheckboxForm(
         value: _admiral,
         onChanged: (selected) {
           setState(() => _admiral = selected ?? false);
+          if (selected == false) {
+            _admiralTraits.clear();
+          }
         },
         title: Text(Translations.of(context)!.hint_admiral),
       ),
+      if (_admiral) _navyTraits,
       SizedBox(height: ThemeComponents.spacing),
       Text(
         Translations.of(context)!.hint_ministers,
@@ -298,15 +266,20 @@ class _CharacterEditorState extends State<CharacterEditor> {
         }).toList(),
       ),
       SizedBox(height: ThemeComponents.spacing),
-      CheckboxForm(
-        value: _randomTraits,
-        enabled: _positions.isNotEmpty,
-        onChanged: (selected) {
-          setState(() => _randomTraits = selected ?? true);
-        },
-        title: Text(Translations.of(context)!.hint_random_traits),
-      ),
-      SizedBox(height: ThemeComponents.spacing),
+      if (_importedTraits)
+        Column(
+          children: [
+            CheckboxForm(
+              value: _randomTraits,
+              enabled: _positions.isNotEmpty,
+              onChanged: (selected) {
+                setState(() => _randomTraits = selected ?? true);
+              },
+              title: Text(Translations.of(context)!.hint_random_traits),
+            ),
+            SizedBox(height: ThemeComponents.spacing),
+          ],
+        ),
       if (!_randomTraits && _positions.isNotEmpty) ..._traits,
     ];
   }
@@ -316,7 +289,7 @@ class _CharacterEditorState extends State<CharacterEditor> {
     String small = Translations.of(context)!.hint_small;
 
     return <Widget>[
-      if (_headOfState)
+      if (_civilianPortrait)
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -349,6 +322,7 @@ class _CharacterEditorState extends State<CharacterEditor> {
             Text(
               Translations.of(context)!.concat_sample(_sampleGFXPath),
             ),
+            SizedBox(height: ThemeComponents.spacing),
           ],
         ),
     ];
@@ -359,7 +333,7 @@ class _CharacterEditorState extends State<CharacterEditor> {
     String small = Translations.of(context)!.hint_small;
 
     return <Widget>[
-      if (_fieldMarshal || _corpCommander)
+      if (_armyPortrait)
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -392,6 +366,7 @@ class _CharacterEditorState extends State<CharacterEditor> {
             Text(
               Translations.of(context)!.concat_sample(_sampleGFXPath),
             ),
+            SizedBox(height: ThemeComponents.spacing),
           ],
         ),
     ];
@@ -402,7 +377,7 @@ class _CharacterEditorState extends State<CharacterEditor> {
     String small = Translations.of(context)!.hint_small;
 
     return <Widget>[
-      if (_admiral)
+      if (_navyPortrait)
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -435,8 +410,199 @@ class _CharacterEditorState extends State<CharacterEditor> {
             Text(
               Translations.of(context)!.concat_sample(_sampleGFXPath),
             ),
+            SizedBox(height: ThemeComponents.spacing),
           ],
         ),
+    ];
+  }
+
+  Widget get _hosTraits {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Wrap(
+        spacing: 8,
+        runSpacing: 8,
+        children: [
+          ..._leaderTraits.map((trait) {
+            return Chip(
+              label: Text(trait),
+              onDeleted: () {
+                final List<String> traits = _leaderTraits;
+                if (traits.contains(trait)) {
+                  traits.remove(trait);
+                  setState(() => _leaderTraits = traits);
+                }
+              },
+            );
+          }).toList(),
+          ActionChip(
+            avatar: const Icon(Icons.add),
+            label: Text(Translations.of(context)!.button_add_trait),
+            onPressed: () async {
+              final result = await _triggerInput();
+              if (result != null) {
+                final traits = _leaderTraits;
+                if (!traits.contains(result)) {
+                  traits.add(result);
+                  setState(() => _leaderTraits = traits);
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content:
+                          Text(Translations.of(context)!.feedback_trait_exists),
+                    ),
+                  );
+                }
+              }
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget get _armyTraits {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Wrap(
+        spacing: 8,
+        runSpacing: 8,
+        children: [
+          ..._commanderTraits.map((trait) {
+            return Chip(
+              label: Text(trait),
+              onDeleted: () {
+                final List<String> traits = _commanderTraits;
+                if (traits.contains(trait)) {
+                  traits.remove(trait);
+                  setState(() => _commanderTraits = traits);
+                }
+              },
+            );
+          }).toList(),
+          ActionChip(
+            avatar: const Icon(Icons.add),
+            label: Text(Translations.of(context)!.button_add_trait),
+            onPressed: () async {
+              final result = await _triggerInput();
+              if (result != null) {
+                final traits = _commanderTraits;
+                if (!traits.contains(result)) {
+                  traits.add(result);
+                  setState(() => _commanderTraits = traits);
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content:
+                          Text(Translations.of(context)!.feedback_trait_exists),
+                    ),
+                  );
+                }
+              }
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget get _navyTraits {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Wrap(
+        spacing: 8,
+        runSpacing: 8,
+        children: [
+          ..._admiralTraits.map((trait) {
+            return Chip(
+              label: Text(trait),
+              onDeleted: () {
+                final List<String> traits = _admiralTraits;
+                if (traits.contains(trait)) {
+                  traits.remove(trait);
+                  setState(() => _admiralTraits = traits);
+                }
+              },
+            );
+          }).toList(),
+          ActionChip(
+            avatar: const Icon(Icons.add),
+            label: Text(Translations.of(context)!.button_add_trait),
+            onPressed: () async {
+              final result = await _triggerInput();
+              if (result != null) {
+                final traits = _admiralTraits;
+                if (!traits.contains(result)) {
+                  traits.add(result);
+                  setState(() => _admiralTraits = traits);
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content:
+                          Text(Translations.of(context)!.feedback_trait_exists),
+                    ),
+                  );
+                }
+              }
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  List<Widget> get _traits {
+    return <Widget>[
+      Text(
+        Translations.of(context)!.hint_traits,
+        style: const TextStyle(
+          fontWeight: FontWeight.w600,
+          fontSize: 16,
+        ),
+      ),
+      SizedBox(height: ThemeComponents.spacing),
+      Consumer<TraitsNotifier>(
+        builder: (context, notifier, _) {
+          return Column(
+            children: [
+              for (final position in _positions)
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    notifier.traits[position] == null
+                        ? TextFormField(
+                            decoration: InputDecoration(
+                              border: ThemeComponents.inputBorder,
+                              hintText: position.getLocalization(context),
+                            ),
+                            onChanged: (text) {
+                              final traits = _ministerTraits;
+                              if (!traits.contains(text)) {
+                                traits.add(text);
+                              }
+                              setState(() => _ministerTraits = traits);
+                            },
+                          )
+                        : DropdownInputField<String>(
+                            selected: _ministerTraits.firstWhere(
+                                (trait) => trait.startsWith(position.prefix),
+                                orElse: () {
+                              return notifier.traits[position]!.first;
+                            }),
+                            items: notifier.traits[position]!,
+                            onChange: (trait) {
+                              if (!_ministerTraits.contains(trait)) {
+                                _ministerTraits.add(trait);
+                              }
+                            },
+                          ),
+                    SizedBox(height: ThemeComponents.spacing),
+                  ],
+                )
+            ],
+          );
+        },
+      )
     ];
   }
 

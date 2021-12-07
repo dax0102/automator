@@ -23,6 +23,7 @@ ThemeData get dark {
 
   return base.copyWith(
     scaffoldBackgroundColor: background,
+    primaryColor: primary,
     colorScheme: base.colorScheme.copyWith(
       primary: primary,
       onPrimary: onPrimary,
