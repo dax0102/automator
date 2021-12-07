@@ -8,6 +8,7 @@ import 'package:automator/characters/characters_notifier.dart';
 import 'package:automator/core/ideologies.dart';
 import 'package:automator/core/writer.dart';
 import 'package:automator/shared/custom/header.dart';
+import 'package:automator/shared/custom/state.dart';
 import 'package:automator/shared/theme.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -208,88 +209,102 @@ class _CharactersPageState extends State<CharactersPage> {
             Consumer<CharactersNotifier>(
               builder: (context, notifier, _) {
                 final characters = notifier.characters;
-                return Table(
-                  border: TableBorder.all(
-                    color: Theme.of(context).colorScheme.surface,
-                  ),
-                  columnWidths: const {
-                    0: FractionColumnWidth(0.05),
-                    1: FractionColumnWidth(0.2),
-                    2: FractionColumnWidth(0.2),
-                    3: FractionColumnWidth(0.3)
-                  },
-                  children: [
-                    _headers,
-                    ...characters.map((character) {
-                      return TableRow(children: [
-                        TableCell(
-                          verticalAlignment: ThemeComponents.cellAlignment,
-                          child: Padding(
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 8.0),
-                            child: Text(character.tag),
-                          ),
+                return characters.isNotEmpty
+                    ? Table(
+                        border: TableBorder.all(
+                          color: Theme.of(context).colorScheme.surface,
                         ),
-                        TableCell(
-                          verticalAlignment: ThemeComponents.cellAlignment,
-                          child: Padding(
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 8.0),
-                            child: Text(character.name),
-                          ),
-                        ),
-                        TableCell(
-                          verticalAlignment: ThemeComponents.cellAlignment,
-                          child: Padding(
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 8.0),
-                            child: Text(
-                                character.ideology.getLocalization(context)),
-                          ),
-                        ),
-                        TableCell(
-                          verticalAlignment: ThemeComponents.cellAlignment,
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Wrap(
-                              spacing: 8,
-                              runSpacing: 8,
-                              children: character.positions.map((position) {
-                                return Chip(
-                                  label:
-                                      Text(position.getLocalization(context)),
-                                );
-                              }).toList(),
-                            ),
-                          ),
-                        ),
-                        TableCell(
-                          verticalAlignment: ThemeComponents.cellAlignment,
-                          child: Icon(character.headOfState
-                              ? Icons.check
-                              : Icons.clear),
-                        ),
-                        TableCell(
-                          verticalAlignment: ThemeComponents.cellAlignment,
-                          child: Icon(character.fieldMarshal
-                              ? Icons.check
-                              : Icons.clear),
-                        ),
-                        TableCell(
-                          verticalAlignment: ThemeComponents.cellAlignment,
-                          child: Icon(character.corpCommander
-                              ? Icons.check
-                              : Icons.clear),
-                        ),
-                        TableCell(
-                          verticalAlignment: ThemeComponents.cellAlignment,
-                          child: Icon(
-                              character.admiral ? Icons.check : Icons.clear),
-                        ),
-                      ]);
-                    })
-                  ],
-                );
+                        columnWidths: const {
+                          0: FractionColumnWidth(0.05),
+                          1: FractionColumnWidth(0.2),
+                          2: FractionColumnWidth(0.2),
+                          3: FractionColumnWidth(0.3)
+                        },
+                        children: [
+                          _headers,
+                          ...characters.map((character) {
+                            return TableRow(children: [
+                              TableCell(
+                                verticalAlignment:
+                                    ThemeComponents.cellAlignment,
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 8.0),
+                                  child: Text(character.tag),
+                                ),
+                              ),
+                              TableCell(
+                                verticalAlignment:
+                                    ThemeComponents.cellAlignment,
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 8.0),
+                                  child: Text(character.name),
+                                ),
+                              ),
+                              TableCell(
+                                verticalAlignment:
+                                    ThemeComponents.cellAlignment,
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 8.0),
+                                  child: Text(character.ideology
+                                      .getLocalization(context)),
+                                ),
+                              ),
+                              TableCell(
+                                verticalAlignment:
+                                    ThemeComponents.cellAlignment,
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Wrap(
+                                    spacing: 8,
+                                    runSpacing: 8,
+                                    children:
+                                        character.positions.map((position) {
+                                      return Chip(
+                                        label: Text(
+                                            position.getLocalization(context)),
+                                      );
+                                    }).toList(),
+                                  ),
+                                ),
+                              ),
+                              TableCell(
+                                verticalAlignment:
+                                    ThemeComponents.cellAlignment,
+                                child: Icon(character.headOfState
+                                    ? Icons.check
+                                    : Icons.clear),
+                              ),
+                              TableCell(
+                                verticalAlignment:
+                                    ThemeComponents.cellAlignment,
+                                child: Icon(character.fieldMarshal
+                                    ? Icons.check
+                                    : Icons.clear),
+                              ),
+                              TableCell(
+                                verticalAlignment:
+                                    ThemeComponents.cellAlignment,
+                                child: Icon(character.corpCommander
+                                    ? Icons.check
+                                    : Icons.clear),
+                              ),
+                              TableCell(
+                                verticalAlignment:
+                                    ThemeComponents.cellAlignment,
+                                child: Icon(character.admiral
+                                    ? Icons.check
+                                    : Icons.clear),
+                              ),
+                            ]);
+                          })
+                        ],
+                      )
+                    : EmptyState(
+                        title:
+                            Translations.of(context)!.state_empty_characters);
               },
             )
           ],

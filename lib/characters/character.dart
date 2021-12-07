@@ -144,6 +144,10 @@ class Character {
     this.skills,
   });
 
+  static int randomSkill() {
+    return 1 + Random().nextInt(5 - 1);
+  }
+
   List<String> get parsedSkills {
     return skills?.split(',') ?? [];
   }
