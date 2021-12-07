@@ -28,28 +28,28 @@ class _CharacterImportState extends State<CharacterImport> {
   Map<String, bool> _admiral = {};
 
   void _onSave() {
-    final List<Character> characters = [];
-    for (String name in widget.names) {
-      Character character = Character(
-          name: name,
-          tag: widget.tag,
-          ideology: _ideologies[name] ?? Ideology.values.first,
-          positions: _positions[name] ?? [],
-          headOfState: _headOfState[name] ?? false,
-          fieldMarshal: _fieldMarshal[name] ?? false,
-          corpCommander: _corpCommander[name] ?? false,
-          admiral: _admiral[name] ?? false,
-          traits: _positions[name]?.map(
-                (position) {
-                  return Character.randomTrait(
-                      position,
-                      Provider.of<TraitsNotifier>(context).traits[position] ??
-                          []);
-                },
-              ).toList() ??
-              []);
-      characters.add(character);
-    }
+    // final List<Character> characters = [];
+    // for (String name in widget.names) {
+    //   Character character = Character(
+    //       name: name,
+    //       tag: widget.tag,
+    //       ideology: _ideologies[name] ?? Ideology.values.first,
+    //       positions: _positions[name] ?? [],
+    //       headOfState: _headOfState[name] ?? false,
+    //       fieldMarshal: _fieldMarshal[name] ?? false,
+    //       corpCommander: _corpCommander[name] ?? false,
+    //       admiral: _admiral[name] ?? false,
+    //       ministerTraits: _positions[name]?.map(
+    //             (position) {
+    //               return Character.randomTrait(
+    //                   position,
+    //                   Provider.of<TraitsNotifier>(context).traits[position] ??
+    //                       []);
+    //             },
+    //           ).toList() ??
+    //           []);
+    //   characters.add(character);
+    // }
   }
 
   Future<Ideology?> _showIdeologyPicker(Ideology ideology) async {

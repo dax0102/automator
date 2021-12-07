@@ -91,26 +91,46 @@ class Character {
   final String tag;
   final Ideology ideology;
   final List<Position> positions;
-  final List<String> traits;
+  final List<String> leaderTraits;
+  final List<String> commanderTraits;
+  final List<String> ministerTraits;
   final bool headOfState;
   final bool fieldMarshal;
   final bool corpCommander;
   final bool admiral;
+  final String? skills;
 
   Character({
     required this.name,
     required this.tag,
     required this.ideology,
     this.positions = const [],
-    this.traits = const [],
+    this.leaderTraits = const [],
+    this.commanderTraits = const [],
+    this.ministerTraits = const [],
     this.headOfState = false,
     this.fieldMarshal = false,
     this.corpCommander = false,
     this.admiral = false,
+    this.skills,
   });
+
+  List<String> get parsedSkills {
+    return skills?.split(',') ?? [];
+  }
 
   String get token {
     return '${tag}_${name.replaceAll(" ", "_")}';
+  }
+
+  bool isArmy() {
+    return positions.contains(Position.chiefOfStaff) ||
+        positions.contains(Position.chiefOfArmy) ||
+        positions.contains(Position.chiefOfAirForce);
+  }
+
+  bool isNavy() {
+    return positions.contains(Position.chiefOfNavy);
   }
 
   bool hasGovernmentPosition() {

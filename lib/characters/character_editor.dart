@@ -20,13 +20,33 @@ class _CharacterEditorState extends State<CharacterEditor> {
   final _nameController = TextEditingController();
   final _tagController = TextEditingController();
   List<Position> _positions = [];
-  Map<Position, String> _customTraits = {};
+  List<String> _leaderTraits = [];
+  List<String> _commanderTraits = [];
+  List<String> _ministerTraits = [];
   Ideology _ideology = Ideology.vanguardist;
   bool _headOfState = false;
   bool _fieldMarshal = false;
   bool _corpCommander = false;
   bool _admiral = false;
   bool _randomTraits = true;
+
+  void _onSave() {
+    final character = Character(
+      name: _nameController.text,
+      tag: _tagController.text,
+      ideology: _ideology,
+      positions: _positions,
+      leaderTraits: _leaderTraits,
+      commanderTraits: _commanderTraits,
+      ministerTraits: _ministerTraits,
+      headOfState: _headOfState,
+      fieldMarshal: _fieldMarshal,
+      corpCommander: _corpCommander,
+      admiral: _admiral,
+    );
+    Provider.of<CharactersNotifier>(context, listen: false).put(character);
+    Navigator.pop(context);
+  }
 
   void _modifyPosition(Position position) {
     final positions = _positions;
@@ -63,15 +83,22 @@ class _CharacterEditorState extends State<CharacterEditor> {
                               hintText: position.getLocalization(context),
                             ),
                             onChanged: (text) {
-                              _customTraits[position] = text;
+                              if (!_ministerTraits.contains(text)) {
+                                _ministerTraits.add(text);
+                              }
                             },
                           )
                         : DropdownInputField<String>(
-                            selected: _customTraits[position] ??
-                                notifier.traits[position]!.first,
+                            selected: _ministerTraits.firstWhere(
+                                (trait) => trait.startsWith(position.prefix),
+                                orElse: () {
+                              return notifier.traits[position]!.first;
+                            }),
                             items: notifier.traits[position]!,
                             onChange: (trait) {
-                              _customTraits[position] = trait;
+                              if (!_ministerTraits.contains(trait)) {
+                                _ministerTraits.add(trait);
+                              }
                             },
                           ),
                     SizedBox(height: ThemeComponents.spacing),
@@ -189,22 +216,6 @@ class _CharacterEditorState extends State<CharacterEditor> {
         title: Text(Translations.of(context)!.hint_random_traits),
       ),
     ];
-  }
-
-  void _onSave() {
-    final character = Character(
-      name: _nameController.text,
-      tag: _tagController.text,
-      ideology: _ideology,
-      positions: _positions,
-      traits: _customTraits.values.toList(),
-      headOfState: _headOfState,
-      fieldMarshal: _fieldMarshal,
-      corpCommander: _corpCommander,
-      admiral: _admiral,
-    );
-    Provider.of<CharactersNotifier>(context, listen: false).put(character);
-    Navigator.pop(context);
   }
 
   @override
