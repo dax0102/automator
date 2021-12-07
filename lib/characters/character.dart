@@ -156,28 +156,33 @@ class Character {
     return '${tag}_${name.replaceAll(" ", "_")}';
   }
 
-  bool isArmy() {
-    return positions.contains(Position.chiefOfStaff) ||
-        positions.contains(Position.chiefOfArmy) ||
-        positions.contains(Position.chiefOfAirForce);
-  }
+  bool get hasGovernmentRole => hasGovernmentPosition(positions);
+  bool get hasMilitaryRole => hasMilitaryPosition(positions);
+  bool get hasArmyRole => hasArmyPosition(positions);
+  bool get hasNavalRole => hasNavalPosition(positions);
 
-  bool isNavy() {
-    return positions.contains(Position.chiefOfNavy);
-  }
-
-  bool hasGovernmentPosition() {
+  static bool hasGovernmentPosition(List<Position> positions) {
     return positions.contains(Position.headOfGovernment) ||
         positions.contains(Position.foreignMinister) ||
         positions.contains(Position.economyMinister) ||
         positions.contains(Position.securityMinister);
   }
 
-  bool hasMilitaryPosition() {
+  static bool hasMilitaryPosition(List<Position> positions) {
     return positions.contains(Position.chiefOfStaff) ||
         positions.contains(Position.chiefOfArmy) ||
         positions.contains(Position.chiefOfNavy) ||
         positions.contains(Position.chiefOfAirForce);
+  }
+
+  static bool hasArmyPosition(List<Position> positions) {
+    return positions.contains(Position.chiefOfStaff) ||
+        positions.contains(Position.chiefOfArmy) ||
+        positions.contains(Position.chiefOfAirForce);
+  }
+
+  static bool hasNavalPosition(List<Position> positions) {
+    return positions.contains(Position.chiefOfNavy);
   }
 
   static Future<List<String>> getNamesFromCSV(File source) async {
