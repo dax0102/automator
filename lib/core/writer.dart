@@ -27,13 +27,19 @@ class Writer {
       if (character.civilianPortrait || character.hasGovernmentRole) {
         await output.writeAsString(_civilian, mode: _mode);
         if (character.civilianPortrait) {
+          String generated =
+              '$_large $portraitLargePrefix${character.tag}/Portrait_${character.token}.tga';
+
           await output.writeAsString(
-              '$_large $portraitLargePrefix${character.tag}/Portrait_${character.token}.tga',
+              character.civilianLargePortrait ?? generated,
               mode: _mode);
         }
         if (character.hasGovernmentRole) {
+          String generated =
+              '$_small $portraitSmallPrefix${character.tag}/${character.token}.tga';
+
           await output.writeAsString(
-              '$_small $portraitSmallPrefix${character.tag}/${character.token}.tga',
+              character.civilianSmallPortrait ?? generated,
               mode: _mode);
         }
         await output.writeAsString('\n\t\t\t}', mode: _mode);
@@ -42,13 +48,17 @@ class Writer {
       if (character.armyPortrait || character.hasArmyRole) {
         await output.writeAsString(_army, mode: _mode);
         if (character.armyPortrait) {
-          await output.writeAsString(
-              '$_large $portraitLargePrefix${character.tag}/Portrait_${character.token}_army.tga',
+          String generated =
+              '$_large $portraitLargePrefix${character.tag}/Portrait_${character.token}_army.tga';
+
+          await output.writeAsString(character.armyLargePortrait ?? generated,
               mode: _mode);
         }
         if (character.hasArmyRole) {
-          await output.writeAsString(
-              '$_small $portraitSmallPrefix${character.tag}/${character.token}.tga',
+          String generated =
+              '$_small $portraitSmallPrefix${character.tag}/${character.token}.tga';
+
+          await output.writeAsString(character.armySmallPortait ?? generated,
               mode: _mode);
         }
         await output.writeAsString('\n\t\t\t}', mode: _mode);
@@ -58,13 +68,17 @@ class Writer {
       if (character.navyPortrait || character.hasNavalRole) {
         await output.writeAsString(_navy, mode: _mode);
         if (character.navyPortrait) {
-          await output.writeAsString(
-              '$_large $portraitLargePrefix${character.tag}/Portrait_${character.token}_navy.tga',
+          String generated =
+              '$_large $portraitLargePrefix${character.tag}/Portrait_${character.token}_navy.tga';
+
+          await output.writeAsString(character.navyLargePortrait ?? generated,
               mode: _mode);
         }
         if (character.hasNavalRole) {
-          await output.writeAsString(
-              '$_small $portraitSmallPrefix${character.tag}/${character.token}.tga',
+          String generated =
+              '$_small $portraitSmallPrefix${character.tag}/${character.token}.tga';
+
+          await output.writeAsString(character.navySmallPortrait ?? generated,
               mode: _mode);
         }
         await output.writeAsString('\n\t\t\t}', mode: _mode);
