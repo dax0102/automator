@@ -26,6 +26,23 @@ class _TraitsPageState extends State<TraitsPage> {
         : PositionExtension.military;
   }
 
+  Future _onImport() async {
+    try {
+      final result = await FilePicker.platform.pickFiles();
+      if (result != null) {
+        final source = File(result.files.single.path!);
+        final traits = await Traits.fetch(source);
+        Provider.of<TraitsNotifier>(context, listen: false).change(traits);
+      }
+    } on RangeError {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(
+          Translations.of(context)!.feedback_invalid_file,
+        ),
+      ));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Consumer<TraitsNotifier>(builder: (context, notifier, _) {
@@ -42,14 +59,7 @@ class _TraitsPageState extends State<TraitsPage> {
                 title: Translations.of(context)!.navigation_traits,
                 actions: Header.getDefault(
                   context,
-                  onImport: () async {
-                    final result = await FilePicker.platform.pickFiles();
-                    if (result != null) {
-                      final source = File(result.files.single.path!);
-                      final traits = await Traits.fetch(source);
-                      notifier.change(traits);
-                    }
-                  },
+                  onImport: _onImport,
                   onReset: traits.isNotEmpty ? notifier.reset : null,
                 ),
               ),
