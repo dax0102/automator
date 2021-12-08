@@ -100,22 +100,16 @@ class _CharactersPageState extends State<CharactersPage> {
     return TableRow(children: [
       TableCell(
         verticalAlignment: ThemeComponents.cellAlignment,
-        child: Padding(
-          padding: ThemeComponents.defaultPadding,
-          child: Text(
-            Translations.of(context)!.hint_tag,
-            textAlign: ThemeComponents.textAlignment,
-          ),
+        child: Text(
+          Translations.of(context)!.hint_tag,
+          textAlign: ThemeComponents.textAlignment,
         ),
       ),
       TableCell(
         verticalAlignment: ThemeComponents.cellAlignment,
-        child: Padding(
-          padding: ThemeComponents.defaultPadding,
-          child: Text(
-            Translations.of(context)!.hint_name,
-            textAlign: ThemeComponents.textAlignment,
-          ),
+        child: Text(
+          Translations.of(context)!.hint_name,
+          textAlign: ThemeComponents.textAlignment,
         ),
       ),
       TableCell(
@@ -204,8 +198,8 @@ class _CharactersPageState extends State<CharactersPage> {
                       columnWidths: const {
                         0: FractionColumnWidth(0.05),
                         1: FractionColumnWidth(0.2),
-                        2: FractionColumnWidth(0.2),
-                        3: FractionColumnWidth(0.3)
+                        2: FractionColumnWidth(0.15),
+                        3: FractionColumnWidth(0.15)
                       },
                       children: [
                         _headers,
