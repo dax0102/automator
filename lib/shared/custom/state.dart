@@ -10,11 +10,13 @@ class EmptyState extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Text(title, style: Theme.of(context).textTheme.headline6),
-      ],
+    return Expanded(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(title, style: Theme.of(context).textTheme.headline6),
+        ],
+      ),
     );
   }
 }

@@ -1,5 +1,5 @@
 name: automator
-description: A new Flutter project.
+description: Component Generation Tool for Fuhrerredux and Kaiserredux.
 
 publish_to: 'none'
 version: 1.0.0+1
@@ -17,6 +17,7 @@ dependencies:
   file_picker: ^4.2.7
   animations: ^2.0.2
   provider: ^6.0.1
+  desktop_window: ^0.4.0
 
 dev_dependencies:
   flutter_test:
