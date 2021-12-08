@@ -17,10 +17,31 @@ class _AboutPageState extends State<AboutPage> {
       child: Padding(
         padding: ThemeComponents.defaultPadding,
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Header(
               title: Translations.of(context)!.navigation_about,
+            ),
+            Card(
+              child: Padding(
+                padding: ThemeComponents.defaultPadding,
+                child: Column(
+                  children: [
+                    const Image(
+                      image: AssetImage('assets/appicon.png'),
+                      width: 256,
+                      height: 256,
+                    ),
+                    Text(
+                      Translations.of(context)!.about_app_title,
+                      style: Theme.of(context).textTheme.headline5,
+                    ),
+                    SizedBox(height: ThemeComponents.spacing),
+                    Text(Translations.of(context)!.about_app_subtitle),
+                    const SizedBox(height: 8),
+                    Text(Translations.of(context)!.about_author),
+                  ],
+                ),
+              ),
             ),
           ],
         ),
