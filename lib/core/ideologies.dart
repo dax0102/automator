@@ -129,3 +129,116 @@ extension IdeologyExtension on Ideology {
     }
   }
 }
+
+enum IdeologyKR {
+  totalist,
+  syndicalist,
+  radicalSocialist,
+  socialDemocrat,
+  socialLiberal,
+  marketLiberal,
+  socialConservative,
+  authoritarianDemocrat,
+  paternalAutocrat,
+  nationalPopulist,
+}
+
+extension IdeologyKRExtension on IdeologyKR {
+  static const prefixNan = "";
+  static const prefixTot = "tot";
+  static const prefixSyn = "syn";
+  static const prefixRso = "rso";
+  static const prefixSde = "sde";
+  static const prefixSli = "sli";
+  static const prefixMli = "mli";
+  static const prefixSco = "sco";
+  static const prefixAde = "ade";
+  static const prefixPau = "pau";
+  static const prefixNpo = "npo";
+  static const tokenNan = "";
+  static const tokenTot = "totalist";
+  static const tokenSyn = "syndicalist";
+  static const tokenRso = "radical_socialist";
+  static const tokenSde = "social_democrat";
+  static const tokenSli = "social_liberal";
+  static const tokenMli = "market_liberal";
+  static const tokenSco = "social_conservative";
+  static const tokenAde = "authoritarian_democrat";
+  static const tokenPau = "paternal_autocrat";
+  static const tokenNpo = "national_populist";
+
+  String get prefix {
+    switch (this) {
+      case IdeologyKR.totalist:
+        return prefixTot;
+      case IdeologyKR.syndicalist:
+        return prefixSyn;
+      case IdeologyKR.radicalSocialist:
+        return prefixRso;
+      case IdeologyKR.socialDemocrat:
+        return prefixSde;
+      case IdeologyKR.socialLiberal:
+        return prefixSli;
+      case IdeologyKR.marketLiberal:
+        return prefixMli;
+      case IdeologyKR.socialConservative:
+        return prefixSco;
+      case IdeologyKR.authoritarianDemocrat:
+        return prefixAde;
+      case IdeologyKR.paternalAutocrat:
+        return prefixPau;
+      case IdeologyKR.nationalPopulist:
+        return prefixNpo;
+    }
+  }
+
+  String get token {
+    switch (this) {
+      case IdeologyKR.totalist:
+        return tokenTot;
+      case IdeologyKR.syndicalist:
+        return tokenSyn;
+      case IdeologyKR.radicalSocialist:
+        return tokenRso;
+      case IdeologyKR.socialDemocrat:
+        return tokenSde;
+      case IdeologyKR.socialLiberal:
+        return tokenSli;
+      case IdeologyKR.marketLiberal:
+        return tokenMli;
+      case IdeologyKR.socialConservative:
+        return tokenSco;
+      case IdeologyKR.authoritarianDemocrat:
+        return tokenAde;
+      case IdeologyKR.paternalAutocrat:
+        return tokenPau;
+      case IdeologyKR.nationalPopulist:
+        return tokenNpo;
+    }
+  }
+
+  String getLocalization(BuildContext context) {
+    switch (this) {
+      case IdeologyKR.totalist:
+        return Translations.of(context)!.ideology_tot;
+      case IdeologyKR.syndicalist:
+        return Translations.of(context)!.ideology_syn;
+      case IdeologyKR.radicalSocialist:
+        return Translations.of(context)!.ideology_rso;
+      case IdeologyKR.socialDemocrat:
+        return Translations.of(context)!.ideology_sde;
+      case IdeologyKR.socialLiberal:
+        return Translations.of(context)!.ideology_sli;
+      case IdeologyKR.marketLiberal:
+        return Translations.of(context)!.ideology_mli;
+      case IdeologyKR.socialConservative:
+        return Translations.of(context)!.ideology_sco;
+      case IdeologyKR.authoritarianDemocrat:
+        return Translations.of(context)!.ideology_ade;
+      case IdeologyKR.paternalAutocrat:
+        return Translations.of(context)!.ideology_pau;
+      case IdeologyKR.nationalPopulist:
+        return Translations.of(context)!.ideology_npo;
+    }
+  }
+}

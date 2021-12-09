@@ -1,4 +1,4 @@
-import 'package:automator/characters/character.dart';
+import 'package:automator/core/position.dart';
 import 'package:flutter/foundation.dart';
 
 class TraitsNotifier extends ChangeNotifier {

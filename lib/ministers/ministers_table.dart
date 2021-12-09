@@ -1,21 +1,21 @@
-import 'package:automator/characters/character.dart';
 import 'package:automator/core/ideologies.dart';
 import 'package:automator/core/position.dart';
+import 'package:automator/ministers/minister.dart';
 import 'package:automator/shared/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/translations.dart';
 
-class CharacterTable extends StatelessWidget {
-  const CharacterTable({
+class MinistersTable extends StatelessWidget {
+  const MinistersTable({
     Key? key,
-    required this.characters,
+    required this.ministers,
     required this.onEdit,
     required this.onRemove,
   }) : super(key: key);
 
-  final List<Character> characters;
-  final Function(Character) onEdit;
-  final Function(Character) onRemove;
+  final List<Minister> ministers;
+  final Function(Minister) onEdit;
+  final Function(Minister) onRemove;
 
   TableRow _getHeaders(BuildContext context) {
     return TableRow(children: [
@@ -62,46 +62,6 @@ class CharacterTable extends StatelessWidget {
       TableCell(
         verticalAlignment: ThemeComponents.cellAlignment,
         child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Text(
-            Translations.of(context)!.hint_head_of_state,
-            textAlign: ThemeComponents.textAlignment,
-          ),
-        ),
-      ),
-      TableCell(
-        verticalAlignment: ThemeComponents.cellAlignment,
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Text(
-            Translations.of(context)!.hint_field_marshal,
-            textAlign: ThemeComponents.textAlignment,
-          ),
-        ),
-      ),
-      TableCell(
-        verticalAlignment: ThemeComponents.cellAlignment,
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Text(
-            Translations.of(context)!.hint_corps_commander,
-            textAlign: ThemeComponents.textAlignment,
-          ),
-        ),
-      ),
-      TableCell(
-        verticalAlignment: ThemeComponents.cellAlignment,
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Text(
-            Translations.of(context)!.hint_admiral,
-            textAlign: ThemeComponents.textAlignment,
-          ),
-        ),
-      ),
-      TableCell(
-        verticalAlignment: ThemeComponents.cellAlignment,
-        child: Padding(
           padding: const EdgeInsets.all(8),
           child: Text(
             Translations.of(context)!.button_edit,
@@ -130,33 +90,33 @@ class CharacterTable extends StatelessWidget {
       ),
       columnWidths: const {
         0: FractionColumnWidth(0.05),
-        1: FractionColumnWidth(0.15),
+        1: FractionColumnWidth(0.2),
         2: FractionColumnWidth(0.15),
-        3: FractionColumnWidth(0.25)
+        3: FractionColumnWidth(0.45)
       },
       children: [
         _getHeaders(context),
-        ...characters.map((character) {
+        ...ministers.map((minister) {
           return TableRow(children: [
             TableCell(
               verticalAlignment: ThemeComponents.cellAlignment,
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                child: Text(character.tag),
+                child: Text(minister.tag),
               ),
             ),
             TableCell(
               verticalAlignment: ThemeComponents.cellAlignment,
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                child: Text(character.name),
+                child: Text(minister.name),
               ),
             ),
             TableCell(
               verticalAlignment: ThemeComponents.cellAlignment,
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                child: Text(character.ideology.getLocalization(context)),
+                child: Text(minister.ideology.getLocalization(context)),
               ),
             ),
             TableCell(
@@ -166,7 +126,7 @@ class CharacterTable extends StatelessWidget {
                 child: Wrap(
                   spacing: 8,
                   runSpacing: 8,
-                  children: character.positions.map((position) {
+                  children: minister.positions.map((position) {
                     return Chip(
                       label: Text(position.getLocalization(context)),
                     );
@@ -175,33 +135,17 @@ class CharacterTable extends StatelessWidget {
               ),
             ),
             TableCell(
-              verticalAlignment: ThemeComponents.cellAlignment,
-              child: Icon(character.headOfState ? Icons.check : Icons.clear),
-            ),
-            TableCell(
-              verticalAlignment: ThemeComponents.cellAlignment,
-              child: Icon(character.fieldMarshal ? Icons.check : Icons.clear),
-            ),
-            TableCell(
-              verticalAlignment: ThemeComponents.cellAlignment,
-              child: Icon(character.corpCommander ? Icons.check : Icons.clear),
-            ),
-            TableCell(
-              verticalAlignment: ThemeComponents.cellAlignment,
-              child: Icon(character.admiral ? Icons.check : Icons.clear),
-            ),
-            TableCell(
                 child: IconButton(
               icon: const Icon(Icons.edit_outlined),
               onPressed: () {
-                onEdit(character);
+                onEdit(minister);
               },
             )),
             TableCell(
                 child: IconButton(
               icon: const Icon(Icons.delete_outline),
               onPressed: () {
-                onRemove(character);
+                onRemove(minister);
               },
             )),
           ]);

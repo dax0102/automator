@@ -2,6 +2,8 @@ import 'package:automator/characters/characters_notifier.dart';
 import 'package:automator/characters/characters_page.dart';
 import 'package:automator/core/navigation.dart';
 import 'package:automator/localization/locales.dart';
+import 'package:automator/ministers/ministers_notifier.dart';
+import 'package:automator/ministers/ministers_page.dart';
 import 'package:automator/others/about_page.dart';
 import 'package:automator/others/guides_page.dart';
 import 'package:automator/shared/theme.dart';
@@ -43,6 +45,7 @@ class _AutomatorState extends State<Automator> {
       providers: [
         ChangeNotifierProvider(create: (_) => TraitsNotifier()),
         ChangeNotifierProvider(create: (_) => CharactersNotifier()),
+        ChangeNotifierProvider(create: (_) => MinistersNotifier())
       ],
       child: MaterialApp(
         theme: dark,
@@ -75,10 +78,12 @@ class _MainPageState extends State<MainPage> {
       case 0:
         return const CharactersPage();
       case 1:
-        return const TraitsPage();
+        return const MinistersPage();
       case 2:
-        return const GuidesPage();
+        return const TraitsPage();
       case 3:
+        return const GuidesPage();
+      case 4:
         return const AboutPage();
       default:
         throw Exception("Invalid Route");
