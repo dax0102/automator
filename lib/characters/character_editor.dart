@@ -86,22 +86,22 @@ class _CharacterEditorState extends State<CharacterEditor> {
       navyPortrait: _navyPortrait,
       civilianLargePortrait: _civilianLargePortrait.text.isEmpty
           ? null
-          : Writer.buildPortraitPath(tag, token),
+          : Writer.buildPortraitPath(tag),
       civilianSmallPortrait: _civilianSmallPortrait.text.isEmpty
           ? null
-          : Writer.buildPortraitPath(tag, token, isLarge: false),
+          : Writer.buildPortraitPath(tag, isLarge: false),
       armyLargePortrait: _armyLargePortrait.text.isEmpty
           ? null
-          : Writer.buildPortraitPath(tag, token),
+          : Writer.buildPortraitPath(tag),
       armySmallPortait: _armySmallPortrait.text.isEmpty
           ? null
-          : Writer.buildPortraitPath(tag, token, isLarge: false),
+          : Writer.buildPortraitPath(tag, isLarge: false),
       navyLargePortrait: _navyLargePortrait.text.isEmpty
           ? null
-          : Writer.buildPortraitPath(tag, token),
+          : Writer.buildPortraitPath(tag),
       navySmallPortrait: _navySmallPortrait.text.isEmpty
           ? null
-          : Writer.buildPortraitPath(tag, token, isLarge: false),
+          : Writer.buildPortraitPath(tag, isLarge: false),
     );
     Provider.of<CharactersNotifier>(context, listen: false).put(character);
     Navigator.pop(context);

@@ -231,14 +231,9 @@ class Writer {
     await output.writeAsString('\n}', mode: _mode);
   }
 
-  static String buildPortraitPath(
-    String tag,
-    String token, {
-    bool isLarge = true,
-    String? suffix,
-  }) {
+  static String buildPortraitPath(String token, {bool isLarge = false}) {
     String prefix = isLarge ? portraitLargePrefix : portraitSmallPrefix;
-    return '$prefix$tag/$token$portraitSuffix';
+    return '$prefix$token$portraitSuffix';
   }
 
   static const _characters = "characters = {";
