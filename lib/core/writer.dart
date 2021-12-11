@@ -49,13 +49,11 @@ class Writer {
         await output.writeAsString('\n\t\t\t\t}', mode: _mode);
         await output.writeAsString('\n\t\t\t}', mode: _mode);
 
-        if (position.isMilitary()) {
-          await output.writeAsString('\n\t\t\tvisible = {', mode: _mode);
-          await output.writeAsString(
-              '\n\t\t\t\tNOT = { has_country_flag = ${nameNoSpace}_dead }',
-              mode: _mode);
-          await output.writeAsString('\n\t\t\t}', mode: _mode);
-        }
+        await output.writeAsString('\n\t\t\tvisible = {', mode: _mode);
+        await output.writeAsString(
+            '\n\t\t\t\tNOT = { has_country_flag = ${nameNoSpace}_dead }',
+            mode: _mode);
+        await output.writeAsString('\n\t\t\t}', mode: _mode);
 
         await output.writeAsString('\n\t\t\ton_add = {', mode: _mode);
         await output.writeAsString(
@@ -65,18 +63,13 @@ class Writer {
 
         await output.writeAsString(_traits, mode: _mode);
         await output.writeAsString('\n\t\t\t\t${position.token}', mode: _mode);
-        if (position.isGovernment()) {
-          await output.writeAsString('\n\t\t\t\t${minister.ideology.token}',
-              mode: _mode);
-        }
+        await output.writeAsString('\n\t\t\t\t${minister.ideology.token}',
+            mode: _mode);
         await output.writeAsString('\n\t\t\t\t$trait', mode: _mode);
         await output.writeAsString('\n\t\t\t}', mode: _mode); // close traits
-        if (position.isMilitary()) {
-          await output.writeAsString('\n\t\t\tcancel_if_invalid = yes');
-        }
-        await output.writeAsString('\n\t\t}', mode: _mode); // close
+        await output.writeAsString('\n\t\t}', mode: _mode); // clos
       }
-      await output.writeAsString('\n\t}', mode: _mode); // close position
+      await output.writeAsString('\n\t}', mode: _mode);
     }
     await output.writeAsString('}', mode: _mode);
   }
