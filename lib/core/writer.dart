@@ -71,6 +71,7 @@ class Writer {
       }
       await output.writeAsString('\n\t}', mode: _mode);
     }
+    await output.writeAsString('}', mode: _mode);
   }
 
   static Future saveMinistersLoc(
