@@ -6,6 +6,7 @@ import 'package:automator/characters/character_editor.dart';
 import 'package:automator/characters/character_import.dart';
 import 'package:automator/characters/characters_notifier.dart';
 import 'package:automator/core/ideologies.dart';
+import 'package:automator/core/reader.dart';
 import 'package:automator/core/writer.dart';
 import 'package:automator/shared/custom/header.dart';
 import 'package:automator/shared/custom/state.dart';
@@ -23,50 +24,87 @@ class CharactersPage extends StatefulWidget {
 }
 
 class _CharactersPageState extends State<CharactersPage> {
-  final _tagInputFormKey = GlobalKey<FormState>();
-  final _tagController = TextEditingController();
-
   Future<String?> _invokeTagInput() async {
+    final _tagInputFormKey = GlobalKey<FormState>();
+    final _tagController = TextEditingController();
+
     return await showDialog(
       context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: Text(Translations.of(context)!.dialog_enter_tag),
-          content: Form(
-            key: _tagInputFormKey,
-            child: TextFormField(
-              controller: _tagController,
-              decoration: InputDecoration(
-                border: ThemeComponents.inputBorder,
-                hintText: Translations.of(context)!.hint_tag,
-              ),
-              maxLength: 3,
-              validator: (text) {
-                if (text == null || text.length != 3) {
-                  return Translations.of(context)!.feedback_invalid_tag;
-                }
+      builder: (BuildContext context) {
+        ReadStrategy _readStrategy = ReadStrategy.single;
 
-                return null;
-              },
+        return StatefulBuilder(
+            builder: (BuildContext context, StateSetter setState) {
+          return AlertDialog(
+            title: Text(Translations.of(context)!.dialog_import_strategy),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(Translations.of(context)!.dialog_import_strategy_subtitle),
+                SizedBox(height: ThemeComponents.spacing),
+                RadioListTile<ReadStrategy>(
+                  value: ReadStrategy.single,
+                  groupValue: _readStrategy,
+                  onChanged: (strategy) {
+                    setState(
+                        () => _readStrategy = strategy ?? ReadStrategy.single);
+                  },
+                  title: Text(Translations.of(context)!.hint_one_tag),
+                ),
+                if (_readStrategy == ReadStrategy.single)
+                  Padding(
+                    child: Form(
+                      key: _tagInputFormKey,
+                      child: TextFormField(
+                        controller: _tagController,
+                        decoration: InputDecoration(
+                          border: ThemeComponents.inputBorder,
+                          hintText: Translations.of(context)!.hint_tag,
+                        ),
+                        maxLength: 3,
+                        validator: (text) {
+                          if (text == null || text.length != 3) {
+                            return Translations.of(context)!
+                                .feedback_invalid_tag;
+                          }
+                          return null;
+                        },
+                      ),
+                    ),
+                    padding: const EdgeInsets.symmetric(horizontal: 64),
+                  ),
+                RadioListTile<ReadStrategy>(
+                  value: ReadStrategy.multiple,
+                  groupValue: _readStrategy,
+                  onChanged: (strategy) {
+                    setState(() =>
+                        _readStrategy = strategy ?? ReadStrategy.multiple);
+                  },
+                  title: Text(Translations.of(context)!.hint_multiple_tags),
+                ),
+              ],
             ),
-          ),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () {
-                if (_tagInputFormKey.currentState!.validate()) {
-                  Navigator.pop(context, _tagController.text);
-                }
-              },
-              child: Text(Translations.of(context)!.button_continue),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: Text(Translations.of(context)!.button_cancel),
-            )
-          ],
-        );
+            actions: <Widget>[
+              TextButton(
+                onPressed: () {
+                  if (_readStrategy == ReadStrategy.single &&
+                      _tagInputFormKey.currentState!.validate()) {
+                    Navigator.pop(context, _tagController.text);
+                  } else {
+                    Navigator.pop(context, "");
+                  }
+                },
+                child: Text(Translations.of(context)!.button_continue),
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: Text(Translations.of(context)!.button_cancel),
+              )
+            ],
+          );
+        });
       },
     );
   }
@@ -91,11 +129,10 @@ class _CharactersPageState extends State<CharactersPage> {
   void _onImport() async {
     final tag = await _invokeTagInput();
     if (tag != null) {
-      _tagController.clear();
       final result = await FilePicker.platform.pickFiles();
       if (result != null) {
         final file = File(result.files.single.path!);
-        final names = await Character.getNamesFromCSV(file);
+        final names = await Reader.getNamesFromCSV(file);
         Navigator.push(
           context,
           PageRouteBuilder(
@@ -311,11 +348,5 @@ class _CharactersPageState extends State<CharactersPage> {
         ),
       ),
     );
-  }
-
-  @override
-  void dispose() {
-    _tagController.dispose();
-    super.dispose();
   }
 }

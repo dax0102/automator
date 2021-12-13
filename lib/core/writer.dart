@@ -24,9 +24,9 @@ class Writer {
       // Portraits
       await output.writeAsString(_portraits, mode: _mode);
       // Add Civilian Portraits
-      if (character.headOfState || character.hasGovernmentRole) {
+      if (character.civilianPortrait || character.hasGovernmentRole) {
         await output.writeAsString(_civilian, mode: _mode);
-        if (character.headOfState) {
+        if (character.civilianPortrait) {
           await output.writeAsString(
               '$_large $portraitLargePrefix${character.tag}/Portrait_${character.token}.tga',
               mode: _mode);
@@ -39,11 +39,9 @@ class Writer {
         await output.writeAsString('\n\t\t\t}', mode: _mode);
       }
       // Add Army Portraits
-      if (character.fieldMarshal ||
-          character.corpCommander ||
-          character.hasArmyRole) {
+      if (character.armyPortrait || character.hasArmyRole) {
         await output.writeAsString(_army, mode: _mode);
-        if (character.fieldMarshal || character.corpCommander) {
+        if (character.armyPortrait) {
           await output.writeAsString(
               '$_large $portraitLargePrefix${character.tag}/Portrait_${character.token}_army.tga',
               mode: _mode);
@@ -57,9 +55,9 @@ class Writer {
       }
 
       // Add Navy Portraits
-      if (character.admiral || character.hasNavalRole) {
+      if (character.navyPortrait || character.hasNavalRole) {
         await output.writeAsString(_navy, mode: _mode);
-        if (character.admiral) {
+        if (character.navyPortrait) {
           await output.writeAsString(
               '$_large $portraitLargePrefix${character.tag}/Portrait_${character.token}_navy.tga',
               mode: _mode);
