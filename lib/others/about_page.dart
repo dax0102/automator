@@ -36,7 +36,10 @@ class _AboutPageState extends State<AboutPage> {
                       style: Theme.of(context).textTheme.headline5,
                     ),
                     SizedBox(height: ThemeComponents.spacing),
-                    Text(Translations.of(context)!.about_app_subtitle),
+                    Text(
+                      Translations.of(context)!.about_app_subtitle,
+                      style: const TextStyle(color: Colors.grey),
+                    ),
                     const SizedBox(height: 8),
                     Text(Translations.of(context)!.about_author),
                   ],
