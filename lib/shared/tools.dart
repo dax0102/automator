@@ -10,3 +10,5 @@ extension IterableExtension<T> on Iterable<T> {
     return result;
   }
 }
+
+class InvalidPrefixError extends Error {}

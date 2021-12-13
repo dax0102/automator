@@ -5,35 +5,37 @@ import 'package:automator/core/writer.dart';
 import 'package:automator/shared/custom/checkbox_form.dart';
 import 'package:automator/shared/custom/dropdown_field.dart';
 import 'package:automator/shared/theme.dart';
+import 'package:automator/shared/tools.dart';
 import 'package:automator/traits/traits_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/translations.dart';
 import 'package:provider/provider.dart';
 
 class CharacterEditor extends StatefulWidget {
-  const CharacterEditor({Key? key}) : super(key: key);
+  CharacterEditor({Key? key, this.character}) : super(key: key);
+
+  final Character? character;
 
   @override
   _CharacterEditorState createState() => _CharacterEditorState();
 }
 
 class _CharacterEditorState extends State<CharacterEditor> {
-  final _nameController = TextEditingController();
-  final _tagController = TextEditingController();
-  final _civilianLargePortrait = TextEditingController();
-  final _civilianSmallPortrait = TextEditingController();
-  final _armyLargePortrait = TextEditingController();
-  final _armySmallPortrait = TextEditingController();
-  final _navyLargePortrait = TextEditingController();
-  final _navySmallPortrait = TextEditingController();
-  bool _importedTraits = false;
+  late TextEditingController _nameController;
+  late TextEditingController _tagController;
+  late TextEditingController _civilianLargePortrait;
+  late TextEditingController _civilianSmallPortrait;
+  late TextEditingController _armyLargePortrait;
+  late TextEditingController _armySmallPortrait;
+  late TextEditingController _navyLargePortrait;
+  late TextEditingController _navySmallPortrait;
   bool _customPaths = false;
   List<Position> _positions = [];
   List<String> _leaderTraits = [];
   List<String> _commanderLandTraits = [];
   List<String> _commanderSeaTraits = [];
   Map<Position, String> _ministerTraits = {};
-  Ideology _ideology = Ideology.vanguardist;
+  Ideology _ideology = Ideology.none;
   bool _headOfState = false;
   bool _fieldMarshal = false;
   bool _corpCommander = false;
@@ -45,8 +47,48 @@ class _CharacterEditorState extends State<CharacterEditor> {
   @override
   void initState() {
     super.initState();
-    _importedTraits =
-        Provider.of<TraitsNotifier>(context, listen: false).traits.isNotEmpty;
+    try {
+      final character = widget.character;
+
+      _nameController = TextEditingController(text: character?.name);
+      _tagController = TextEditingController(text: character?.tag);
+      _civilianLargePortrait =
+          TextEditingController(text: character?.civilianLargePortrait);
+      _civilianSmallPortrait =
+          TextEditingController(text: character?.civilianSmallPortrait);
+      _armyLargePortrait =
+          TextEditingController(text: character?.armyLargePortrait);
+      _armySmallPortrait =
+          TextEditingController(text: character?.armySmallPortait);
+      _navyLargePortrait =
+          TextEditingController(text: character?.navyLargePortrait);
+      _navySmallPortrait =
+          TextEditingController(text: character?.navySmallPortrait);
+      _customPaths = character?.hasCustomPortraitPath() ?? false;
+      _positions = character?.positions ?? [];
+      _leaderTraits = character?.leaderTraits ?? [];
+      _commanderLandTraits = character?.commanderLandTraits ?? [];
+      _commanderSeaTraits = character?.commanderSeaTraits ?? [];
+      _ministerTraits = {
+        for (var item in character?.ministerTraits ?? [])
+          PositionExtension.getFromPrefix(item.substring(0, item.indexOf('_'))):
+              item
+      };
+      _ideology = character?.ideology ?? Ideology.none;
+      _headOfState = character?.headOfState ?? false;
+      _fieldMarshal = character?.fieldMarshal ?? false;
+      _corpCommander = character?.corpCommander ?? false;
+      _admiral = character?.admiral ?? false;
+      _civilianPortrait = character?.civilianPortrait ?? false;
+      _armyPortrait = character?.armyPortrait ?? false;
+      _navyPortrait = character?.navyPortrait ?? false;
+    } on InvalidPrefixError {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(Translations.of(context)!.feedback_invalid_trait),
+        ),
+      );
+    }
   }
 
   @override

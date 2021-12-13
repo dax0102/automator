@@ -293,7 +293,12 @@ class _CharacterImportState extends State<CharacterImport> {
                 TextButton(
                   child: Text(Translations.of(context)!.button_save),
                   onPressed: () {
-                    Navigator.pop(context, traitController.text.split(','));
+                    final traits = traitController.text;
+                    if (traits.isEmpty) {
+                      Navigator.pop(context);
+                    } else {
+                      Navigator.pop(context, traitController.text.split(','));
+                    }
                   },
                 ),
                 TextButton(

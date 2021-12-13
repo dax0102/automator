@@ -20,4 +20,9 @@ class CharactersNotifier extends ChangeNotifier {
     _characters.remove(character);
     notifyListeners();
   }
+
+  reset() {
+    _characters.clear();
+    notifyListeners();
+  }
 }

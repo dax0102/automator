@@ -1,7 +1,5 @@
 import 'dart:io';
 
-import 'package:automator/shared/tools.dart';
-
 enum ReadStrategy { single, multiple }
 
 class Reader {
@@ -15,7 +13,6 @@ class Reader {
 
     List<String> names = source.split(',');
     names = names.map((name) => name.trim()).toList();
-    names = names.distinctBy((x) => x).toList();
     return names;
   }
 }

@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:math';
 import 'package:automator/core/ideologies.dart';
+import 'package:automator/shared/tools.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_gen/gen_l10n/translations.dart';
 
@@ -49,6 +50,29 @@ extension PositionExtension on Position {
       Position.chiefOfNavy,
       Position.chiefOfAirForce
     ];
+  }
+
+  static Position getFromPrefix(String prefix) {
+    switch (prefix) {
+      case prefixHeadOfGovernment:
+        return Position.headOfGovernment;
+      case prefixForeignMinister:
+        return Position.foreignMinister;
+      case prefixEconomyMinister:
+        return Position.economyMinister;
+      case prefixSecurityMinister:
+        return Position.securityMinister;
+      case prefixChiefOfStaff:
+        return Position.chiefOfStaff;
+      case prefixChiefOfArmy:
+        return Position.chiefOfArmy;
+      case prefixChiefOfNavy:
+        return Position.chiefOfNavy;
+      case prefixChiefOfAirForce:
+        return Position.chiefOfAirForce;
+      default:
+        throw InvalidPrefixError();
+    }
   }
 
   String getLocalization(BuildContext context) {
@@ -164,8 +188,13 @@ class Character {
     this.navySmallPortrait,
   });
 
-  static int randomSkill() {
-    return 1 + Random().nextInt(5 - 1);
+  bool hasCustomPortraitPath() {
+    return civilianLargePortrait != null ||
+        civilianSmallPortrait != null ||
+        armyLargePortrait != null ||
+        armySmallPortait != null ||
+        navyLargePortrait != null ||
+        navySmallPortrait != null;
   }
 
   List<String> get parsedSkills {
@@ -180,6 +209,10 @@ class Character {
   bool get hasMilitaryRole => hasMilitaryPosition(positions);
   bool get hasArmyRole => hasArmyPosition(positions);
   bool get hasNavalRole => hasNavalPosition(positions);
+
+  static int randomSkill() {
+    return 1 + Random().nextInt(5 - 1);
+  }
 
   static String buildToken(String tag, String name) {
     return '${tag}_${name.replaceAll(" ", "_")}';
