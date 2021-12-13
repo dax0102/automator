@@ -131,6 +131,12 @@ class Character {
   final bool armyPortrait;
   final bool navyPortrait;
   final String? skills;
+  final String? civilianLargePortrait;
+  final String? civilianSmallPortrait;
+  final String? armyLargePortrait;
+  final String? armySmallPortait;
+  final String? navyLargePortrait;
+  final String? navySmallPortrait;
 
   Character({
     required this.name,
@@ -148,6 +154,12 @@ class Character {
     this.armyPortrait = false,
     this.navyPortrait = false,
     this.skills,
+    this.civilianLargePortrait,
+    this.civilianSmallPortrait,
+    this.armyLargePortrait,
+    this.armySmallPortait,
+    this.navyLargePortrait,
+    this.navySmallPortrait,
   });
 
   static int randomSkill() {
