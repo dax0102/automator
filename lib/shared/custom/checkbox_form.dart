@@ -26,6 +26,7 @@ class CheckboxForm extends StatelessWidget {
           Checkbox(
             value: value,
             onChanged: enabled ? onChanged : null,
+            activeColor: Theme.of(context).colorScheme.primary,
           ),
           Expanded(
             child: title,
