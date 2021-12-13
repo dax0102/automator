@@ -3,6 +3,7 @@ import 'package:automator/characters/characters_page.dart';
 import 'package:automator/core/navigation.dart';
 import 'package:automator/localization/locales.dart';
 import 'package:automator/others/about_page.dart';
+import 'package:automator/others/guides_page.dart';
 import 'package:automator/shared/theme.dart';
 import 'package:automator/traits/traits_notifier.dart';
 import 'package:automator/traits/traits_page.dart';
@@ -76,6 +77,8 @@ class _MainPageState extends State<MainPage> {
       case 1:
         return const TraitsPage();
       case 2:
+        return const GuidesPage();
+      case 3:
         return const AboutPage();
       default:
         throw Exception("Invalid Route");

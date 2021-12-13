@@ -1,4 +1,5 @@
 import 'package:automator/characters/character.dart';
+import 'package:automator/characters/characters_notifier.dart';
 import 'package:automator/core/ideologies.dart';
 import 'package:automator/shared/custom/checkbox_form.dart';
 import 'package:automator/shared/custom/dropdown_field.dart';
@@ -23,8 +24,8 @@ class CharacterImport extends StatefulWidget {
 class _CharacterImportState extends State<CharacterImport> {
   final _formKey = GlobalKey<FormState>();
   final _tagController = TextEditingController();
+  final Map<String, Map<Position, String>> _positions = {};
   Map<String, Ideology> _ideologies = {};
-  Map<String, Map<Position, String>> _positions = {};
   Map<String, List<String>> _leaderTraits = {};
   Map<String, List<String>> _commanderLandTraits = {};
   Map<String, List<String>> _commanderSeaTraits = {};
@@ -60,15 +61,7 @@ class _CharacterImportState extends State<CharacterImport> {
         fieldMarshal: _fieldMarshal[name] ?? false,
         corpCommander: _corpCommander[name] ?? false,
         admiral: _admiral[name] ?? false,
-        ministerTraits: _positions[name]?.keys.map(
-              (position) {
-                return Character.randomTrait(
-                    position,
-                    Provider.of<TraitsNotifier>(context).traits[position] ??
-                        []);
-              },
-            ).toList() ??
-            [],
+        ministerTraits: _positions[name]?.values.toList() ?? [],
         civilianPortrait: portrait & _civilianPortrait == _civilianPortrait,
         armyPortrait: portrait & _armyPortrait == _armyPortrait,
         navyPortrait: portrait & _navyPortrait == _navyPortrait,
@@ -77,7 +70,9 @@ class _CharacterImportState extends State<CharacterImport> {
         commanderSeaTraits: _commanderSeaTraits[name] ?? [],
       );
       characters.add(character);
+      Provider.of<CharactersNotifier>(context, listen: false).put(character);
     }
+    Navigator.pop(context);
   }
 
   Future<Ideology?> _showIdeologyPicker(Ideology ideology) async {
@@ -163,7 +158,8 @@ class _CharacterImportState extends State<CharacterImport> {
                 TextButton(
                     child: Text(Translations.of(context)!.button_save),
                     onPressed: () {
-                      Navigator.pop(context, Role(position, trait!));
+                      Navigator.pop(context,
+                          Role(position, trait ?? _traitController.text));
                     }),
                 TextButton(
                   child: Text(Translations.of(context)!.button_cancel),
