@@ -28,7 +28,7 @@ class Writer {
         await output.writeAsString(_civilian, mode: _mode);
         if (character.civilianPortrait) {
           String generated =
-              '$_large $portraitLargePrefix${character.tag}/Portrait_${character.token}.tga';
+              '$_large $portraitLargePrefix${character.tag}/Portrait_${character.token}$portraitSuffix';
 
           await output.writeAsString(
               character.civilianLargePortrait ?? generated,
@@ -36,7 +36,7 @@ class Writer {
         }
         if (character.hasGovernmentRole) {
           String generated =
-              '$_small $portraitSmallPrefix${character.tag}/${character.token}.tga';
+              '$_small $portraitSmallPrefix${character.tag}/${character.token}$portraitSuffix';
 
           await output.writeAsString(
               character.civilianSmallPortrait ?? generated,
@@ -49,14 +49,14 @@ class Writer {
         await output.writeAsString(_army, mode: _mode);
         if (character.armyPortrait) {
           String generated =
-              '$_large $portraitLargePrefix${character.tag}/Portrait_${character.token}_army.tga';
+              '$_large $portraitLargePrefix${character.tag}/Portrait_${character.token}_army$portraitSuffix';
 
           await output.writeAsString(character.armyLargePortrait ?? generated,
               mode: _mode);
         }
         if (character.hasArmyRole) {
           String generated =
-              '$_small $portraitSmallPrefix${character.tag}/${character.token}.tga';
+              '$_small $portraitSmallPrefix${character.tag}/${character.token}$portraitSuffix';
 
           await output.writeAsString(character.armySmallPortait ?? generated,
               mode: _mode);
@@ -69,14 +69,14 @@ class Writer {
         await output.writeAsString(_navy, mode: _mode);
         if (character.navyPortrait) {
           String generated =
-              '$_large $portraitLargePrefix${character.tag}/Portrait_${character.token}_navy.tga';
+              '$_large $portraitLargePrefix${character.tag}/Portrait_${character.token}_navy$portraitSuffix';
 
           await output.writeAsString(character.navyLargePortrait ?? generated,
               mode: _mode);
         }
         if (character.hasNavalRole) {
           String generated =
-              '$_small $portraitSmallPrefix${character.tag}/${character.token}.tga';
+              '$_small $portraitSmallPrefix${character.tag}/${character.token}$portraitSuffix';
 
           await output.writeAsString(character.navySmallPortrait ?? generated,
               mode: _mode);
@@ -106,7 +106,7 @@ class Writer {
       // Field Marshal
       if (character.fieldMarshal) {
         await output.writeAsString(_fieldMarshal, mode: _mode);
-        if (character.commanderTraits.isNotEmpty) {
+        if (character.commanderLandTraits.isNotEmpty) {
           await output.writeAsString(_traits, mode: _mode);
           for (String trait in character.leaderTraits) {
             await output.writeAsString('\n\t\t\t\t$trait', mode: _mode);
@@ -141,7 +141,7 @@ class Writer {
       if (character.corpCommander) {
         await output.writeAsString(_corpCommander, mode: _mode);
         await output.writeAsString(_traits, mode: _mode);
-        if (character.commanderTraits.isNotEmpty) {
+        if (character.commanderLandTraits.isNotEmpty) {
           await output.writeAsString(_traits, mode: _mode);
           for (String trait in character.leaderTraits) {
             await output.writeAsString('\n\t\t\t\t$trait', mode: _mode);
@@ -176,7 +176,7 @@ class Writer {
       if (character.admiral) {
         await output.writeAsString(_admiral, mode: _mode);
         await output.writeAsString(_traits, mode: _mode);
-        if (character.commanderTraits.isNotEmpty) {
+        if (character.commanderSeaTraits.isNotEmpty) {
           await output.writeAsString(_traits, mode: _mode);
           for (String trait in character.leaderTraits) {
             await output.writeAsString('\n\t\t\t\t$trait', mode: _mode);
@@ -231,6 +231,16 @@ class Writer {
     await output.writeAsString('\n}', mode: _mode);
   }
 
+  static String buildPortraitPath(
+    String tag,
+    String token, {
+    bool isLarge = true,
+    String? suffix,
+  }) {
+    String prefix = isLarge ? portraitLargePrefix : portraitSmallPrefix;
+    return '$prefix$tag/$token$portraitSuffix';
+  }
+
   static const _characters = "characters = {";
   static const _name = "\n\t\tname =";
   static const _portraits = "\n\t\tportraits = {";
@@ -259,4 +269,5 @@ class Writer {
   static const _mode = FileMode.append;
   static const portraitLargePrefix = "gfx/leaders/";
   static const portraitSmallPrefix = "gfx/ministers/";
+  static const portraitSuffix = ".tga";
 }
