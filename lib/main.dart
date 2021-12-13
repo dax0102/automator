@@ -6,6 +6,7 @@ import 'package:automator/others/about_page.dart';
 import 'package:automator/shared/theme.dart';
 import 'package:automator/traits/traits_notifier.dart';
 import 'package:automator/traits/traits_page.dart';
+import 'package:desktop_window/desktop_window.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/translations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -15,12 +16,26 @@ void main() {
   runApp(const Automator());
 }
 
-class Automator extends StatelessWidget {
+class Automator extends StatefulWidget {
   const Automator({Key? key}) : super(key: key);
 
   static const appName = "Automator";
 
-  // This widget is the root of your application.
+  @override
+  State<Automator> createState() => _AutomatorState();
+}
+
+class _AutomatorState extends State<Automator> {
+  @override
+  void initState() {
+    super.initState();
+    _initWindow();
+  }
+
+  void _initWindow() async {
+    await DesktopWindow.setMinWindowSize(const Size(1000, 600));
+  }
+
   @override
   Widget build(BuildContext context) {
     return MultiProvider(

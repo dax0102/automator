@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 class ThemeComponents {
   const ThemeComponents._();
 
+  static String codeFont = 'Cascadia Code';
+
   static double get spacing => 16;
   static EdgeInsets get defaultPadding => EdgeInsets.all(spacing);
   static InputBorder get inputBorder => const OutlineInputBorder();
