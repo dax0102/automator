@@ -24,91 +24,6 @@ class CharactersPage extends StatefulWidget {
 }
 
 class _CharactersPageState extends State<CharactersPage> {
-  Future<String?> _invokeTagInput() async {
-    final _tagInputFormKey = GlobalKey<FormState>();
-    final _tagController = TextEditingController();
-
-    return await showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        ReadStrategy _readStrategy = ReadStrategy.single;
-
-        return StatefulBuilder(
-            builder: (BuildContext context, StateSetter setState) {
-          return AlertDialog(
-            title: Text(Translations.of(context)!.dialog_import_strategy),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(Translations.of(context)!.dialog_import_strategy_subtitle),
-                SizedBox(height: ThemeComponents.spacing),
-                RadioListTile<ReadStrategy>(
-                  value: ReadStrategy.single,
-                  groupValue: _readStrategy,
-                  onChanged: (strategy) {
-                    setState(
-                        () => _readStrategy = strategy ?? ReadStrategy.single);
-                  },
-                  title: Text(Translations.of(context)!.hint_one_tag),
-                ),
-                if (_readStrategy == ReadStrategy.single)
-                  Padding(
-                    child: Form(
-                      key: _tagInputFormKey,
-                      child: TextFormField(
-                        controller: _tagController,
-                        decoration: InputDecoration(
-                          border: ThemeComponents.inputBorder,
-                          hintText: Translations.of(context)!.hint_tag,
-                        ),
-                        maxLength: 3,
-                        validator: (text) {
-                          if (text == null || text.length != 3) {
-                            return Translations.of(context)!
-                                .feedback_invalid_tag;
-                          }
-                          return null;
-                        },
-                      ),
-                    ),
-                    padding: const EdgeInsets.symmetric(horizontal: 64),
-                  ),
-                RadioListTile<ReadStrategy>(
-                  value: ReadStrategy.multiple,
-                  groupValue: _readStrategy,
-                  onChanged: (strategy) {
-                    setState(() =>
-                        _readStrategy = strategy ?? ReadStrategy.multiple);
-                  },
-                  title: Text(Translations.of(context)!.hint_multiple_tags),
-                ),
-              ],
-            ),
-            actions: <Widget>[
-              TextButton(
-                onPressed: () {
-                  if (_readStrategy == ReadStrategy.single &&
-                      _tagInputFormKey.currentState!.validate()) {
-                    Navigator.pop(context, _tagController.text);
-                  } else {
-                    Navigator.pop(context, "");
-                  }
-                },
-                child: Text(Translations.of(context)!.button_continue),
-              ),
-              TextButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                child: Text(Translations.of(context)!.button_cancel),
-              )
-            ],
-          );
-        });
-      },
-    );
-  }
-
   void _onAdd() async {
     Navigator.push(
       context,
@@ -127,42 +42,48 @@ class _CharactersPageState extends State<CharactersPage> {
   }
 
   void _onImport() async {
-    final tag = await _invokeTagInput();
-    if (tag != null) {
-      final result = await FilePicker.platform.pickFiles();
-      if (result != null) {
-        final file = File(result.files.single.path!);
-        final names = await Reader.getNamesFromCSV(file);
-        Navigator.push(
-          context,
-          PageRouteBuilder(
-            pageBuilder: (context, _, __) => CharacterImport(
-              tag: tag,
-              names: names,
-            ),
-            transitionsBuilder:
-                (context, animation, secondaryAnimation, child) {
-              return SharedAxisTransition(
-                animation: animation,
-                secondaryAnimation: secondaryAnimation,
-                transitionType: SharedAxisTransitionType.horizontal,
-                child: child,
-              );
-            },
+    final result = await FilePicker.platform.pickFiles(
+      type: FileType.custom,
+      allowedExtensions: ['csv'],
+    );
+    if (result != null) {
+      final file = File(result.files.single.path!);
+      final names = await Reader.getNamesFromCSV(file);
+      Navigator.push(
+        context,
+        PageRouteBuilder(
+          pageBuilder: (context, _, __) => CharacterImport(
+            names: names,
           ),
-        );
-      }
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            return SharedAxisTransition(
+              animation: animation,
+              secondaryAnimation: secondaryAnimation,
+              transitionType: SharedAxisTransitionType.horizontal,
+              child: child,
+            );
+          },
+        ),
+      );
     }
   }
 
   void _onExport() async {
     final characters =
         Provider.of<CharactersNotifier>(context, listen: false).characters;
-    String? output =
-        await FilePicker.platform.saveFile(fileName: 'ministers.txt');
-    if (output != null) {
-      Writer writer = Writer(output, characters);
-      await writer.save();
+    if (characters.isNotEmpty) {
+      String? output =
+          await FilePicker.platform.saveFile(fileName: 'ministers.txt');
+      if (output != null) {
+        Writer writer = Writer(output, characters);
+        await writer.save();
+      }
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(Translations.of(context)!.feedbacK_empty_output),
+        ),
+      );
     }
   }
 
