@@ -24,6 +24,72 @@ class CharactersPage extends StatefulWidget {
 }
 
 class _CharactersPageState extends State<CharactersPage> {
+  Future _onExtractionComplete(List<String> items) async {
+    return await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        List<String> names = items;
+
+        return StatefulBuilder(
+          builder: (BuildContext context, setState) {
+            return AlertDialog(
+              title: Text(Translations.of(context)!.dialog_name_extraction),
+              content: SingleChildScrollView(
+                child: Column(
+                  children: names.map(
+                    (name) {
+                      return ListTile(
+                        title: Text(name),
+                        leading: IconButton(
+                          icon: const Icon(Icons.delete_outline),
+                          onPressed: () {
+                            final _names = names;
+                            names.remove(name);
+                            setState(() => names = _names);
+                          },
+                        ),
+                      );
+                    },
+                  ).toList(),
+                ),
+              ),
+              actions: <Widget>[
+                TextButton(
+                  child: Text(Translations.of(context)!.button_continue),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      PageRouteBuilder(
+                        pageBuilder: (context, _, __) => CharacterImport(
+                          names: names,
+                        ),
+                        transitionsBuilder:
+                            (context, animation, secondaryAnimation, child) {
+                          return SharedAxisTransition(
+                            animation: animation,
+                            secondaryAnimation: secondaryAnimation,
+                            transitionType: SharedAxisTransitionType.horizontal,
+                            child: child,
+                          );
+                        },
+                      ),
+                    );
+                  },
+                ),
+                TextButton(
+                  child: Text(Translations.of(context)!.button_cancel),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
+  }
+
   void _onAdd() {
     Navigator.push(
       context,
@@ -97,7 +163,7 @@ class _CharactersPageState extends State<CharactersPage> {
     if (result != null) {
       try {
         final file = File(result.files.single.path!);
-        final names = await Reader.importNames(file);
+        final names = await Reader.importNamesFromCSV(file);
         Navigator.push(
           context,
           PageRouteBuilder(
@@ -115,6 +181,26 @@ class _CharactersPageState extends State<CharactersPage> {
             },
           ),
         );
+      } on MissingContentError {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(Translations.of(context)!.feedback_empty_file),
+          ),
+        );
+      }
+    }
+  }
+
+  void _onExtract() async {
+    final result = await FilePicker.platform.pickFiles(
+      type: FileType.custom,
+      allowedExtensions: ['yaml', 'yml'],
+    );
+    if (result != null) {
+      try {
+        final file = File(result.files.single.path!);
+        final names = await Reader.importNamesFromYAML(file);
+        await _onExtractionComplete(names);
       } on MissingContentError {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -149,13 +235,20 @@ class _CharactersPageState extends State<CharactersPage> {
     final characters = notifier.characters;
     return Header(
       title: Translations.of(context)!.navigation_characters,
-      actions: Header.getDefault(
-        context,
-        onAdd: _onAdd,
-        onImport: _onImport,
-        onExport: _onExport,
-        onReset: characters.isNotEmpty ? notifier.reset : null,
-      ),
+      actions: [
+        ...Header.getDefault(
+          context,
+          onAdd: _onAdd,
+          onImport: _onImport,
+          onExport: _onExport,
+          onReset: characters.isNotEmpty ? notifier.reset : null,
+        ),
+        ElevatedButton.icon(
+          onPressed: _onExtract,
+          icon: const Icon(Icons.read_more_outlined),
+          label: Text(Translations.of(context)!.button_extract),
+        )
+      ],
     );
   }
 
