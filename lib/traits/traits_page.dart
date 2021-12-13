@@ -38,14 +38,18 @@ class _TraitsPageState extends State<TraitsPage> {
             children: [
               Header(
                 title: Translations.of(context)!.navigation_traits,
-                actions: Header.getDefault(context, onImport: () async {
-                  final result = await FilePicker.platform.pickFiles();
-                  if (result != null) {
-                    final source = File(result.files.single.path!);
-                    final traits = await Traits.fetch(source);
-                    notifier.change(traits);
-                  }
-                }),
+                actions: Header.getDefault(
+                  context,
+                  onImport: () async {
+                    final result = await FilePicker.platform.pickFiles();
+                    if (result != null) {
+                      final source = File(result.files.single.path!);
+                      final traits = await Traits.fetch(source);
+                      notifier.change(traits);
+                    }
+                  },
+                  onReset: notifier.traits.isNotEmpty ? notifier.reset : null,
+                ),
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
