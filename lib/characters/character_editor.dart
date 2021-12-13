@@ -38,7 +38,6 @@ class _CharacterEditorState extends State<CharacterEditor> {
   bool _fieldMarshal = false;
   bool _corpCommander = false;
   bool _admiral = false;
-  bool _randomTraits = true;
   bool _civilianPortrait = false;
   bool _armyPortrait = false;
   bool _navyPortrait = false;
@@ -48,7 +47,6 @@ class _CharacterEditorState extends State<CharacterEditor> {
     super.initState();
     _importedTraits =
         Provider.of<TraitsNotifier>(context, listen: false).traits.isNotEmpty;
-    _randomTraits = _importedTraits;
   }
 
   @override
@@ -86,19 +84,19 @@ class _CharacterEditorState extends State<CharacterEditor> {
       navyPortrait: _navyPortrait,
       civilianLargePortrait: _civilianLargePortrait.text.isEmpty
           ? null
-          : Writer.buildPortraitPath(tag),
+          : Writer.buildPortraitPath(token),
       civilianSmallPortrait: _civilianSmallPortrait.text.isEmpty
           ? null
-          : Writer.buildPortraitPath(tag, isLarge: false),
+          : Writer.buildPortraitPath(token, isLarge: false),
       armyLargePortrait: _armyLargePortrait.text.isEmpty
           ? null
-          : Writer.buildPortraitPath(tag),
+          : Writer.buildPortraitPath(token),
       armySmallPortait: _armySmallPortrait.text.isEmpty
           ? null
-          : Writer.buildPortraitPath(tag, isLarge: false),
+          : Writer.buildPortraitPath(token, isLarge: false),
       navyLargePortrait: _navyLargePortrait.text.isEmpty
           ? null
-          : Writer.buildPortraitPath(tag),
+          : Writer.buildPortraitPath(token),
       navySmallPortrait: _navySmallPortrait.text.isEmpty
           ? null
           : Writer.buildPortraitPath(tag, isLarge: false),
@@ -307,21 +305,7 @@ class _CharacterEditorState extends State<CharacterEditor> {
         }).toList(),
       ),
       SizedBox(height: ThemeComponents.spacing),
-      if (_importedTraits)
-        Column(
-          children: [
-            CheckboxForm(
-              value: _randomTraits,
-              enabled: _positions.isNotEmpty,
-              onChanged: (selected) {
-                setState(() => _randomTraits = selected ?? true);
-              },
-              title: Text(Translations.of(context)!.hint_random_traits),
-            ),
-            SizedBox(height: ThemeComponents.spacing),
-          ],
-        ),
-      if (!_randomTraits && _positions.isNotEmpty) ..._traits,
+      if (_positions.isNotEmpty) ..._traits,
     ];
   }
 

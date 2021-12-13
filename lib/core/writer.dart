@@ -83,6 +83,7 @@ class Writer {
         }
         await output.writeAsString('\n\t\t\t}', mode: _mode);
       }
+      await output.writeAsString('\n\t\t}', mode: _mode);
 
       if (character.headOfState) {
         // Country Leader
