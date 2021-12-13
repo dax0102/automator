@@ -24,6 +24,14 @@ extension PositionExtension on Position {
   static const prefixChiefOfArmy = "carm";
   static const prefixChiefOfNavy = "cnav";
   static const prefixChiefOfAirForce = "cair";
+  static const tokenHeadOfGovernment = "head_of_government";
+  static const tokenForeignMinister = "foreign_minister";
+  static const tokenEconomyMinister = "economy_minister";
+  static const tokenSecurityMinister = "security_minister";
+  static const tokenChiefOfStaff = "chief_of_staff";
+  static const tokenChiefOfArmy = "chief_of_army";
+  static const tokenChiefOfNavy = "chief_of_navy";
+  static const tokenChiefOfAirForce = "chief_of_air_force";
 
   static List<Position> get government {
     return [
@@ -61,6 +69,27 @@ extension PositionExtension on Position {
         return Translations.of(context)!.position_cnav;
       case Position.chiefOfAirForce:
         return Translations.of(context)!.position_cair;
+    }
+  }
+
+  String get token {
+    switch (this) {
+      case Position.headOfGovernment:
+        return tokenHeadOfGovernment;
+      case Position.foreignMinister:
+        return tokenForeignMinister;
+      case Position.economyMinister:
+        return tokenEconomyMinister;
+      case Position.securityMinister:
+        return tokenSecurityMinister;
+      case Position.chiefOfStaff:
+        return tokenChiefOfStaff;
+      case Position.chiefOfArmy:
+        return tokenChiefOfArmy;
+      case Position.chiefOfNavy:
+        return tokenChiefOfNavy;
+      case Position.chiefOfAirForce:
+        return tokenChiefOfAirForce;
     }
   }
 
