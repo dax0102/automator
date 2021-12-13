@@ -25,6 +25,7 @@ class Character {
   final String? armySmallPortait;
   final String? navyLargePortrait;
   final String? navySmallPortrait;
+  final int cost;
 
   Character({
     required this.name,
@@ -49,6 +50,7 @@ class Character {
     this.armySmallPortait,
     this.navyLargePortrait,
     this.navySmallPortrait,
+    this.cost = 150,
   });
 
   bool hasCustomPortraitPath() {
