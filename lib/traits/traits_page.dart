@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:automator/characters/character.dart';
+import 'package:automator/core/position.dart';
 import 'package:automator/core/reader.dart';
 import 'package:automator/shared/custom/header.dart';
 import 'package:automator/shared/custom/state.dart';

@@ -28,7 +28,7 @@ class _CharactersPageState extends State<CharactersPage> {
     Navigator.push(
       context,
       PageRouteBuilder(
-        pageBuilder: (context, _, __) => CharacterEditor(),
+        pageBuilder: (context, _, __) => const CharacterEditor(),
         transitionsBuilder: (context, animation, secondaryAnimation, child) {
           return SharedAxisTransition(
             animation: animation,
@@ -129,11 +129,12 @@ class _CharactersPageState extends State<CharactersPage> {
     final characters =
         Provider.of<CharactersNotifier>(context, listen: false).characters;
     if (characters.isNotEmpty) {
-      String? output =
-          await FilePicker.platform.saveFile(fileName: 'ministers.txt');
+      String? output = await FilePicker.platform.saveFile(
+        type: FileType.custom,
+        allowedExtensions: ['txt'],
+      );
       if (output != null) {
-        Writer writer = Writer(output, characters);
-        await writer.save();
+        await Writer.saveCharacters(output, characters);
       }
     } else {
       ScaffoldMessenger.of(context).showSnackBar(

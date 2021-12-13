@@ -2,14 +2,138 @@ import 'dart:io';
 
 import 'package:automator/characters/character.dart';
 import 'package:automator/core/ideologies.dart';
+import 'package:automator/core/position.dart';
+import 'package:automator/ministers/minister.dart';
 
 class Writer {
-  final List<Character> characters;
-  final String path;
+  const Writer._();
 
-  const Writer(this.path, this.characters);
+  static Future saveMinistersCore(
+    String path,
+    Map<Position, List<Minister>> ministers,
+  ) async {
+    final output = File(path);
+    if (await output.exists()) {
+      await output.delete();
+    }
+    await output.create();
 
-  Future save() async {
+    await output.writeAsString(_ideas, mode: _mode);
+    for (MapEntry<Position, List<Minister>> entry in ministers.entries) {
+      Position position = entry.key;
+      List<Minister> ministersGrouped = entry.value;
+      String trigger = position == Position.headOfGovernment
+          ? 'head_of_gov_available'
+          : 'minister_available';
+
+      await output.writeAsString('\n\t${position.token} = {', mode: _mode);
+      for (Minister minister in ministersGrouped) {
+        String trait = minister.traits
+            .firstWhere((trait) => trait.startsWith(position.prefix));
+        String nameNoSpace = minister.name.replaceAll(" ", "_");
+
+        await output.writeAsString(
+            '\n\t\t${minister.token}_${position.prefix}_${minister.ideology.prefix} = {',
+            mode: _mode);
+
+        await output.writeAsString(
+            '\n\t\t\tallowed = { original_tag = ${minister.tag} }',
+            mode: _mode);
+
+        await output.writeAsString('\n\t\t\tavailable = {', mode: _mode);
+        await output.writeAsString('\n\t\t\t\tcustom_trigger_tooltip = {',
+            mode: _mode);
+        await output.writeAsString('\n\t\t\t\t\ttooltip = $trigger',
+            mode: _mode);
+        await output.writeAsString('\n\t\t\t\t\talways = no', mode: _mode);
+        await output.writeAsString('\n\t\t\t\t}', mode: _mode);
+        await output.writeAsString('\n\t\t\t}', mode: _mode);
+
+        await output.writeAsString('\n\t\t\tvisible = {', mode: _mode);
+        await output.writeAsString(
+            '\n\t\t\t\tNOT = { has_country_flag = ${nameNoSpace}_dead }',
+            mode: _mode);
+        await output.writeAsString('\n\t\t\t}', mode: _mode);
+
+        await output.writeAsString('\n\t\t\ton_add = {', mode: _mode);
+        await output.writeAsString(
+            '\n\t\t\t\tlog = "[GetDateText]: [Root.GetName]: add idea ${minister.token}_${position.prefix}_${minister.ideology.prefix}" ',
+            mode: _mode);
+        await output.writeAsString('\n\t\t\t}', mode: _mode);
+
+        await output.writeAsString(_traits, mode: _mode);
+        await output.writeAsString('\n\t\t\t\t${position.token}', mode: _mode);
+        await output.writeAsString('\n\t\t\t\t${minister.ideology.token}',
+            mode: _mode);
+        await output.writeAsString('\n\t\t\t\t$trait', mode: _mode);
+        await output.writeAsString('\n\t\t\t}', mode: _mode); // close traits
+        await output.writeAsString('\n\t\t}', mode: _mode); // clos
+      }
+      await output.writeAsString('\n\t}', mode: _mode);
+    }
+  }
+
+  static Future saveMinistersLoc(
+    String path,
+    Map<Position, List<Minister>> ministers,
+  ) async {
+    final output = File(path);
+    if (await output.exists()) {
+      await output.delete();
+    }
+    await output.create();
+
+    await output.writeAsString('l_english:', mode: _mode);
+    for (MapEntry<Position, List<Minister>> entry in ministers.entries) {
+      final position = entry.key;
+      final ministersGroup = entry.value;
+
+      await output.writeAsString('\n### $position', mode: _mode);
+      for (Minister minister in ministersGroup) {
+        String pos = position.prefix;
+        String ide = minister.ideology.prefix;
+
+        await output.writeAsString(
+            '\n${minister.token}_${pos}_$ide:0 "${minister.name}"',
+            mode: _mode);
+      }
+    }
+  }
+
+  static Future saveMinistersGFX(
+    String path,
+    Map<Position, List<Minister>> ministers,
+  ) async {
+    final output = File(path);
+    if (await output.exists()) {
+      await output.delete();
+    }
+    await output.create();
+
+    await output.writeAsString('spriteTypes = {', mode: _mode);
+    for (MapEntry<Position, List<Minister>> entry in ministers.entries) {
+      final position = entry.key;
+      final ministersGroup = entry.value;
+
+      await output.writeAsString('\n### $position', mode: _mode);
+      for (Minister minister in ministersGroup) {
+        String pos = position.prefix;
+        String ide = minister.ideology.prefix;
+        String token = '${minister.token}_${pos}_$ide';
+
+        await output.writeAsString('\n\tspriteType = {', mode: _mode);
+        await output.writeAsString('\n\t\tname = "GFX_idea_$token"',
+            mode: _mode);
+        await output.writeAsString(
+            '\n\t\ttexturefile = "gfx/interface/ministers/${minister.tag}/${minister.token}.tga"',
+            mode: _mode);
+        await output.writeAsString('\n\t}', mode: _mode);
+      }
+    }
+    await output.writeAsString('\n}', mode: _mode);
+  }
+
+  static Future saveCharacters(String path, List<Character> characters) async {
     final output = File(path);
     if (await output.exists()) {
       await output.delete();
@@ -237,6 +361,8 @@ class Writer {
     return '$prefix$token$portraitSuffix';
   }
 
+  static const _ideas = "ideas = {";
+
   static const _characters = "characters = {";
   static const _name = "\n\t\tname =";
   static const _portraits = "\n\t\tportraits = {";
@@ -264,6 +390,6 @@ class Writer {
 
   static const _mode = FileMode.append;
   static const portraitLargePrefix = "gfx/leaders/";
-  static const portraitSmallPrefix = "gfx/ministers/";
+  static const portraitSmallPrefix = "gfx/interface/ministers/";
   static const portraitSuffix = ".tga";
 }
