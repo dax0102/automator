@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'dart:math';
 
 import 'package:automator/characters/character.dart';
 import 'package:automator/core/ideologies.dart';
@@ -25,16 +24,16 @@ class Writer {
       // Portraits
       await output.writeAsString(_portraits, mode: _mode);
       // Add Civilian Portraits
-      if (character.headOfState || character.hasGovernmentPosition()) {
+      if (character.headOfState || character.hasGovernmentRole) {
         await output.writeAsString(_civilian, mode: _mode);
         if (character.headOfState) {
           await output.writeAsString(
-              '$_large $_portraitLargePrefix${character.tag}/Portrait_${character.token}.tga',
+              '$_large $portraitLargePrefix${character.tag}/Portrait_${character.token}.tga',
               mode: _mode);
         }
-        if (character.hasGovernmentPosition()) {
+        if (character.hasGovernmentRole) {
           await output.writeAsString(
-              '$_small $_portraitSmallPrefix${character.token}',
+              '$_small $portraitSmallPrefix${character.tag}/${character.token}.tga',
               mode: _mode);
         }
         await output.writeAsString('\n\t\t\t}', mode: _mode);
@@ -42,32 +41,32 @@ class Writer {
       // Add Army Portraits
       if (character.fieldMarshal ||
           character.corpCommander ||
-          character.isArmy()) {
+          character.hasArmyRole) {
         await output.writeAsString(_army, mode: _mode);
         if (character.fieldMarshal || character.corpCommander) {
           await output.writeAsString(
-              '$_large $_portraitLargePrefix${character.tag}/Portrait_${character.token}_army.tga',
+              '$_large $portraitLargePrefix${character.tag}/Portrait_${character.token}_army.tga',
               mode: _mode);
         }
-        if (character.isArmy()) {
+        if (character.hasArmyRole) {
           await output.writeAsString(
-              '$_small $_portraitSmallPrefix${character.token}',
+              '$_small $portraitSmallPrefix${character.tag}/${character.token}.tga',
               mode: _mode);
         }
         await output.writeAsString('\n\t\t\t}', mode: _mode);
       }
 
       // Add Navy Portraits
-      if (character.admiral || character.isNavy()) {
+      if (character.admiral || character.hasNavalRole) {
         await output.writeAsString(_navy, mode: _mode);
         if (character.admiral) {
           await output.writeAsString(
-              '$_large $_portraitLargePrefix${character.tag}/Portrait_${character.token}_navy.tga',
+              '$_large $portraitLargePrefix${character.tag}/Portrait_${character.token}_navy.tga',
               mode: _mode);
         }
-        if (character.isNavy()) {
+        if (character.hasNavalRole) {
           await output.writeAsString(
-              '$_small $_portraitSmallPrefix${character.token}',
+              '$_small $portraitSmallPrefix${character.tag}/${character.token}.tga',
               mode: _mode);
         }
         await output.writeAsString('\n\t\t\t}', mode: _mode);
@@ -246,6 +245,6 @@ class Writer {
   static const _ideaToken = "\n\t\t\tidea_token = ";
 
   static const _mode = FileMode.append;
-  static const _portraitLargePrefix = "gfx/leaders/";
-  static const _portraitSmallPrefix = "GFX_idea_";
+  static const portraitLargePrefix = "gfx/leaders/";
+  static const portraitSmallPrefix = "gfx/ministers/";
 }
