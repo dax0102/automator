@@ -53,5 +53,8 @@ ThemeData get dark {
     snackBarTheme: base.snackBarTheme.copyWith(
       behavior: SnackBarBehavior.floating,
     ),
+    cardTheme: base.cardTheme.copyWith(
+      color: surface,
+    ),
   );
 }
