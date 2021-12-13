@@ -1,15 +1,27 @@
 import 'package:automator/shared/tools.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_gen/gen_l10n/translations.dart';
+import 'package:hive/hive.dart';
 
+part 'position.g.dart';
+
+@HiveType(typeId: 1)
 enum Position {
+  @HiveField(0)
   headOfGovernment,
+  @HiveField(1)
   foreignMinister,
+  @HiveField(2)
   economyMinister,
+  @HiveField(3)
   securityMinister,
+  @HiveField(4)
   chiefOfStaff,
+  @HiveField(5)
   chiefOfArmy,
+  @HiveField(6)
   chiefOfNavy,
+  @HiveField(7)
   chiefOfAirForce,
 }
 

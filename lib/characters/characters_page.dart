@@ -11,6 +11,7 @@ import 'package:automator/core/writer.dart';
 import 'package:automator/shared/custom/header.dart';
 import 'package:automator/shared/custom/state.dart';
 import 'package:automator/shared/theme.dart';
+import 'package:automator/shared/tools.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/translations.dart';
@@ -220,12 +221,12 @@ class _CharactersPageState extends State<CharactersPage> {
     final characters =
         Provider.of<CharactersNotifier>(context, listen: false).characters;
     if (characters.isNotEmpty) {
-      String? output = await FilePicker.platform.saveFile(
-        type: FileType.custom,
-        allowedExtensions: ['txt'],
-      );
+      String? output = await FilePicker.platform.getDirectoryPath();
       if (output != null) {
-        await Writer.saveCharacters(output, characters);
+        final items = characters.groupBy((c) => c.tag);
+        for (MapEntry<String, List<Character>> item in items.entries) {
+          await Writer.saveCharacters('$output/${item.key}.txt', item.value);
+        }
       }
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
