@@ -39,6 +39,8 @@ class Header extends StatelessWidget {
     Function()? onAdd,
     Function()? onEdit,
     Function()? onRemove,
+    Function()? onImport,
+    Function()? onExport,
   }) {
     return [
       if (onAdd != null)
@@ -59,6 +61,18 @@ class Header extends StatelessWidget {
           icon: const Icon(Icons.delete_outlined),
           label: Text(Translations.of(context)!.button_remove),
         ),
+      if (onImport != null)
+        ElevatedButton.icon(
+          onPressed: onImport,
+          icon: const Icon(Icons.upload_file_outlined),
+          label: Text(Translations.of(context)!.button_import),
+        ),
+      if (onExport != null)
+        ElevatedButton.icon(
+          onPressed: onExport,
+          icon: const Icon(Icons.download_outlined),
+          label: Text(Translations.of(context)!.button_export),
+        )
     ];
   }
 }
