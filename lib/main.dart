@@ -3,7 +3,6 @@ import 'package:automator/characters/characters_page.dart';
 import 'package:automator/core/navigation.dart';
 import 'package:automator/localization/locales.dart';
 import 'package:automator/shared/theme.dart';
-import 'package:automator/tags/tags_page.dart';
 import 'package:automator/traits/traits_notifier.dart';
 import 'package:automator/traits/traits_page.dart';
 import 'package:flutter/material.dart';
@@ -58,8 +57,6 @@ class _MainPageState extends State<MainPage> {
         return const CharactersPage();
       case 1:
         return const TraitsPage();
-      case 2:
-        return const TagsPage();
       default:
         throw Exception("Invalid Route");
     }
