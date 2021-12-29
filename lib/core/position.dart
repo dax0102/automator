@@ -1,27 +1,15 @@
 import 'package:automator/shared/tools.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_gen/gen_l10n/translations.dart';
-import 'package:hive/hive.dart';
 
-part 'position.g.dart';
-
-@HiveType(typeId: 1)
 enum Position {
-  @HiveField(0)
   headOfGovernment,
-  @HiveField(1)
   foreignMinister,
-  @HiveField(2)
   economyMinister,
-  @HiveField(3)
   securityMinister,
-  @HiveField(4)
   chiefOfStaff,
-  @HiveField(5)
   chiefOfArmy,
-  @HiveField(6)
   chiefOfNavy,
-  @HiveField(7)
   chiefOfAirForce,
 }
 
@@ -42,20 +30,6 @@ extension PositionExtension on Position {
   static const tokenChiefOfArmy = "chief_of_army";
   static const tokenChiefOfNavy = "chief_of_navy";
   static const tokenChiefOfAirForce = "chief_of_air_force";
-
-  bool isGovernment() {
-    return this == Position.headOfGovernment ||
-        this == Position.foreignMinister ||
-        this == Position.economyMinister ||
-        this == Position.securityMinister;
-  }
-
-  bool isMilitary() {
-    return this == Position.chiefOfStaff ||
-        this == Position.chiefOfArmy ||
-        this == Position.chiefOfNavy ||
-        this == Position.chiefOfAirForce;
-  }
 
   static List<Position> get government {
     return [

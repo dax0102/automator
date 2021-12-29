@@ -1,6 +1,7 @@
 {
     "app_name": "Automator",
     "navigation_characters": "Characters",
+    "navigation_ministers": "Ministers",
     "navigation_traits": "Traits",
     "navigation_guides": "Guides",
     "navigation_about": "About",
@@ -87,6 +88,9 @@
     "position_cnav": "Chief of Navy",
     "position_cair": "Chief of Air Force",
     "ideology_none": "Not Applicable",
+    "ideology_tot": "Totalist",
+    "ideology_syn": "Syndicalist",
+    "ideology_rso": "Radical Socialist",
     "ideology_van": "National Collectivist",
     "ideology_col": "Socialist",
     "ideology_lib": "Libertarian Socialist",
