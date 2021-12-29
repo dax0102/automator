@@ -20,6 +20,12 @@ class CharacterEditor extends StatefulWidget {
 class _CharacterEditorState extends State<CharacterEditor> {
   final _nameController = TextEditingController();
   final _tagController = TextEditingController();
+  final _civilianLargePortrait = TextEditingController();
+  final _civilianSmallPortrait = TextEditingController();
+  final _armyLargePortrait = TextEditingController();
+  final _armySmallPortrait = TextEditingController();
+  final _navyLargePortrait = TextEditingController();
+  final _navySmallPortrait = TextEditingController();
   bool _importedTraits = false;
   bool _customPaths = false;
   List<Position> _positions = [];
@@ -68,6 +74,20 @@ class _CharacterEditorState extends State<CharacterEditor> {
       civilianPortrait: _civilianPortrait,
       armyPortrait: _armyPortrait,
       navyPortrait: _navyPortrait,
+      civilianLargePortrait: _civilianLargePortrait.text.isEmpty
+          ? null
+          : _civilianLargePortrait.text,
+      civilianSmallPortrait: _civilianSmallPortrait.text.isEmpty
+          ? null
+          : _civilianSmallPortrait.text,
+      armyLargePortrait:
+          _armyLargePortrait.text.isEmpty ? null : _armyLargePortrait.text,
+      armySmallPortait:
+          _armySmallPortrait.text.isEmpty ? null : _armySmallPortrait.text,
+      navyLargePortrait:
+          _navyLargePortrait.text.isEmpty ? null : _navyLargePortrait.text,
+      navySmallPortrait:
+          _navySmallPortrait.text.isEmpty ? null : _navySmallPortrait.text,
     );
     Provider.of<CharactersNotifier>(context, listen: false).put(character);
     Navigator.pop(context);
@@ -307,6 +327,7 @@ class _CharacterEditorState extends State<CharacterEditor> {
                 border: ThemeComponents.inputBorder,
                 prefixText: Writer.portraitLargePrefix,
               ),
+              controller: _civilianLargePortrait,
             ),
             const SizedBox(height: 4),
             Text(Translations.of(context)!.concat_sample(_samplePortraitPath)),
@@ -324,6 +345,7 @@ class _CharacterEditorState extends State<CharacterEditor> {
                 border: ThemeComponents.inputBorder,
                 prefixText: Writer.portraitSmallPrefix,
               ),
+              controller: _civilianSmallPortrait,
             ),
             const SizedBox(height: 4),
             Text(
@@ -351,6 +373,7 @@ class _CharacterEditorState extends State<CharacterEditor> {
                 border: ThemeComponents.inputBorder,
                 prefixText: Writer.portraitLargePrefix,
               ),
+              controller: _armyLargePortrait,
             ),
             const SizedBox(height: 4),
             Text(Translations.of(context)!.concat_sample(_samplePortraitPath)),
@@ -368,6 +391,7 @@ class _CharacterEditorState extends State<CharacterEditor> {
                 border: ThemeComponents.inputBorder,
                 prefixText: Writer.portraitSmallPrefix,
               ),
+              controller: _armySmallPortrait,
             ),
             const SizedBox(height: 4),
             Text(
@@ -395,6 +419,7 @@ class _CharacterEditorState extends State<CharacterEditor> {
                 border: ThemeComponents.inputBorder,
                 prefixText: Writer.portraitLargePrefix,
               ),
+              controller: _navyLargePortrait,
             ),
             const SizedBox(height: 4),
             Text(Translations.of(context)!.concat_sample(_samplePortraitPath)),
@@ -412,6 +437,7 @@ class _CharacterEditorState extends State<CharacterEditor> {
                 border: ThemeComponents.inputBorder,
                 prefixText: Writer.portraitSmallPrefix,
               ),
+              controller: _navySmallPortrait,
             ),
             const SizedBox(height: 4),
             Text(
