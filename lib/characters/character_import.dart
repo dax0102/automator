@@ -505,7 +505,12 @@ class _CharacterImportState extends State<CharacterImport> {
                             if (ideology != null) {
                               final ideologies = _ideologies;
                               ideologies[name] = ideology;
-                              setState(() => _ideologies = ideologies);
+                              setState(() {
+                                _ideologies = ideologies;
+                                if (_headOfState[name] == true) {
+                                  _headOfState[name] = false;
+                                }
+                              });
                             }
                           },
                           child:
@@ -567,19 +572,22 @@ class _CharacterImportState extends State<CharacterImport> {
                         child: Checkbox(
                           activeColor: Theme.of(context).colorScheme.primary,
                           value: _headOfState[name] ?? false,
-                          onChanged: (checked) async {
-                            final headOfState = _headOfState;
-                            headOfState[name] = checked ?? false;
-                            setState(() => _headOfState = headOfState);
-                            if (checked == true) {
-                              final traits = await _showTraitEditor(name);
-                              if (traits != null) {
-                                final leaderTrait = _leaderTraits;
-                                leaderTrait[name] = traits;
-                                setState(() => _leaderTraits = leaderTrait);
-                              }
-                            }
-                          },
+                          onChanged: _ideologies[name] != Ideology.none
+                              ? (checked) async {
+                                  final headOfState = _headOfState;
+                                  headOfState[name] = checked ?? false;
+                                  setState(() => _headOfState = headOfState);
+                                  if (checked == true) {
+                                    final traits = await _showTraitEditor(name);
+                                    if (traits != null) {
+                                      final leaderTrait = _leaderTraits;
+                                      leaderTrait[name] = traits;
+                                      setState(
+                                          () => _leaderTraits = leaderTrait);
+                                    }
+                                  }
+                                }
+                              : null,
                         ),
                       ),
                       TableCell(
