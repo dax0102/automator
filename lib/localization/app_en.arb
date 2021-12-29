@@ -22,6 +22,7 @@
     "button_save": "Save",
     "button_continue": "Continue",
     "button_cancel": "Cancel",
+    "button_reset": "Reset",
     "dialog_enter_tag": "Enter tag",
     "dialog_select_ideology": "Select Ideology",
     "feedback_invalid_tag": "Invalid tag",

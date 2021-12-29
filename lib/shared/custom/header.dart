@@ -41,6 +41,7 @@ class Header extends StatelessWidget {
     Function()? onRemove,
     Function()? onImport,
     Function()? onExport,
+    Function()? onReset,
   }) {
     return [
       if (onAdd != null)
@@ -72,6 +73,12 @@ class Header extends StatelessWidget {
           onPressed: onExport,
           icon: const Icon(Icons.download_outlined),
           label: Text(Translations.of(context)!.button_export),
+        ),
+      if (onReset != null)
+        ElevatedButton.icon(
+          onPressed: onReset,
+          icon: const Icon(Icons.clear_outlined),
+          label: Text(Translations.of(context)!.button_reset),
         )
     ];
   }
