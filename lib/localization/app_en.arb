@@ -90,5 +90,7 @@
     "ideology_pau": "Paternal Autocrat",
     "ideology_npo": "National Populist",
     "ideology_val": "Valkist",
-    "about_author": "dax0102"
+    "about_app_title": "Automator",
+    "about_app_subtitle": "Component Generation Tool for Fuhrerredux and Kaiserredux.",
+    "about_author": "Developed by: dax0102"
 }
