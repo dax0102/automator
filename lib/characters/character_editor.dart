@@ -30,8 +30,8 @@ class _CharacterEditorState extends State<CharacterEditor> {
   bool _customPaths = false;
   List<Position> _positions = [];
   List<String> _leaderTraits = [];
-  List<String> _commanderTraits = [];
-  List<String> _admiralTraits = [];
+  List<String> _commanderLandTraits = [];
+  List<String> _commanderSeaTraits = [];
   Map<Position, String> _ministerTraits = {};
   Ideology _ideology = Ideology.vanguardist;
   bool _headOfState = false;
@@ -65,13 +65,17 @@ class _CharacterEditorState extends State<CharacterEditor> {
   }
 
   void _onSave() {
+    final tag = _tagController.text;
+    final token = Character.buildToken(tag, _nameController.text);
+
     final character = Character(
       name: _nameController.text,
-      tag: _tagController.text,
+      tag: tag,
       ideology: _ideology,
       positions: _ministerTraits.keys.toList(),
       leaderTraits: _leaderTraits,
-      commanderTraits: _commanderTraits,
+      commanderLandTraits: _commanderLandTraits,
+      commanderSeaTraits: _commanderSeaTraits,
       ministerTraits: _ministerTraits.values.toList(),
       headOfState: _headOfState,
       fieldMarshal: _fieldMarshal,
@@ -82,18 +86,22 @@ class _CharacterEditorState extends State<CharacterEditor> {
       navyPortrait: _navyPortrait,
       civilianLargePortrait: _civilianLargePortrait.text.isEmpty
           ? null
-          : _civilianLargePortrait.text,
+          : Writer.buildPortraitPath(tag, token),
       civilianSmallPortrait: _civilianSmallPortrait.text.isEmpty
           ? null
-          : _civilianSmallPortrait.text,
-      armyLargePortrait:
-          _armyLargePortrait.text.isEmpty ? null : _armyLargePortrait.text,
-      armySmallPortait:
-          _armySmallPortrait.text.isEmpty ? null : _armySmallPortrait.text,
-      navyLargePortrait:
-          _navyLargePortrait.text.isEmpty ? null : _navyLargePortrait.text,
-      navySmallPortrait:
-          _navySmallPortrait.text.isEmpty ? null : _navySmallPortrait.text,
+          : Writer.buildPortraitPath(tag, token, isLarge: false),
+      armyLargePortrait: _armyLargePortrait.text.isEmpty
+          ? null
+          : Writer.buildPortraitPath(tag, token),
+      armySmallPortait: _armySmallPortrait.text.isEmpty
+          ? null
+          : Writer.buildPortraitPath(tag, token, isLarge: false),
+      navyLargePortrait: _navyLargePortrait.text.isEmpty
+          ? null
+          : Writer.buildPortraitPath(tag, token),
+      navySmallPortrait: _navySmallPortrait.text.isEmpty
+          ? null
+          : Writer.buildPortraitPath(tag, token, isLarge: false),
     );
     Provider.of<CharactersNotifier>(context, listen: false).put(character);
     Navigator.pop(context);
@@ -247,7 +255,7 @@ class _CharacterEditorState extends State<CharacterEditor> {
         onChanged: (selected) {
           setState(() => _fieldMarshal = selected ?? false);
           if (selected == false) {
-            _commanderTraits.clear();
+            _commanderLandTraits.clear();
           }
         },
       ),
@@ -259,7 +267,7 @@ class _CharacterEditorState extends State<CharacterEditor> {
         onChanged: (selected) {
           setState(() => _corpCommander = selected ?? false);
           if (selected == false) {
-            _commanderTraits.clear();
+            _commanderLandTraits.clear();
           }
         },
       ),
@@ -269,7 +277,7 @@ class _CharacterEditorState extends State<CharacterEditor> {
         onChanged: (selected) {
           setState(() => _admiral = selected ?? false);
           if (selected == false) {
-            _admiralTraits.clear();
+            _commanderSeaTraits.clear();
           }
         },
         title: Text(Translations.of(context)!.hint_admiral),
@@ -332,6 +340,7 @@ class _CharacterEditorState extends State<CharacterEditor> {
               decoration: InputDecoration(
                 border: ThemeComponents.inputBorder,
                 prefixText: Writer.portraitLargePrefix,
+                suffixText: Writer.portraitSuffix,
               ),
               controller: _civilianLargePortrait,
             ),
@@ -350,6 +359,7 @@ class _CharacterEditorState extends State<CharacterEditor> {
               decoration: InputDecoration(
                 border: ThemeComponents.inputBorder,
                 prefixText: Writer.portraitSmallPrefix,
+                suffixText: Writer.portraitSuffix,
               ),
               controller: _civilianSmallPortrait,
             ),
@@ -378,6 +388,7 @@ class _CharacterEditorState extends State<CharacterEditor> {
               decoration: InputDecoration(
                 border: ThemeComponents.inputBorder,
                 prefixText: Writer.portraitLargePrefix,
+                suffixText: Writer.portraitSuffix,
               ),
               controller: _armyLargePortrait,
             ),
@@ -396,6 +407,7 @@ class _CharacterEditorState extends State<CharacterEditor> {
               decoration: InputDecoration(
                 border: ThemeComponents.inputBorder,
                 prefixText: Writer.portraitSmallPrefix,
+                suffixText: Writer.portraitSuffix,
               ),
               controller: _armySmallPortrait,
             ),
@@ -424,6 +436,7 @@ class _CharacterEditorState extends State<CharacterEditor> {
               decoration: InputDecoration(
                 border: ThemeComponents.inputBorder,
                 prefixText: Writer.portraitLargePrefix,
+                suffixText: Writer.portraitSuffix,
               ),
               controller: _navyLargePortrait,
             ),
@@ -442,6 +455,7 @@ class _CharacterEditorState extends State<CharacterEditor> {
               decoration: InputDecoration(
                 border: ThemeComponents.inputBorder,
                 prefixText: Writer.portraitSmallPrefix,
+                suffixText: Writer.portraitSuffix,
               ),
               controller: _navySmallPortrait,
             ),
@@ -507,14 +521,14 @@ class _CharacterEditorState extends State<CharacterEditor> {
         spacing: 8,
         runSpacing: 8,
         children: [
-          ..._commanderTraits.map((trait) {
+          ..._commanderLandTraits.map((trait) {
             return Chip(
               label: Text(trait),
               onDeleted: () {
-                final List<String> traits = _commanderTraits;
+                final List<String> traits = _commanderLandTraits;
                 if (traits.contains(trait)) {
                   traits.remove(trait);
-                  setState(() => _commanderTraits = traits);
+                  setState(() => _commanderLandTraits = traits);
                 }
               },
             );
@@ -525,10 +539,10 @@ class _CharacterEditorState extends State<CharacterEditor> {
             onPressed: () async {
               final result = await _triggerInput();
               if (result != null) {
-                final traits = _commanderTraits;
+                final traits = _commanderLandTraits;
                 if (!traits.contains(result)) {
                   traits.add(result);
-                  setState(() => _commanderTraits = traits);
+                  setState(() => _commanderLandTraits = traits);
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
@@ -552,14 +566,14 @@ class _CharacterEditorState extends State<CharacterEditor> {
         spacing: 8,
         runSpacing: 8,
         children: [
-          ..._admiralTraits.map((trait) {
+          ..._commanderSeaTraits.map((trait) {
             return Chip(
               label: Text(trait),
               onDeleted: () {
-                final List<String> traits = _admiralTraits;
+                final List<String> traits = _commanderSeaTraits;
                 if (traits.contains(trait)) {
                   traits.remove(trait);
-                  setState(() => _admiralTraits = traits);
+                  setState(() => _commanderSeaTraits = traits);
                 }
               },
             );
@@ -570,10 +584,10 @@ class _CharacterEditorState extends State<CharacterEditor> {
             onPressed: () async {
               final result = await _triggerInput();
               if (result != null) {
-                final traits = _admiralTraits;
+                final traits = _commanderSeaTraits;
                 if (!traits.contains(result)) {
                   traits.add(result);
-                  setState(() => _admiralTraits = traits);
+                  setState(() => _commanderSeaTraits = traits);
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
@@ -689,16 +703,9 @@ class _CharacterEditorState extends State<CharacterEditor> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          if (_headOfState ||
-                              Character.hasGovernmentPosition(_positions))
-                            ..._portraitsCivilian,
-                          if (_fieldMarshal ||
-                              _corpCommander ||
-                              Character.hasArmyPosition(_positions))
-                            ..._portraitsArmy,
-                          if (_admiral ||
-                              Character.hasNavalPosition(_positions))
-                            ..._portraitsNavy,
+                          ..._portraitsCivilian,
+                          ..._portraitsArmy,
+                          ..._portraitsNavy,
                         ],
                       ),
                     ),

@@ -121,7 +121,8 @@ class Character {
   final Ideology ideology;
   final List<Position> positions;
   final List<String> leaderTraits;
-  final List<String> commanderTraits;
+  final List<String> commanderLandTraits;
+  final List<String> commanderSeaTraits;
   final List<String> ministerTraits;
   final bool headOfState;
   final bool fieldMarshal;
@@ -144,7 +145,8 @@ class Character {
     required this.ideology,
     this.positions = const [],
     this.leaderTraits = const [],
-    this.commanderTraits = const [],
+    this.commanderLandTraits = const [],
+    this.commanderSeaTraits = const [],
     this.ministerTraits = const [],
     this.headOfState = false,
     this.fieldMarshal = false,
@@ -171,13 +173,17 @@ class Character {
   }
 
   String get token {
-    return '${tag}_${name.replaceAll(" ", "_")}';
+    return buildToken(tag, name);
   }
 
   bool get hasGovernmentRole => hasGovernmentPosition(positions);
   bool get hasMilitaryRole => hasMilitaryPosition(positions);
   bool get hasArmyRole => hasArmyPosition(positions);
   bool get hasNavalRole => hasNavalPosition(positions);
+
+  static String buildToken(String tag, String name) {
+    return '${tag}_${name.replaceAll(" ", "_")}';
+  }
 
   static bool hasGovernmentPosition(List<Position> positions) {
     return positions.contains(Position.headOfGovernment) ||

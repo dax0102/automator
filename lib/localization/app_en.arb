@@ -41,6 +41,7 @@
     "dialog_select_ideology": "Select Ideology",
     "dialog_select_trait": "Select Position and Trait",
     "dialog_enter_trait": "Enter Trait",
+    "dialog_enter_trait_subtitle": "Type in the traits you want to include to this character, if you have multiple, separate it with commas.",
     "dialog_generate_portrait_paths": "Generate Portrait Paths",
     "feedback_invalid_tag": "Invalid tag",
     "feedback_trait_added": "Trait added",
