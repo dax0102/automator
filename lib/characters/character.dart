@@ -74,6 +74,9 @@ class Character {
   List<Position> positions;
   List<String> traits;
   bool headOfState;
+  bool fieldMarshal;
+  bool corpCommander;
+  bool admiral;
 
   Character({
     required this.name,
@@ -82,6 +85,9 @@ class Character {
     this.positions = const [],
     this.traits = const [],
     this.headOfState = false,
+    this.fieldMarshal = false,
+    this.corpCommander = false,
+    this.admiral = false,
   });
 
   static Future<List<String>> getNamesFromCSV(File source) async {
