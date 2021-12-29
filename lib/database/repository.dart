@@ -10,18 +10,12 @@ abstract class Repository<T> {
 }
 
 class CharacterRepository extends Repository<Character> {
-  static const _boxName = "characters";
-  final Box<Character> _box = Hive.box<Character>(_boxName);
+  static const boxName = "characters";
+  late final Box<Character> _box;
   List<Character> _characters = [];
 
-  static Future<bool> open() async {
-    if (!Hive.isBoxOpen(_boxName)) {
-      await Hive.openBox<Character>(_boxName);
-    }
-    return true;
-  }
-
   CharacterRepository() {
+    _box = Hive.box(boxName);
     _characters = _box.values.toList();
   }
 
@@ -52,18 +46,12 @@ class CharacterRepository extends Repository<Character> {
 }
 
 class TraitsRepository extends Repository<String> {
-  static const _boxName = "traits";
-  final Box<String> _box = Hive.box<String>(_boxName);
+  static const boxName = "traits";
+  late final Box<String> _box;
   List<String> _traits = [];
 
-  static Future<bool> open() async {
-    if (!Hive.isBoxOpen(_boxName)) {
-      await Hive.openBox<Character>(_boxName);
-    }
-    return true;
-  }
-
   TraitsRepository() {
+    _box = Hive.box(boxName);
     _traits = _box.values.toList();
   }
 
