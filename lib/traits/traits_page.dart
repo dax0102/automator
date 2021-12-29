@@ -29,6 +29,8 @@ class _TraitsPageState extends State<TraitsPage> {
   @override
   Widget build(BuildContext context) {
     return Consumer<TraitsNotifier>(builder: (context, notifier, _) {
+      final traits = notifier.traits;
+
       return SingleChildScrollView(
         child: Padding(
           padding: ThemeComponents.defaultPadding,
@@ -48,7 +50,7 @@ class _TraitsPageState extends State<TraitsPage> {
                       notifier.change(traits);
                     }
                   },
-                  onReset: notifier.traits.isNotEmpty ? notifier.reset : null,
+                  onReset: traits.isNotEmpty ? notifier.reset : null,
                 ),
               ),
               Row(
@@ -106,7 +108,7 @@ class _TraitsPageState extends State<TraitsPage> {
                         SizedBox(height: ThemeComponents.spacing),
                         ListView.separated(
                           shrinkWrap: true,
-                          itemCount: notifier.traits[position]?.length ?? 0,
+                          itemCount: traits[position]?.length ?? 0,
                           itemBuilder: (context, index) {
                             return ListTile(
                               title: Text(

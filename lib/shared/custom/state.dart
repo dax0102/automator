@@ -1,3 +1,4 @@
+import 'package:automator/shared/theme.dart';
 import 'package:flutter/material.dart';
 
 class EmptyState extends StatelessWidget {
@@ -10,13 +11,11 @@ class EmptyState extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(title, style: Theme.of(context).textTheme.headline6),
-        ],
-      ),
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text(title, style: Theme.of(context).textTheme.headline6),
+      ],
     );
   }
 }

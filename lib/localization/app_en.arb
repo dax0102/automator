@@ -25,6 +25,7 @@
     "dialog_enter_tag": "Enter tag",
     "dialog_select_ideology": "Select Ideology",
     "feedback_invalid_tag": "Invalid tag",
+    "state_empty_characters": "No Characters",
     "concat_for_tag": "For tag: {tag}",
     "@concat_for_tag": {
         "description": "The tag that needs to be interpolated.",
