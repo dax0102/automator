@@ -71,7 +71,7 @@ class Header extends StatelessWidget {
       if (onExport != null)
         ElevatedButton.icon(
           onPressed: onExport,
-          icon: const Icon(Icons.download_outlined),
+          icon: const Icon(Icons.print_outlined),
           label: Text(Translations.of(context)!.button_export),
         ),
       if (onReset != null)

@@ -1,30 +1,23 @@
 import 'package:automator/characters/character.dart';
-import 'package:automator/database/repository.dart';
 import 'package:flutter/foundation.dart';
 
 class CharactersNotifier extends ChangeNotifier {
-  final CharacterRepository repository = CharacterRepository();
-  List<Character> _characters = [];
+  final List<Character> _characters = [];
   List<Character> get characters => _characters;
 
-  CharactersNotifier() {
-    _characters = repository.fetch();
-  }
-
   put(Character character) {
-    repository.put(character);
-    _characters = repository.fetch();
+    if (_characters.contains(character)) {
+      final index = _characters.indexOf(character);
+      assert(index >= 0);
+      _characters[index] = character;
+    } else {
+      _characters.add(character);
+    }
     notifyListeners();
   }
 
   remove(Character character) {
-    repository.remove(character);
-    _characters = repository.fetch();
-    notifyListeners();
-  }
-
-  reset() {
-    _characters.clear();
+    _characters.remove(character);
     notifyListeners();
   }
 }
