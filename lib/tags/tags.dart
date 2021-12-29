@@ -1,4 +1,5 @@
 import 'package:automator/shared/custom/header.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/translations.dart';
 
@@ -16,22 +17,10 @@ class _TagsPageState extends State<TagsPage> {
       children: [
         Header(
           title: Translations.of(context)!.navigation_tags,
-          actions: [
-            ...Header.getDefault(
-              context,
-              onAdd: () {},
-            ),
-            ElevatedButton.icon(
-              onPressed: () {},
-              icon: const Icon(Icons.upload_file_outlined),
-              label: Text(Translations.of(context)!.button_import),
-            ),
-            ElevatedButton.icon(
-              onPressed: () {},
-              icon: const Icon(Icons.download_outlined),
-              label: Text(Translations.of(context)!.button_export),
-            )
-          ],
+          actions: Header.getDefault(context, onAdd: () {}, onImport: () async {
+            final result = await FilePicker.platform.pickFiles();
+            if (result != null) {}
+          }),
         ),
       ],
     );
