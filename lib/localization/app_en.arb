@@ -2,7 +2,6 @@
     "app_name": "Automator",
     "navigation_characters": "Characters",
     "navigation_traits": "Traits",
-    "navigation_tags": "Tags",
     "generated_code_preview": "Generated Code",
     "hint_name": "Name",
     "hint_tag": "Tag",
