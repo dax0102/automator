@@ -1,8 +1,8 @@
-import 'package:automator/characters/characters.dart';
+import 'package:automator/characters/characters_page.dart';
 import 'package:automator/core/navigation.dart';
 import 'package:automator/localization/locales.dart';
 import 'package:automator/shared/theme.dart';
-import 'package:automator/tags/tags.dart';
+import 'package:automator/tags/tags_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/translations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';

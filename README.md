@@ -1,16 +1,9 @@
 # automator
 
-A new Flutter project.
+An automated component generation tool for total conversion mods such as Fuhrerredux and Kaiserredux.
 
-## Getting Started
+## License
+This project is licensed under the GPL-3.0 - see the license file for more details
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Contributing
+This application is currently under development. Contributions are still welcome but may need more consideration from the maintainers.
