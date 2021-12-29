@@ -29,6 +29,10 @@ flutter:
   generate: true
 
   fonts:
+    - family: 'Cascadia Code'
+      fonts:
+        - asset: 'fonts/CascadiaCode-Regular.ttf'
+          weight: 400
     - family: 'Rubik'
       fonts:
         - asset: 'fonts/Rubik-Bold.ttf'

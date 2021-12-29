@@ -29,9 +29,9 @@ class _TraitsPageState extends State<TraitsPage> {
   @override
   Widget build(BuildContext context) {
     return Consumer<TraitsNotifier>(builder: (context, notifier, _) {
-      return Padding(
-        padding: ThemeComponents.defaultPadding,
-        child: SingleChildScrollView(
+      return SingleChildScrollView(
+        child: Padding(
+          padding: ThemeComponents.defaultPadding,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -108,6 +108,11 @@ class _TraitsPageState extends State<TraitsPage> {
                               title: Text(
                                 notifier.traits[position]![index],
                                 overflow: TextOverflow.ellipsis,
+                                style: const TextStyle(
+                                  fontFamily: 'Cascadia Code',
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w400,
+                                ),
                               ),
                             );
                           },
