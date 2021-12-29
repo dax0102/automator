@@ -21,11 +21,13 @@ class CharacterImport extends StatefulWidget {
 }
 
 class _CharacterImportState extends State<CharacterImport> {
+  final _formKey = GlobalKey<FormState>();
   final _tagController = TextEditingController();
   Map<String, Ideology> _ideologies = {};
   Map<String, Map<Position, String>> _positions = {};
   Map<String, List<String>> _leaderTraits = {};
-  Map<String, List<String>> _commanderTraits = {};
+  Map<String, List<String>> _commanderLandTraits = {};
+  Map<String, List<String>> _commanderSeaTraits = {};
   Map<String, bool> _headOfState = {};
   Map<String, bool> _fieldMarshal = {};
   Map<String, bool> _corpCommander = {};
@@ -41,6 +43,10 @@ class _CharacterImportState extends State<CharacterImport> {
   }
 
   void _onSave() {
+    if (!_formKey.currentState!.validate()) {
+      return;
+    }
+
     final List<Character> characters = [];
     for (String name in widget.names) {
       final portrait = _portraits[name] ?? 0;
@@ -66,6 +72,9 @@ class _CharacterImportState extends State<CharacterImport> {
         civilianPortrait: portrait & _civilianPortrait == _civilianPortrait,
         armyPortrait: portrait & _armyPortrait == _armyPortrait,
         navyPortrait: portrait & _navyPortrait == _navyPortrait,
+        leaderTraits: _leaderTraits[name] ?? [],
+        commanderLandTraits: _commanderLandTraits[name] ?? [],
+        commanderSeaTraits: _commanderSeaTraits[name] ?? [],
       );
       characters.add(character);
     }
@@ -243,7 +252,69 @@ class _CharacterImportState extends State<CharacterImport> {
     );
   }
 
-  Widget _buildConfigureButton(String name, int portraits) {
+  Future<List<String>?> _showTraitEditor(String name, {int type = 0}) async {
+    return await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        final formKey = GlobalKey<FormState>();
+        List<String> traits = [];
+        switch (type) {
+          case 0:
+            traits = _leaderTraits[name] ?? [];
+            break;
+          case 1:
+            traits = _commanderLandTraits[name] ?? [];
+            break;
+          case 2:
+            traits = _commanderSeaTraits[name] ?? [];
+            break;
+        }
+        final traitController = TextEditingController(text: traits.join(','));
+        debugPrint(traits.map((t) => t).toString());
+
+        return StatefulBuilder(
+          builder: (BuildContext context, StateSetter setState) {
+            return AlertDialog(
+              title: Text(Translations.of(context)!.dialog_enter_trait),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(Translations.of(context)!.dialog_enter_trait_subtitle),
+                  SizedBox(height: ThemeComponents.spacing),
+                  Form(
+                    key: formKey,
+                    child: TextFormField(
+                      decoration: InputDecoration(
+                        border: ThemeComponents.inputBorder,
+                        hintText: Translations.of(context)!.hint_traits,
+                      ),
+                      controller: traitController,
+                    ),
+                  )
+                ],
+              ),
+              actions: <Widget>[
+                TextButton(
+                  child: Text(Translations.of(context)!.button_save),
+                  onPressed: () {
+                    Navigator.pop(context, traitController.text.split(','));
+                  },
+                ),
+                TextButton(
+                  child: Text(Translations.of(context)!.button_cancel),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
+  }
+
+  Widget _configureButton(String name, int portraits) {
     String label = "";
     if (portraits & _civilianPortrait == _civilianPortrait) {
       label += Translations.of(context)!.hint_civillian;
@@ -261,8 +332,8 @@ class _CharacterImportState extends State<CharacterImport> {
       label += Translations.of(context)!.hint_navy;
     }
 
-    return ActionChip(
-      avatar: const Icon(Icons.settings_outlined),
+    return TextButton.icon(
+      icon: const Icon(Icons.settings_outlined),
       label: Text(
         label.isEmpty ? Translations.of(context)!.button_configure : label,
       ),
@@ -301,12 +372,23 @@ class _CharacterImportState extends State<CharacterImport> {
                 children: [
                   Expanded(
                     flex: 1,
-                    child: TextField(
-                      decoration: InputDecoration(
-                        border: ThemeComponents.inputBorder,
-                        hintText: Translations.of(context)!.hint_tag,
+                    child: Form(
+                      key: _formKey,
+                      child: TextFormField(
+                        decoration: InputDecoration(
+                          border: ThemeComponents.inputBorder,
+                          hintText: Translations.of(context)!.hint_tag,
+                        ),
+                        maxLength: 3,
+                        controller: _tagController,
+                        validator: (tag) {
+                          if (tag == null || tag.isEmpty || tag.length > 3) {
+                            return Translations.of(context)!
+                                .feedback_invalid_tag;
+                          }
+                          return null;
+                        },
                       ),
-                      controller: _tagController,
                     ),
                   ),
                   const Spacer(flex: 4),
@@ -321,36 +403,48 @@ class _CharacterImportState extends State<CharacterImport> {
                   0: FractionColumnWidth(0.2),
                   1: FractionColumnWidth(0.15),
                   2: FractionColumnWidth(0.15),
-                  3: FractionColumnWidth(0.3)
+                  3: FractionColumnWidth(0.25)
                 },
                 children: [
                   TableRow(children: [
                     TableCell(
                       verticalAlignment: ThemeComponents.cellAlignment,
-                      child: Text(
-                        Translations.of(context)!.hint_name,
-                        textAlign: ThemeComponents.textAlignment,
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          Translations.of(context)!.hint_name,
+                          textAlign: ThemeComponents.textAlignment,
+                        ),
                       ),
                     ),
                     TableCell(
                       verticalAlignment: ThemeComponents.cellAlignment,
-                      child: Text(
-                        Translations.of(context)!.hint_ideology,
-                        textAlign: ThemeComponents.textAlignment,
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          Translations.of(context)!.hint_ideology,
+                          textAlign: ThemeComponents.textAlignment,
+                        ),
                       ),
                     ),
                     TableCell(
                       verticalAlignment: ThemeComponents.cellAlignment,
-                      child: Text(
-                        Translations.of(context)!.hint_portraits,
-                        textAlign: ThemeComponents.textAlignment,
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          Translations.of(context)!.hint_portraits,
+                          textAlign: ThemeComponents.textAlignment,
+                        ),
                       ),
                     ),
                     TableCell(
                       verticalAlignment: ThemeComponents.cellAlignment,
-                      child: Text(
-                        Translations.of(context)!.hint_positions,
-                        textAlign: ThemeComponents.textAlignment,
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          Translations.of(context)!.hint_positions,
+                          textAlign: ThemeComponents.textAlignment,
+                        ),
                       ),
                     ),
                     TableCell(
@@ -362,23 +456,32 @@ class _CharacterImportState extends State<CharacterImport> {
                     ),
                     TableCell(
                       verticalAlignment: ThemeComponents.cellAlignment,
-                      child: Text(
-                        Translations.of(context)!.hint_field_marshal,
-                        textAlign: ThemeComponents.textAlignment,
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          Translations.of(context)!.hint_field_marshal,
+                          textAlign: ThemeComponents.textAlignment,
+                        ),
                       ),
                     ),
                     TableCell(
                       verticalAlignment: ThemeComponents.cellAlignment,
-                      child: Text(
-                        Translations.of(context)!.hint_corps_commander,
-                        textAlign: ThemeComponents.textAlignment,
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          Translations.of(context)!.hint_corps_commander,
+                          textAlign: ThemeComponents.textAlignment,
+                        ),
                       ),
                     ),
                     TableCell(
                       verticalAlignment: ThemeComponents.cellAlignment,
-                      child: Text(
-                        Translations.of(context)!.hint_admiral,
-                        textAlign: ThemeComponents.textAlignment,
+                      child: Padding(
+                        padding: const EdgeInsets.all(8),
+                        child: Text(
+                          Translations.of(context)!.hint_admiral,
+                          textAlign: ThemeComponents.textAlignment,
+                        ),
                       ),
                     ),
                   ]),
@@ -408,9 +511,8 @@ class _CharacterImportState extends State<CharacterImport> {
                         ),
                       ),
                       TableCell(
-                        verticalAlignment: TableCellVerticalAlignment.middle,
-                        child:
-                            _buildConfigureButton(name, _portraits[name] ?? 0),
+                        verticalAlignment: TableCellVerticalAlignment.fill,
+                        child: _configureButton(name, _portraits[name] ?? 0),
                       ),
                       TableCell(
                         verticalAlignment: TableCellVerticalAlignment.middle,
@@ -463,10 +565,18 @@ class _CharacterImportState extends State<CharacterImport> {
                         child: Checkbox(
                           activeColor: Theme.of(context).colorScheme.primary,
                           value: _headOfState[name] ?? false,
-                          onChanged: (checked) {
+                          onChanged: (checked) async {
                             final headOfState = _headOfState;
                             headOfState[name] = checked ?? false;
                             setState(() => _headOfState = headOfState);
+                            if (checked == true) {
+                              final traits = await _showTraitEditor(name);
+                              if (traits != null) {
+                                final leaderTrait = _leaderTraits;
+                                leaderTrait[name] = traits;
+                                setState(() => _leaderTraits = leaderTrait);
+                              }
+                            }
                           },
                         ),
                       ),
@@ -477,10 +587,21 @@ class _CharacterImportState extends State<CharacterImport> {
                           value: _fieldMarshal[name] ?? false,
                           onChanged: _corpCommander[name] == true
                               ? null
-                              : (checked) {
+                              : (checked) async {
                                   final fieldMarshal = _fieldMarshal;
                                   fieldMarshal[name] = checked ?? false;
                                   setState(() => _fieldMarshal = fieldMarshal);
+                                  if (checked == true) {
+                                    final traits =
+                                        await _showTraitEditor(name, type: 1);
+                                    if (traits != null) {
+                                      final commanderTrait =
+                                          _commanderLandTraits;
+                                      commanderTrait[name] = traits;
+                                      setState(() => _commanderLandTraits =
+                                          commanderTrait);
+                                    }
+                                  }
                                 },
                         ),
                       ),
@@ -491,11 +612,22 @@ class _CharacterImportState extends State<CharacterImport> {
                           value: _corpCommander[name] ?? false,
                           onChanged: _fieldMarshal[name] == true
                               ? null
-                              : (checked) {
+                              : (checked) async {
                                   final corpCommander = _corpCommander;
                                   corpCommander[name] = checked ?? false;
                                   setState(
                                       () => _corpCommander = corpCommander);
+                                  if (checked == true) {
+                                    final traits =
+                                        await _showTraitEditor(name, type: 1);
+                                    if (traits != null) {
+                                      final commanderTrait =
+                                          _commanderLandTraits;
+                                      commanderTrait[name] = traits;
+                                      setState(() => _commanderLandTraits =
+                                          commanderTrait);
+                                    }
+                                  }
                                 },
                         ),
                       ),
@@ -504,10 +636,20 @@ class _CharacterImportState extends State<CharacterImport> {
                         child: Checkbox(
                           activeColor: Theme.of(context).colorScheme.primary,
                           value: _admiral[name] ?? false,
-                          onChanged: (checked) {
+                          onChanged: (checked) async {
                             final admiral = _admiral;
                             admiral[name] = checked ?? false;
                             setState(() => _admiral = admiral);
+                            if (checked == true) {
+                              final traits =
+                                  await _showTraitEditor(name, type: 2);
+                              if (traits != null) {
+                                final commanderTrait = _commanderSeaTraits;
+                                commanderTrait[name] = traits;
+                                setState(
+                                    () => _commanderSeaTraits = commanderTrait);
+                              }
+                            }
                           },
                         ),
                       ),
