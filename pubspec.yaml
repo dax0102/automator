@@ -28,6 +28,9 @@ flutter:
   uses-material-design: true
   generate: true
 
+  assets:
+    - assets/appicon.png
+
   fonts:
     - family: 'Cascadia Code'
       fonts:
