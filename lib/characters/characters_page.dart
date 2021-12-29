@@ -35,9 +35,14 @@ class _CharactersPageState extends State<CharactersPage> {
             return AlertDialog(
               title: Text(Translations.of(context)!.dialog_name_extraction),
               content: SingleChildScrollView(
-                child: Column(
-                  children: names.map(
-                    (name) {
+                child: SizedBox(
+                  width: 256,
+                  height: 512,
+                  child: ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: names.length,
+                    itemBuilder: (context, index) {
+                      final name = names[index];
                       return ListTile(
                         title: Text(name),
                         leading: IconButton(
@@ -50,7 +55,7 @@ class _CharactersPageState extends State<CharactersPage> {
                         ),
                       );
                     },
-                  ).toList(),
+                  ),
                 ),
               ),
               actions: <Widget>[
