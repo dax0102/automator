@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:automator/characters/character.dart';
+import 'package:automator/core/position.dart';
 import 'package:automator/core/reader.dart';
 
 class Traits {

@@ -1,6 +1,7 @@
 import 'package:automator/characters/character.dart';
 import 'package:automator/characters/characters_notifier.dart';
 import 'package:automator/core/ideologies.dart';
+import 'package:automator/core/position.dart';
 import 'package:automator/core/writer.dart';
 import 'package:automator/shared/custom/checkbox_form.dart';
 import 'package:automator/shared/custom/dropdown_field.dart';
@@ -12,7 +13,7 @@ import 'package:flutter_gen/gen_l10n/translations.dart';
 import 'package:provider/provider.dart';
 
 class CharacterEditor extends StatefulWidget {
-  CharacterEditor({Key? key, this.character}) : super(key: key);
+  const CharacterEditor({Key? key, this.character}) : super(key: key);
 
   final Character? character;
 

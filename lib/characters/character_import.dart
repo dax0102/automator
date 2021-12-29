@@ -1,6 +1,7 @@
 import 'package:automator/characters/character.dart';
 import 'package:automator/characters/characters_notifier.dart';
 import 'package:automator/core/ideologies.dart';
+import 'package:automator/core/position.dart';
 import 'package:automator/shared/custom/checkbox_form.dart';
 import 'package:automator/shared/custom/dropdown_field.dart';
 import 'package:automator/shared/custom/radio_form.dart';

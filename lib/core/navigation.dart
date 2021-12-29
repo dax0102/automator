@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/translations.dart';
 
-enum Route { characters, traits, guides, about }
+enum Route { characters, ministers, traits, guides, about }
 
 extension RouteExtension on Route {
   static const characters = "characters";
@@ -10,6 +10,8 @@ extension RouteExtension on Route {
     switch (this) {
       case Route.characters:
         return const Icon(Icons.face_outlined);
+      case Route.ministers:
+        return const Icon(Icons.groups_outlined);
       case Route.traits:
         return const Icon(Icons.military_tech_outlined);
       case Route.guides:
@@ -23,6 +25,8 @@ extension RouteExtension on Route {
     switch (this) {
       case Route.characters:
         return const Icon(Icons.face);
+      case Route.ministers:
+        return const Icon(Icons.groups);
       case Route.traits:
         return const Icon(Icons.military_tech);
       case Route.guides:
@@ -36,6 +40,8 @@ extension RouteExtension on Route {
     switch (this) {
       case Route.characters:
         return Translations.of(context)!.navigation_characters;
+      case Route.ministers:
+        return Translations.of(context)!.navigation_ministers;
       case Route.traits:
         return Translations.of(context)!.navigation_traits;
       case Route.guides:
