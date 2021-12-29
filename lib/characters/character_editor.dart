@@ -226,7 +226,13 @@ class _CharacterEditorState extends State<CharacterEditor> {
                   .toList(),
               labelText: Translations.of(context)!.hint_ideology,
               onChange: (selected) {
-                setState(() => _ideology = selected);
+                setState(() {
+                  _ideology = selected;
+                  if (selected == Ideology.none) {
+                    _civilianPortrait = false;
+                    _headOfState = false;
+                  }
+                });
               },
             ),
           ),
@@ -243,6 +249,7 @@ class _CharacterEditorState extends State<CharacterEditor> {
       const SizedBox(height: 8),
       CheckboxForm(
         value: _civilianPortrait,
+        enabled: _ideology != Ideology.none,
         onChanged: (checked) {
           setState(() => _civilianPortrait = checked ?? false);
         },
@@ -281,6 +288,7 @@ class _CharacterEditorState extends State<CharacterEditor> {
       CheckboxForm(
         title: Text(Translations.of(context)!.hint_head_of_state),
         value: _headOfState,
+        enabled: _ideology != Ideology.none,
         onChanged: (selected) {
           setState(() => _headOfState = selected ?? false);
           if (selected == false) {
