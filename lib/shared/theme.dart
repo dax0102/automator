@@ -6,6 +6,9 @@ class ThemeComponents {
   static double get spacing => 16;
   static EdgeInsets get defaultPadding => EdgeInsets.all(spacing);
   static InputBorder get inputBorder => const OutlineInputBorder();
+
+  static get cellAlignment => TableCellVerticalAlignment.middle;
+  static get textAlignment => TextAlign.center;
 }
 
 ThemeData get dark {

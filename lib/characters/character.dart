@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'dart:math';
+import 'package:automator/core/ideologies.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_gen/gen_l10n/translations.dart';
 
@@ -86,15 +87,15 @@ extension PositionExtension on Position {
 }
 
 class Character {
-  String name;
-  String tag;
-  String ideology;
-  List<Position> positions;
-  List<String> traits;
-  bool headOfState;
-  bool fieldMarshal;
-  bool corpCommander;
-  bool admiral;
+  final String name;
+  final String tag;
+  final Ideology ideology;
+  final List<Position> positions;
+  final List<String> traits;
+  final bool headOfState;
+  final bool fieldMarshal;
+  final bool corpCommander;
+  final bool admiral;
 
   Character({
     required this.name,
@@ -107,6 +108,24 @@ class Character {
     this.corpCommander = false,
     this.admiral = false,
   });
+
+  String get token {
+    return '${tag}_${name.replaceAll(" ", "_")}';
+  }
+
+  bool hasGovernmentPosition() {
+    return positions.contains(Position.headOfGovernment) ||
+        positions.contains(Position.foreignMinister) ||
+        positions.contains(Position.economyMinister) ||
+        positions.contains(Position.securityMinister);
+  }
+
+  bool hasMilitaryPosition() {
+    return positions.contains(Position.chiefOfStaff) ||
+        positions.contains(Position.chiefOfArmy) ||
+        positions.contains(Position.chiefOfNavy) ||
+        positions.contains(Position.chiefOfAirForce);
+  }
 
   static Future<List<String>> getNamesFromCSV(File source) async {
     final lines = await source.readAsString();
