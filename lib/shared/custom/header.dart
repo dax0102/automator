@@ -50,18 +50,6 @@ class Header extends StatelessWidget {
           icon: const Icon(Icons.add),
           label: Text(Translations.of(context)!.button_add),
         ),
-      if (onEdit != null)
-        ElevatedButton.icon(
-          onPressed: onEdit,
-          icon: const Icon(Icons.edit_outlined),
-          label: Text(Translations.of(context)!.button_edit),
-        ),
-      if (onRemove != null)
-        ElevatedButton.icon(
-          onPressed: onRemove,
-          icon: const Icon(Icons.delete_outlined),
-          label: Text(Translations.of(context)!.button_remove),
-        ),
       if (onImport != null)
         ElevatedButton.icon(
           onPressed: onImport,
