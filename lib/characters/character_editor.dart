@@ -26,7 +26,7 @@ class _CharacterEditorState extends State<CharacterEditor> {
   List<String> _leaderTraits = [];
   List<String> _commanderTraits = [];
   List<String> _admiralTraits = [];
-  List<String> _ministerTraits = [];
+  Map<Position, String> _ministerTraits = {};
   Ideology _ideology = Ideology.vanguardist;
   bool _headOfState = false;
   bool _fieldMarshal = false;
@@ -45,6 +45,13 @@ class _CharacterEditorState extends State<CharacterEditor> {
     _randomTraits = _importedTraits;
   }
 
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _tagController.dispose();
+    super.dispose();
+  }
+
   void _onSave() {
     final character = Character(
       name: _nameController.text,
@@ -53,7 +60,7 @@ class _CharacterEditorState extends State<CharacterEditor> {
       positions: _positions,
       leaderTraits: _leaderTraits,
       commanderTraits: _commanderTraits,
-      ministerTraits: _ministerTraits,
+      ministerTraits: _ministerTraits.values.toList(),
       headOfState: _headOfState,
       fieldMarshal: _fieldMarshal,
       corpCommander: _corpCommander,
@@ -575,25 +582,20 @@ class _CharacterEditorState extends State<CharacterEditor> {
                               border: ThemeComponents.inputBorder,
                               hintText: position.getLocalization(context),
                             ),
-                            onChanged: (text) {
+                            onChanged: (trait) {
                               final traits = _ministerTraits;
-                              if (!traits.contains(text)) {
-                                traits.add(text);
-                              }
+                              traits[position] = trait;
                               setState(() => _ministerTraits = traits);
                             },
                           )
                         : DropdownInputField<String>(
-                            selected: _ministerTraits.firstWhere(
-                                (trait) => trait.startsWith(position.prefix),
-                                orElse: () {
-                              return notifier.traits[position]!.first;
-                            }),
+                            selected: _ministerTraits[position] ??
+                                notifier.traits[position]!.first,
                             items: notifier.traits[position]!,
                             onChange: (trait) {
-                              if (!_ministerTraits.contains(trait)) {
-                                _ministerTraits.add(trait);
-                              }
+                              final traits = _ministerTraits;
+                              traits[position] = trait;
+                              setState(() => _ministerTraits = traits);
                             },
                           ),
                     SizedBox(height: ThemeComponents.spacing),

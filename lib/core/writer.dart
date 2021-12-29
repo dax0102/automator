@@ -201,7 +201,7 @@ class Writer {
         await output.writeAsString(_advisor, mode: _mode);
         await output.writeAsString('$_slot ${position.token}', mode: _mode);
         await output.writeAsString(
-            '$_ideaToken ${character.token}_${character.ideology.token}_${position.token}',
+            '$_ideaToken ${character.token}_${position.prefix}_${character.ideology.prefix}',
             mode: _mode);
         await output.writeAsString(_traits, mode: _mode);
         await output.writeAsString('\n\t\t\t\t${position.token}', mode: _mode);
