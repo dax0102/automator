@@ -31,20 +31,6 @@ extension PositionExtension on Position {
   static const tokenChiefOfNavy = "chief_of_navy";
   static const tokenChiefOfAirForce = "chief_of_air_force";
 
-  bool isGovernment() {
-    return this == Position.headOfGovernment ||
-        this == Position.foreignMinister ||
-        this == Position.economyMinister ||
-        this == Position.securityMinister;
-  }
-
-  bool isMilitary() {
-    return this == Position.chiefOfStaff ||
-        this == Position.chiefOfArmy ||
-        this == Position.chiefOfNavy ||
-        this == Position.chiefOfAirForce;
-  }
-
   static List<Position> get government {
     return [
       Position.headOfGovernment,
