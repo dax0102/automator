@@ -27,7 +27,7 @@ ThemeData get dark {
     colorScheme: base.colorScheme.copyWith(
       primary: primary,
       onPrimary: onPrimary,
-      secondary: primary,
+      secondary: Colors.red,
       onSecondary: onPrimary,
       surface: surface,
       error: error,
@@ -49,6 +49,9 @@ ThemeData get dark {
     ),
     dialogTheme: base.dialogTheme.copyWith(
       backgroundColor: surface,
+    ),
+    snackBarTheme: base.snackBarTheme.copyWith(
+      behavior: SnackBarBehavior.floating,
     ),
   );
 }

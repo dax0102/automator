@@ -2,6 +2,7 @@
     "app_name": "Automator",
     "navigation_characters": "Characters",
     "navigation_traits": "Traits",
+    "navigation_about": "About",
     "generated_code_preview": "Generated Code",
     "hint_name": "Name",
     "hint_tag": "Tag",
@@ -34,15 +35,19 @@
     "button_cancel": "Cancel",
     "button_reset": "Reset",
     "button_add_trait": "Add Trait",
+    "button_configure": "Configure",
     "dialog_import_strategy": "Import Strategy",
     "dialog_import_strategy_subtitle": "You can import characters for a single country tag or multiple country tags.",
     "dialog_select_ideology": "Select Ideology",
-    "dialog_select_trait": "Select Trait",
+    "dialog_select_trait": "Select Position and Trait",
     "dialog_enter_trait": "Enter Trait",
+    "dialog_generate_portrait_paths": "Generate Portrait Paths",
     "feedback_invalid_tag": "Invalid tag",
     "feedback_trait_added": "Trait added",
     "feedback_trait_removed": "Trait removed",
     "feedback_trait_exists": "Trait already exists",
+    "feedback_invalid_file": "Invalid file",
+    "feedbacK_empty_output": "There is no data to export",
     "state_empty_characters": "No Characters",
     "concat_for_tag": "For tag: {tag}",
     "@concat_for_tag": {
@@ -84,5 +89,6 @@
     "ideology_ade": "Authoritarian Democrat",
     "ideology_pau": "Paternal Autocrat",
     "ideology_npo": "National Populist",
-    "ideology_val": "Valkist"
+    "ideology_val": "Valkist",
+    "about_author": "dax0102"
 }
