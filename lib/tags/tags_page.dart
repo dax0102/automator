@@ -19,9 +19,9 @@ class _TagsPageState extends State<TagsPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: ThemeComponents.defaultPadding,
-      child: SingleChildScrollView(
+    return SingleChildScrollView(
+      child: Padding(
+        padding: ThemeComponents.defaultPadding,
         child: Column(
           children: [
             Header(
