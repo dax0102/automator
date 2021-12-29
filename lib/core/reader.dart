@@ -19,14 +19,14 @@ class Reader {
 
     List<String> names = [];
     for (String line in source) {
-      if (line.contains('_${Position.headOfGovernment.prefix}_') ||
+      if (line.contains('_${Position.headOfGovernment.prefix}') ||
           line.contains('_${Position.foreignMinister.prefix}_') ||
-          line.contains('_${Position.economyMinister.prefix}_') ||
-          line.contains('_${Position.securityMinister.prefix}_') ||
-          line.contains('_${Position.chiefOfStaff.prefix}_') ||
-          line.contains('_${Position.chiefOfArmy.prefix}_') ||
-          line.contains('_${Position.chiefOfNavy.prefix}_') ||
-          line.contains('_${Position.chiefOfAirForce.prefix}_')) {
+          line.contains('_${Position.economyMinister.prefix}') ||
+          line.contains('_${Position.securityMinister.prefix}') ||
+          line.contains('_${Position.chiefOfStaff.prefix}') ||
+          line.contains('_${Position.chiefOfArmy.prefix}') ||
+          line.contains('_${Position.chiefOfNavy.prefix}') ||
+          line.contains('_${Position.chiefOfAirForce.prefix}')) {
         String name =
             line.substring(line.indexOf('"') + 1, line.lastIndexOf('"'));
         if (name.isNotEmpty && !names.contains(name)) {
