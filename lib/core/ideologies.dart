@@ -2,6 +2,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_gen/gen_l10n/translations.dart';
 
 enum Ideology {
+  none,
   vanguardist,
   collectivist,
   libertarianSocialist,
@@ -16,6 +17,7 @@ enum Ideology {
 }
 
 extension IdeologyExtension on Ideology {
+  static const prefixNan = "";
   static const prefixVan = "van";
   static const prefixCol = "col";
   static const prefixLib = "lib";
@@ -27,6 +29,7 @@ extension IdeologyExtension on Ideology {
   static const prefixPau = "pau";
   static const prefixNpo = "npo";
   static const prefixVal = "val";
+  static const tokenNan = "";
   static const tokenVan = "vanguardist";
   static const tokenCol = "collectivist";
   static const tokenLib = "libertarian_socialist";
@@ -41,6 +44,8 @@ extension IdeologyExtension on Ideology {
 
   String get prefix {
     switch (this) {
+      case Ideology.none:
+        return prefixNan;
       case Ideology.vanguardist:
         return prefixVan;
       case Ideology.collectivist:
@@ -68,6 +73,8 @@ extension IdeologyExtension on Ideology {
 
   String get token {
     switch (this) {
+      case Ideology.none:
+        return tokenNan;
       case Ideology.vanguardist:
         return tokenVan;
       case Ideology.collectivist:
@@ -95,6 +102,8 @@ extension IdeologyExtension on Ideology {
 
   String getLocalization(BuildContext context) {
     switch (this) {
+      case Ideology.none:
+        return Translations.of(context)!.ideology_none;
       case Ideology.vanguardist:
         return Translations.of(context)!.ideology_van;
       case Ideology.collectivist:
