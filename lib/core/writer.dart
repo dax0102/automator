@@ -360,7 +360,7 @@ class Writer {
         await output.writeAsString('\n\t\t}', mode: _mode); // close idea
       }
 
-      await output.writeAsString('\n\t}\n', mode: _mode); // close character
+      await output.writeAsString('\n\t}', mode: _mode); // close character
     }
     await output.writeAsString('\n}', mode: _mode);
   }
@@ -394,7 +394,7 @@ class Writer {
   static const _corpCommander = "\n\t\tcorps_commander = {";
   static const _admiral = "\n\t\tadmiral = {";
   static const _advisor = "\n\t\tadvisor = {";
-  static const _cost = "\n\t\tcost = ";
+  static const _cost = "\n\t\t\tcost = ";
   static const _slot = "\n\t\t\tslot =";
   static const _ideaToken = "\n\t\t\tidea_token = ";
 

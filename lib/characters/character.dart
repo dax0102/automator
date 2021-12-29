@@ -1,30 +1,57 @@
 import 'dart:math';
 import 'package:automator/core/ideologies.dart';
 import 'package:automator/core/position.dart';
+import 'package:hive/hive.dart';
 
+part 'character.g.dart';
+
+@HiveType(typeId: 0)
 class Character {
+  @HiveField(0)
   final String name;
+  @HiveField(1)
   final String tag;
+  @HiveField(2)
   final Ideology ideology;
+  @HiveField(3)
   final List<Position> positions;
+  @HiveField(4)
   final List<String> leaderTraits;
+  @HiveField(5)
   final List<String> commanderLandTraits;
+  @HiveField(6)
   final List<String> commanderSeaTraits;
+  @HiveField(7)
   final List<String> ministerTraits;
+  @HiveField(8)
   final bool headOfState;
+  @HiveField(9)
   final bool fieldMarshal;
+  @HiveField(10)
   final bool corpCommander;
+  @HiveField(11)
   final bool admiral;
+  @HiveField(12)
   final bool civilianPortrait;
+  @HiveField(13)
   final bool armyPortrait;
+  @HiveField(14)
   final bool navyPortrait;
+  @HiveField(15)
   final String? skills;
+  @HiveField(16)
   final String? civilianLargePortrait;
+  @HiveField(17)
   final String? civilianSmallPortrait;
+  @HiveField(18)
   final String? armyLargePortrait;
+  @HiveField(19)
   final String? armySmallPortait;
+  @HiveField(20)
   final String? navyLargePortrait;
+  @HiveField(21)
   final String? navySmallPortrait;
+  @HiveField(22)
   final int cost;
 
   Character({
