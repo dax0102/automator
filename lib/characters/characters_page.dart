@@ -100,58 +100,82 @@ class _CharactersPageState extends State<CharactersPage> {
     return TableRow(children: [
       TableCell(
         verticalAlignment: ThemeComponents.cellAlignment,
-        child: Text(
-          Translations.of(context)!.hint_tag,
-          textAlign: ThemeComponents.textAlignment,
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Text(
+            Translations.of(context)!.hint_tag,
+            textAlign: ThemeComponents.textAlignment,
+          ),
         ),
       ),
       TableCell(
         verticalAlignment: ThemeComponents.cellAlignment,
-        child: Text(
-          Translations.of(context)!.hint_name,
-          textAlign: ThemeComponents.textAlignment,
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Text(
+            Translations.of(context)!.hint_name,
+            textAlign: ThemeComponents.textAlignment,
+          ),
         ),
       ),
       TableCell(
         verticalAlignment: ThemeComponents.cellAlignment,
-        child: Text(
-          Translations.of(context)!.hint_ideology,
-          textAlign: ThemeComponents.textAlignment,
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Text(
+            Translations.of(context)!.hint_ideology,
+            textAlign: ThemeComponents.textAlignment,
+          ),
         ),
       ),
       TableCell(
         verticalAlignment: ThemeComponents.cellAlignment,
-        child: Text(
-          Translations.of(context)!.hint_positions,
-          textAlign: ThemeComponents.textAlignment,
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Text(
+            Translations.of(context)!.hint_positions,
+            textAlign: ThemeComponents.textAlignment,
+          ),
         ),
       ),
       TableCell(
         verticalAlignment: ThemeComponents.cellAlignment,
-        child: Text(
-          Translations.of(context)!.hint_head_of_state,
-          textAlign: ThemeComponents.textAlignment,
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Text(
+            Translations.of(context)!.hint_head_of_state,
+            textAlign: ThemeComponents.textAlignment,
+          ),
         ),
       ),
       TableCell(
         verticalAlignment: ThemeComponents.cellAlignment,
-        child: Text(
-          Translations.of(context)!.hint_field_marshal,
-          textAlign: ThemeComponents.textAlignment,
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Text(
+            Translations.of(context)!.hint_field_marshal,
+            textAlign: ThemeComponents.textAlignment,
+          ),
         ),
       ),
       TableCell(
         verticalAlignment: ThemeComponents.cellAlignment,
-        child: Text(
-          Translations.of(context)!.hint_corps_commander,
-          textAlign: ThemeComponents.textAlignment,
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Text(
+            Translations.of(context)!.hint_corps_commander,
+            textAlign: ThemeComponents.textAlignment,
+          ),
         ),
       ),
       TableCell(
         verticalAlignment: ThemeComponents.cellAlignment,
-        child: Text(
-          Translations.of(context)!.hint_admiral,
-          textAlign: ThemeComponents.textAlignment,
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Text(
+            Translations.of(context)!.hint_admiral,
+            textAlign: ThemeComponents.textAlignment,
+          ),
         ),
       ),
     ]);
@@ -199,7 +223,7 @@ class _CharactersPageState extends State<CharactersPage> {
                         0: FractionColumnWidth(0.05),
                         1: FractionColumnWidth(0.2),
                         2: FractionColumnWidth(0.15),
-                        3: FractionColumnWidth(0.15)
+                        3: FractionColumnWidth(0.35)
                       },
                       children: [
                         _headers,
