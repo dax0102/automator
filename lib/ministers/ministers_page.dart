@@ -6,6 +6,7 @@ import 'package:automator/ministers/minister_editor.dart';
 import 'package:automator/ministers/ministers_notifier.dart';
 import 'package:automator/ministers/ministers_table.dart';
 import 'package:automator/shared/custom/header.dart';
+import 'package:automator/shared/custom/state.dart';
 import 'package:automator/shared/theme.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -158,6 +159,9 @@ class _MinistersPageState extends State<MinistersPage> {
               child: Column(
                 children: [
                   _getHeader(notifier),
+                  EmptyState(
+                    title: Translations.of(context)!.state_empty_ministers,
+                  )
                 ],
               ))
           : SingleChildScrollView(
