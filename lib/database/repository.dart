@@ -39,7 +39,7 @@ class CharacterRepository extends Repository<Character> {
 
   @override
   Future remove(data) async {
-    _characters.removeWhere((c) => c.name == c.name);
+    _characters.removeWhere((c) => c.name == data.name);
     await _box.clear();
     return await _box.addAll(_characters);
   }
