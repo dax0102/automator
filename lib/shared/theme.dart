@@ -27,5 +27,9 @@ ThemeData get dark {
         elevation: 0,
       ),
     ),
+    appBarTheme: base.appBarTheme.copyWith(
+      elevation: 0,
+      backgroundColor: background,
+    ),
   );
 }

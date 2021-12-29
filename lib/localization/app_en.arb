@@ -1,10 +1,26 @@
 {
     "app_name": "Automator",
     "navigation_characters": "Characters",
+    "navigation_ideologies": "Ideologies",
     "navigation_tags": "Tags",
+    "hint_name": "Name",
+    "hint_tag": "Tag",
+    "hint_ideology": "Ideology",
+    "hint_positions": "Positions",
+    "hint_traits": "Traits",
     "button_add": "Add",
     "button_edit": "Edit",
     "button_remove": "Remove",
     "button_import": "Import",
-    "button_export": "Export"
+    "button_export": "Export",
+    "button_save": "Save",
+    "button_cancel": "Cancel",
+    "position_hog": "Head of Government",
+    "position_for": "Foreign Minister",
+    "position_eco": "Economy Minister",
+    "position_sec": "Security Minister",
+    "position_cos": "Chief of Staff",
+    "position_carm": "Chief of Army",
+    "position_cnav": "Chief of Navy",
+    "position_cair": "Chief of Air Force"
 }
