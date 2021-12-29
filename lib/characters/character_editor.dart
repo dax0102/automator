@@ -57,7 +57,7 @@ class _CharacterEditorState extends State<CharacterEditor> {
       name: _nameController.text,
       tag: _tagController.text,
       ideology: _ideology,
-      positions: _positions,
+      positions: _ministerTraits.keys.toList(),
       leaderTraits: _leaderTraits,
       commanderTraits: _commanderTraits,
       ministerTraits: _ministerTraits.values.toList(),
