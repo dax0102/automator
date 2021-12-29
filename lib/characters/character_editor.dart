@@ -55,6 +55,12 @@ class _CharacterEditorState extends State<CharacterEditor> {
   void dispose() {
     _nameController.dispose();
     _tagController.dispose();
+    _civilianLargePortrait.dispose();
+    _civilianSmallPortrait.dispose();
+    _armyLargePortrait.dispose();
+    _armySmallPortrait.dispose();
+    _navyLargePortrait.dispose();
+    _navySmallPortrait.dispose();
     super.dispose();
   }
 
