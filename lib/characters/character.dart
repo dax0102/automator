@@ -1,141 +1,86 @@
-import 'dart:math';
-import 'package:automator/core/ideologies.dart';
-import 'package:automator/core/position.dart';
-import 'package:hive/hive.dart';
+import 'package:flutter/widgets.dart';
+import 'package:flutter_gen/gen_l10n/translations.dart';
 
-part 'character.g.dart';
+enum Position {
+  headOfGovernment,
+  foreignMinister,
+  economyMinister,
+  securityMinister,
+  chiefOfStaff,
+  chiefOfArmy,
+  chiefOfNavy,
+  chiefOfAirForce,
+}
 
-@HiveType(typeId: 0)
+extension PositionExtension on Position {
+  static const prefixHeadOfGovernment = "hog";
+  static const prefixForeignMinister = "for";
+  static const prefixEconomyMinister = "eco";
+  static const prefixSecurityMinister = "sec";
+  static const prefixChiefOfStaff = "cos";
+  static const prefixChiefOfArmy = "carm";
+  static const prefixChiefOfNavy = "cnav";
+  static const prefixChiefOfAirForce = "cair";
+
+  String getLocalization(BuildContext context) {
+    switch (this) {
+      case Position.headOfGovernment:
+        return Translations.of(context)!.position_hog;
+      case Position.foreignMinister:
+        return Translations.of(context)!.position_for;
+      case Position.economyMinister:
+        return Translations.of(context)!.position_eco;
+      case Position.securityMinister:
+        return Translations.of(context)!.position_sec;
+      case Position.chiefOfStaff:
+        return Translations.of(context)!.position_cos;
+      case Position.chiefOfArmy:
+        return Translations.of(context)!.position_carm;
+      case Position.chiefOfNavy:
+        return Translations.of(context)!.position_cnav;
+      case Position.chiefOfAirForce:
+        return Translations.of(context)!.position_cair;
+    }
+  }
+
+  String get prefix {
+    switch (this) {
+      case Position.headOfGovernment:
+        return prefixHeadOfGovernment;
+      case Position.foreignMinister:
+        return prefixForeignMinister;
+      case Position.economyMinister:
+        return prefixEconomyMinister;
+      case Position.securityMinister:
+        return prefixSecurityMinister;
+      case Position.chiefOfStaff:
+        return prefixChiefOfStaff;
+      case Position.chiefOfArmy:
+        return prefixChiefOfArmy;
+      case Position.chiefOfNavy:
+        return prefixChiefOfNavy;
+      case Position.chiefOfAirForce:
+        return prefixChiefOfAirForce;
+    }
+  }
+}
+
 class Character {
-  @HiveField(0)
-  final String name;
-  @HiveField(1)
-  final String tag;
-  @HiveField(2)
-  final Ideology ideology;
-  @HiveField(3)
-  final List<Position> positions;
-  @HiveField(4)
-  final List<String> leaderTraits;
-  @HiveField(5)
-  final List<String> commanderLandTraits;
-  @HiveField(6)
-  final List<String> commanderSeaTraits;
-  @HiveField(7)
-  final List<String> ministerTraits;
-  @HiveField(8)
-  final bool headOfState;
-  @HiveField(9)
-  final bool fieldMarshal;
-  @HiveField(10)
-  final bool corpCommander;
-  @HiveField(11)
-  final bool admiral;
-  @HiveField(12)
-  final bool civilianPortrait;
-  @HiveField(13)
-  final bool armyPortrait;
-  @HiveField(14)
-  final bool navyPortrait;
-  @HiveField(15)
-  final String? skills;
-  @HiveField(16)
-  final String? civilianLargePortrait;
-  @HiveField(17)
-  final String? civilianSmallPortrait;
-  @HiveField(18)
-  final String? armyLargePortrait;
-  @HiveField(19)
-  final String? armySmallPortait;
-  @HiveField(20)
-  final String? navyLargePortrait;
-  @HiveField(21)
-  final String? navySmallPortrait;
-  @HiveField(22)
-  final int cost;
+  String name;
+  String tag;
+  String ideology;
+  List<Position> positions;
+  List<String> traits;
+  String? allowedCondition;
+  String? availableCondition;
+  bool headOfState;
 
   Character({
     required this.name,
     required this.tag,
     required this.ideology,
     this.positions = const [],
-    this.leaderTraits = const [],
-    this.commanderLandTraits = const [],
-    this.commanderSeaTraits = const [],
-    this.ministerTraits = const [],
+    this.traits = const [],
     this.headOfState = false,
-    this.fieldMarshal = false,
-    this.corpCommander = false,
-    this.admiral = false,
-    this.civilianPortrait = false,
-    this.armyPortrait = false,
-    this.navyPortrait = false,
-    this.skills,
-    this.civilianLargePortrait,
-    this.civilianSmallPortrait,
-    this.armyLargePortrait,
-    this.armySmallPortait,
-    this.navyLargePortrait,
-    this.navySmallPortrait,
-    this.cost = 150,
   });
-
-  bool hasCustomPortraitPath() {
-    return civilianLargePortrait != null ||
-        civilianSmallPortrait != null ||
-        armyLargePortrait != null ||
-        armySmallPortait != null ||
-        navyLargePortrait != null ||
-        navySmallPortrait != null;
-  }
-
-  List<String> get parsedSkills {
-    return skills?.split(',') ?? [];
-  }
-
-  String get token {
-    return buildToken(tag, name);
-  }
-
-  bool get hasGovernmentRole => hasGovernmentPosition(positions);
-  bool get hasMilitaryRole => hasMilitaryPosition(positions);
-  bool get hasArmyRole => hasArmyPosition(positions);
-  bool get hasNavalRole => hasNavalPosition(positions);
-
-  static int randomSkill() {
-    return 1 + Random().nextInt(5 - 1);
-  }
-
-  static String buildToken(String tag, String name) {
-    return '${tag}_${name.replaceAll(" ", "_")}';
-  }
-
-  static bool hasGovernmentPosition(List<Position> positions) {
-    return positions.contains(Position.headOfGovernment) ||
-        positions.contains(Position.foreignMinister) ||
-        positions.contains(Position.economyMinister) ||
-        positions.contains(Position.securityMinister);
-  }
-
-  static bool hasMilitaryPosition(List<Position> positions) {
-    return positions.contains(Position.chiefOfStaff) ||
-        positions.contains(Position.chiefOfArmy) ||
-        positions.contains(Position.chiefOfNavy) ||
-        positions.contains(Position.chiefOfAirForce);
-  }
-
-  static bool hasArmyPosition(List<Position> positions) {
-    return positions.contains(Position.chiefOfStaff) ||
-        positions.contains(Position.chiefOfArmy) ||
-        positions.contains(Position.chiefOfAirForce);
-  }
-
-  static bool hasNavalPosition(List<Position> positions) {
-    return positions.contains(Position.chiefOfNavy);
-  }
-
-  static String randomTrait(Position position, List<String> traits) {
-    final random = Random();
-    return traits[random.nextInt(traits.length)];
-  }
 }
