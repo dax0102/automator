@@ -43,24 +43,30 @@ class _CharacterImportState extends State<CharacterImport> {
   void _onSave() {
     final List<Character> characters = [];
     for (String name in widget.names) {
+      final portrait = _portraits[name] ?? 0;
+
       Character character = Character(
-          name: name,
-          tag: _tagController.text,
-          ideology: _ideologies[name] ?? Ideology.values.first,
-          positions: _positions[name]?.keys.toList() ?? [],
-          headOfState: _headOfState[name] ?? false,
-          fieldMarshal: _fieldMarshal[name] ?? false,
-          corpCommander: _corpCommander[name] ?? false,
-          admiral: _admiral[name] ?? false,
-          ministerTraits: _positions[name]?.keys.map(
-                (position) {
-                  return Character.randomTrait(
-                      position,
-                      Provider.of<TraitsNotifier>(context).traits[position] ??
-                          []);
-                },
-              ).toList() ??
-              []);
+        name: name,
+        tag: _tagController.text,
+        ideology: _ideologies[name] ?? Ideology.values.first,
+        positions: _positions[name]?.keys.toList() ?? [],
+        headOfState: _headOfState[name] ?? false,
+        fieldMarshal: _fieldMarshal[name] ?? false,
+        corpCommander: _corpCommander[name] ?? false,
+        admiral: _admiral[name] ?? false,
+        ministerTraits: _positions[name]?.keys.map(
+              (position) {
+                return Character.randomTrait(
+                    position,
+                    Provider.of<TraitsNotifier>(context).traits[position] ??
+                        []);
+              },
+            ).toList() ??
+            [],
+        civilianPortrait: portrait & _civilianPortrait == _civilianPortrait,
+        armyPortrait: portrait & _armyPortrait == _armyPortrait,
+        navyPortrait: portrait & _navyPortrait == _navyPortrait,
+      );
       characters.add(character);
     }
   }
@@ -164,11 +170,11 @@ class _CharacterImportState extends State<CharacterImport> {
     );
   }
 
-  Future<int> _showPortraitChooser() async {
+  Future<int?> _showPortraitChooser(int? portraits) async {
     return await showDialog(
       context: context,
       builder: (BuildContext context) {
-        int _portraits = 0;
+        int _portraits = portraits ?? 0;
 
         return StatefulBuilder(builder: (BuildContext context, setState) {
           return AlertDialog(
@@ -228,11 +234,45 @@ class _CharacterImportState extends State<CharacterImport> {
                 TextButton(
                   child: Text(Translations.of(context)!.button_cancel),
                   onPressed: () {
-                    Navigator.pop(context, _portraits);
+                    Navigator.pop(context);
                   },
                 ),
               ]);
         });
+      },
+    );
+  }
+
+  Widget _buildConfigureButton(String name, int portraits) {
+    String label = "";
+    if (portraits & _civilianPortrait == _civilianPortrait) {
+      label += Translations.of(context)!.hint_civillian;
+    }
+    if (portraits & _armyPortrait == _armyPortrait) {
+      if (label.isNotEmpty) {
+        label += ", ";
+      }
+      label += Translations.of(context)!.hint_army;
+    }
+    if (portraits & _navyPortrait == _navyPortrait) {
+      if (label.isNotEmpty) {
+        label += ", ";
+      }
+      label += Translations.of(context)!.hint_navy;
+    }
+
+    return ActionChip(
+      avatar: const Icon(Icons.settings_outlined),
+      label: Text(
+        label.isEmpty ? Translations.of(context)!.button_configure : label,
+      ),
+      onPressed: () async {
+        final result = await _showPortraitChooser(_portraits[name]);
+        if (result != null) {
+          final portraits = _portraits;
+          portraits[name] = result;
+          setState(() => _portraits = portraits);
+        }
       },
     );
   }
@@ -279,8 +319,8 @@ class _CharacterImportState extends State<CharacterImport> {
                 ),
                 columnWidths: const {
                   0: FractionColumnWidth(0.2),
-                  1: FractionColumnWidth(0.2),
-                  2: FractionColumnWidth(0.1),
+                  1: FractionColumnWidth(0.15),
+                  2: FractionColumnWidth(0.15),
                   3: FractionColumnWidth(0.3)
                 },
                 children: [
@@ -368,17 +408,9 @@ class _CharacterImportState extends State<CharacterImport> {
                         ),
                       ),
                       TableCell(
-                        verticalAlignment: ThemeComponents.cellAlignment,
-                        child: Wrap(
-                          children: [
-                            IconButton(
-                              icon: const Icon(Icons.settings_outlined),
-                              onPressed: () async {
-                                final result = await _showPortraitChooser();
-                              },
-                            ),
-                          ],
-                        ),
+                        verticalAlignment: TableCellVerticalAlignment.middle,
+                        child:
+                            _buildConfigureButton(name, _portraits[name] ?? 0),
                       ),
                       TableCell(
                         verticalAlignment: TableCellVerticalAlignment.middle,
