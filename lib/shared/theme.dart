@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
 ThemeData get dark {
-  final base = ThemeData(brightness: Brightness.dark, fontFamily: null);
+  final base = ThemeData(brightness: Brightness.dark);
 
-  const primary = Color(0xff4FD1C5);
+  const primary = Color(0xff4299E1);
   const onPrimary = Color(0xff000000);
   const surface = Color(0xff2D3748);
   const background = Color(0xff1A202C);
@@ -30,6 +30,10 @@ ThemeData get dark {
     appBarTheme: base.appBarTheme.copyWith(
       elevation: 0,
       backgroundColor: background,
+    ),
+    chipTheme: base.chipTheme.copyWith(
+      backgroundColor: Color.lerp(surface, Colors.white, 0.05),
+      selectedColor: Color.lerp(primary, Colors.transparent, 0.05),
     ),
   );
 }
