@@ -105,12 +105,11 @@ class Writer {
           await output.writeAsString('$_traits }', mode: _mode);
         }
 
-        Random random = Random();
-        String skill = random.nextInt(5).toString();
-        String attack = random.nextInt(5).toString();
-        String defense = random.nextInt(5).toString();
-        String planning = random.nextInt(5).toString();
-        String logistics = random.nextInt(5).toString();
+        String skill = Character.randomSkill().toString();
+        String attack = Character.randomSkill().toString();
+        String defense = Character.randomSkill().toString();
+        String planning = Character.randomSkill().toString();
+        String logistics = Character.randomSkill().toString();
 
         if (character.parsedSkills.length == 5) {
           skill = character.parsedSkills[0];
@@ -141,12 +140,11 @@ class Writer {
           await output.writeAsString('$_traits }', mode: _mode);
         }
 
-        Random random = Random();
-        String skill = random.nextInt(5).toString();
-        String attack = random.nextInt(5).toString();
-        String defense = random.nextInt(5).toString();
-        String planning = random.nextInt(5).toString();
-        String logistics = random.nextInt(5).toString();
+        String skill = Character.randomSkill().toString();
+        String attack = Character.randomSkill().toString();
+        String defense = Character.randomSkill().toString();
+        String planning = Character.randomSkill().toString();
+        String logistics = Character.randomSkill().toString();
 
         if (character.parsedSkills.length == 5) {
           skill = character.parsedSkills[0];
@@ -177,12 +175,11 @@ class Writer {
           await output.writeAsString('$_traits }', mode: _mode);
         }
 
-        Random random = Random();
-        String skill = random.nextInt(5).toString();
-        String attack = random.nextInt(5).toString();
-        String defense = random.nextInt(5).toString();
-        String maneuver = random.nextInt(5).toString();
-        String coordination = random.nextInt(5).toString();
+        String skill = Character.randomSkill().toString();
+        String attack = Character.randomSkill().toString();
+        String defense = Character.randomSkill().toString();
+        String maneuver = Character.randomSkill().toString();
+        String coordination = Character.randomSkill().toString();
 
         if (character.parsedSkills.length == 5) {
           skill = character.parsedSkills[0];
