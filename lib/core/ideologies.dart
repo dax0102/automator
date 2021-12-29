@@ -16,6 +16,17 @@ enum Ideology {
 }
 
 extension IdeologyExtension on Ideology {
+  static const prefixVan = "van";
+  static const prefixCol = "col";
+  static const prefixLib = "lib";
+  static const prefixSde = "sde";
+  static const prefixSli = "sli";
+  static const prefixMli = "mli";
+  static const prefixSco = "sco";
+  static const prefixAde = "ade";
+  static const prefixPau = "pau";
+  static const prefixNpo = "npo";
+  static const prefixVal = "val";
   static const tokenVan = "vanguardist";
   static const tokenCol = "collectivist";
   static const tokenLib = "libertarian_socialist";
@@ -27,6 +38,33 @@ extension IdeologyExtension on Ideology {
   static const tokenPau = "paternal_autocrat";
   static const tokenNpo = "national_populist";
   static const tokenVal = "valkist";
+
+  String get prefix {
+    switch (this) {
+      case Ideology.vanguardist:
+        return prefixVan;
+      case Ideology.collectivist:
+        return prefixCol;
+      case Ideology.libertarianSocialist:
+        return prefixLib;
+      case Ideology.socialDemocrat:
+        return prefixSde;
+      case Ideology.socialLiberal:
+        return prefixSli;
+      case Ideology.marketLiberal:
+        return prefixMli;
+      case Ideology.socialConservative:
+        return prefixSco;
+      case Ideology.authoritarianDemocrat:
+        return prefixAde;
+      case Ideology.paternalAutocrat:
+        return prefixPau;
+      case Ideology.nationalPopulist:
+        return prefixNpo;
+      case Ideology.valkist:
+        return prefixVal;
+    }
+  }
 
   String get token {
     switch (this) {

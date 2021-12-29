@@ -200,6 +200,24 @@ class Writer {
         await output.writeAsString('\n\t\t}', mode: _mode);
       }
 
+      for (Position position in character.positions) {
+        String trait = character.ministerTraits
+            .firstWhere((trait) => trait.startsWith(position.prefix));
+
+        await output.writeAsString(_advisor, mode: _mode);
+        await output.writeAsString('$_slot ${position.token}', mode: _mode);
+        await output.writeAsString(
+            '$_ideaToken ${character.token}_${character.ideology.token}_${position.token}',
+            mode: _mode);
+        await output.writeAsString(_traits, mode: _mode);
+        await output.writeAsString('\n\t\t\t\t${position.token}', mode: _mode);
+        await output.writeAsString('\n\t\t\t\t${character.ideology.token}',
+            mode: _mode);
+        await output.writeAsString('\n\t\t\t\t$trait', mode: _mode);
+        await output.writeAsString('\n\t\t\t}', mode: _mode); // close traits
+        await output.writeAsString('\n\t\t}', mode: _mode); // close idea
+      }
+
       await output.writeAsString('\n\t}\n', mode: _mode); // close character
     }
     await output.writeAsString('\n}', mode: _mode);
@@ -227,6 +245,8 @@ class Writer {
   static const _corpCommander = "\n\t\tcorps_commander = {";
   static const _admiral = "\n\t\tadmiral = {";
   static const _advisor = "\n\t\tadvisor = {";
+  static const _slot = "\n\t\t\tslot =";
+  static const _ideaToken = "\n\t\t\tidea_token = ";
 
   static const _mode = FileMode.append;
   static const _portraitLargePrefix = "gfx/leaders/";
