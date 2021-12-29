@@ -17,6 +17,8 @@ void main() {
 class Automator extends StatelessWidget {
   const Automator({Key? key}) : super(key: key);
 
+  static const appName = "Automator";
+
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {

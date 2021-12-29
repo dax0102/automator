@@ -20,6 +20,7 @@ class CharacterImport extends StatefulWidget {
 }
 
 class _CharacterImportState extends State<CharacterImport> {
+  bool _randomTrait = true;
   Map<String, Ideology> _ideologies = {};
   Map<String, List<Position>> _positions = {};
   Map<String, bool> _headOfState = {};
@@ -79,6 +80,36 @@ class _CharacterImportState extends State<CharacterImport> {
     );
   }
 
+  Future<String?> _showTraitPicker() async {
+    return await showDialog(
+      context: context,
+      builder: (context) {
+        final _traitController = TextEditingController();
+        String? trait;
+
+        return AlertDialog(
+          title: Text(Translations.of(context)!.dialog_select_trait),
+          content: TextFormField(
+            decoration: InputDecoration(
+              border: ThemeComponents.inputBorder,
+            ),
+          ),
+          actions: [
+            ElevatedButton(
+                child: Text(Translations.of(context)!.button_save),
+                onPressed: () {}),
+            ElevatedButton(
+              child: Text(Translations.of(context)!.button_cancel),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   void initState() {
     super.initState();
@@ -107,12 +138,24 @@ class _CharacterImportState extends State<CharacterImport> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                Translations.of(context)!.concat_for_tag(widget.tag),
-                style: const TextStyle(
-                  fontWeight: FontWeight.w500,
-                  fontSize: 18,
-                ),
+              Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      Translations.of(context)!.concat_for_tag(widget.tag),
+                      style: const TextStyle(
+                        fontWeight: FontWeight.w500,
+                        fontSize: 18,
+                      ),
+                    ),
+                  ),
+                  SwitchListTile(
+                    value: _randomTrait,
+                    onChanged: (checked) {
+                      setState(() => _randomTrait = checked);
+                    },
+                  )
+                ],
               ),
               SizedBox(height: ThemeComponents.spacing),
               Table(
@@ -214,7 +257,11 @@ class _CharacterImportState extends State<CharacterImport> {
                                 selected:
                                     _positions[name]?.contains(position) ??
                                         false,
-                                onSelected: (_) {
+                                onSelected: (selected) async {
+                                  if (selected) {
+                                    final trait = await _showTraitPicker();
+                                  }
+
                                   final Map<String, List<Position>> root =
                                       _positions;
                                   final List<Position> positions =

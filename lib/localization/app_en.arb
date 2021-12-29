@@ -7,12 +7,20 @@
     "hint_tag": "Tag",
     "hint_ideology": "Ideology",
     "hint_positions": "Positions",
+    "hint_ministers": "Ministers",
     "hint_traits": "Traits",
+    "hint_trait": "Trait",
     "hint_head_of_state": "Can be Head of State",
     "hint_field_marshal": "Can be Field Marshal",
     "hint_corps_commander": "Can be General",
     "hint_admiral": "Can be Admiral",
-    "hint_random_traits": "Random Traits",
+    "hint_random_traits": "Random Minister Traits",
+    "hint_custom_portrait_paths": "Custom Portrait Paths",
+    "hint_large": "Large",
+    "hint_small": "Small",
+    "hint_civillian": "Civillian",
+    "hint_army": "Army",
+    "hint_navy": "Navy",
     "button_add": "Add",
     "button_edit": "Edit",
     "button_remove": "Remove",
@@ -22,9 +30,15 @@
     "button_continue": "Continue",
     "button_cancel": "Cancel",
     "button_reset": "Reset",
+    "button_add_trait": "Add Trait",
     "dialog_enter_tag": "Enter tag",
     "dialog_select_ideology": "Select Ideology",
+    "dialog_select_trait": "Select Trait",
+    "dialog_enter_trait": "Enter Trait",
     "feedback_invalid_tag": "Invalid tag",
+    "feedback_trait_added": "Trait added",
+    "feedback_trait_removed": "Trait removed",
+    "feedback_trait_exists": "Trait already exists",
     "state_empty_characters": "No Characters",
     "concat_for_tag": "For tag: {tag}",
     "@concat_for_tag": {
@@ -33,6 +47,16 @@
             "tag": {
                 "type": "String",
                 "example": "GER"
+            }
+        }
+    },
+    "concat_sample": "Example: {example}",
+    "@concat_sample": {
+        "description": "String used for showing examples",
+        "placeholders": {
+            "example": {
+                "type": "String",
+                "example": "anything"
             }
         }
     },
