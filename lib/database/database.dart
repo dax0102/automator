@@ -14,6 +14,8 @@ class HiveDatabase {
     Hive.registerAdapter(PositionAdapter());
     Hive.registerAdapter(IdeologyAdapter());
 
-    return await CharacterRepository.open();
+    await CharacterRepository.open();
+    await TraitsRepository.open();
+    return Future;
   }
 }
