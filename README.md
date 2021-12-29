@@ -1,80 +1,16 @@
 # automator
 
-An automated component generation tool for total conversion mods such as Führerredux and Kaiserredux.
+A new Flutter project.
 
-## License
-This project is licensed under the GPL-3.0 - see the license file for more details
+## Getting Started
 
-## Contributing
-This application is currently under development. Contributions are still welcome but may need more consideration from the maintainers.
+This project is a starting point for a Flutter application.
 
-## Notes
-This build of Automator is specifically built for Führerredux (and maybe 
-sibling mods such as Kaiserredux and the OG Führerreich. This tool aims 
-to lift the workload of the modders in creating the characters for a 
-specified country. However, the ideologies using by Führerredux are hard-coded
-in this tool, and there maybe plans to override this behavior. Do note that 
-this tool does NOT currently that the data is not persistent; meaning closing
-this tool will result in loss of data inserted unto it. Also please be gentle 
-as this tool is currently in BETA; and some bugs might exist through-out
-(Hopefully not). 
+A few resources to get you started if this is your first Flutter project:
 
----
+- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
+- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
 
-### What does Automator do?
-Currently, I built Automator to generate the character files used for the
-new NSB Patch for Hearts of Iron IV. Führerredux has hundreds-if not thousands
-of characters waiting to be refactored for the new patch. This tool aims to
-automate that. However, there are more features that are planned to be 
-implemented in the future.
-
----
-### How do I automate creation of characters?
-While the aim of the creation of this tool is to automate the creation of the
-characters used in the mod; there are also manual work involved. Currently,
-there are two ways in adding characters. One is adding a single character
-through the character editor clicking the "Add" button, this is ideal when 
-adding or editing single characters, not ideal when creating batches. 
-The other one is adding through the "Importer", by clicking the "Import" button,
-this needs a CSV file, containing the names of the characters.
-
-Sample content of CSV file:
-```
-Rodrigo Duterte,Emmanual Pacquiao,Ferdinand Marcos Jr.
-```
-
-A successfull import will direct you to a screen where you can tweak the details
-of the character such as their positions, ideology and current status.
-
----
-
-### I added the characters, now what?
-If you are done in tweaking the characters, you can export it by clicking the
-"Export" button. This prompts you to save the file; and wait for the task to
-finish. You can rename the file if you want and view the file for vertification.
-If you're done, put it in the 'common/characters/' folder.
-
----
-
-### What are traits?
-Traits are for the minister traits of Führerredux. If it's not empty you will
-be presented to select one rather than manually inputting it when creating or
-importing characters.
-
----
-
-### Why I can't add traits individually?
-You'll need to import them from file, commonly found in 'common/country_leaders/00_minister_traits.txt'.
-Select that file and you will be presented its contents; assuming it's correct.
-
----
-
-### How about the leader and commander traits from Vanilla?
-Those traits are not supported yet, so you'll need to enter them manually.
-
----
-
-### I encountered an error
-If you encounted an error such as the tool crashed or the generated file is
-invalid, report it to me. Do note that I need to know what you are doing so
-that I could debug it.
+For help getting started with Flutter, view our
+[online documentation](https://flutter.dev/docs), which offers tutorials,
+samples, guidance on mobile development, and a full API reference.

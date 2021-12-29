@@ -1,66 +1,33 @@
-import 'package:automator/characters/characters_notifier.dart';
-import 'package:automator/characters/characters_page.dart';
+import 'package:automator/characters/characters.dart';
 import 'package:automator/core/navigation.dart';
-import 'package:automator/database/database.dart';
 import 'package:automator/localization/locales.dart';
-import 'package:automator/ministers/ministers_notifier.dart';
-import 'package:automator/ministers/ministers_page.dart';
-import 'package:automator/others/about_page.dart';
-import 'package:automator/others/guides_page.dart';
 import 'package:automator/shared/theme.dart';
-import 'package:automator/traits/traits_notifier.dart';
-import 'package:automator/traits/traits_page.dart';
-import 'package:desktop_window/desktop_window.dart';
+import 'package:automator/tags/tags.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/translations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:provider/provider.dart';
 
-void main() async {
-  await HiveDatabase.init();
+void main() {
   runApp(const Automator());
 }
 
-class Automator extends StatefulWidget {
+class Automator extends StatelessWidget {
   const Automator({Key? key}) : super(key: key);
 
-  static const appName = "Automator";
-
-  @override
-  State<Automator> createState() => _AutomatorState();
-}
-
-class _AutomatorState extends State<Automator> {
-  @override
-  void initState() {
-    super.initState();
-    _initWindow();
-  }
-
-  void _initWindow() async {
-    await DesktopWindow.setMinWindowSize(const Size(1000, 600));
-  }
-
+  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (_) => TraitsNotifier()),
-        ChangeNotifierProvider(create: (_) => CharactersNotifier()),
-        ChangeNotifierProvider(create: (_) => MinistersNotifier())
+    return MaterialApp(
+      theme: dark,
+      home: const MainPage(),
+      supportedLocales: Locales.all,
+      localizationsDelegates: const [
+        Translations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
       ],
-      child: MaterialApp(
-        theme: dark,
-        home: const MainPage(),
-        supportedLocales: Locales.all,
-        localizationsDelegates: const [
-          Translations.delegate,
-          GlobalMaterialLocalizations.delegate,
-          GlobalCupertinoLocalizations.delegate,
-          GlobalWidgetsLocalizations.delegate,
-        ],
-        onGenerateTitle: (context) => Translations.of(context)!.app_name,
-      ),
+      onGenerateTitle: (context) => Translations.of(context)!.app_name,
     );
   }
 }
@@ -80,13 +47,7 @@ class _MainPageState extends State<MainPage> {
       case 0:
         return const CharactersPage();
       case 1:
-        return const MinistersPage();
-      case 2:
-        return const TraitsPage();
-      case 3:
-        return const GuidesPage();
-      case 4:
-        return const AboutPage();
+        return const TagsPage();
       default:
         throw Exception("Invalid Route");
     }
@@ -104,7 +65,10 @@ class _MainPageState extends State<MainPage> {
           },
         ),
         Expanded(
-          child: SizedBox(child: page, height: double.infinity),
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: page,
+          ),
         )
       ],
     ));

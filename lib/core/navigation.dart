@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/translations.dart';
 
-enum Route { characters, ministers, traits, guides, about }
+enum Route { characters, tags }
 
 extension RouteExtension on Route {
   static const characters = "characters";
@@ -10,14 +10,8 @@ extension RouteExtension on Route {
     switch (this) {
       case Route.characters:
         return const Icon(Icons.face_outlined);
-      case Route.ministers:
-        return const Icon(Icons.groups_outlined);
-      case Route.traits:
-        return const Icon(Icons.military_tech_outlined);
-      case Route.guides:
-        return const Icon(Icons.help_outline_outlined);
-      case Route.about:
-        return const Icon(Icons.info_outline_rounded);
+      case Route.tags:
+        return const Icon(Icons.public_outlined);
     }
   }
 
@@ -25,14 +19,8 @@ extension RouteExtension on Route {
     switch (this) {
       case Route.characters:
         return const Icon(Icons.face);
-      case Route.ministers:
-        return const Icon(Icons.groups);
-      case Route.traits:
-        return const Icon(Icons.military_tech);
-      case Route.guides:
-        return const Icon(Icons.help_rounded);
-      case Route.about:
-        return const Icon(Icons.info_rounded);
+      case Route.tags:
+        return const Icon(Icons.public);
     }
   }
 
@@ -40,14 +28,8 @@ extension RouteExtension on Route {
     switch (this) {
       case Route.characters:
         return Translations.of(context)!.navigation_characters;
-      case Route.ministers:
-        return Translations.of(context)!.navigation_ministers;
-      case Route.traits:
-        return Translations.of(context)!.navigation_traits;
-      case Route.guides:
-        return Translations.of(context)!.navigation_guides;
-      case Route.about:
-        return Translations.of(context)!.navigation_about;
+      case Route.tags:
+        return Translations.of(context)!.navigation_tags;
     }
   }
 }
