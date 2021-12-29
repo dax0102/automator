@@ -1,5 +1,5 @@
 import 'dart:io';
-
+import 'dart:math';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_gen/gen_l10n/translations.dart';
 
@@ -23,6 +23,24 @@ extension PositionExtension on Position {
   static const prefixChiefOfArmy = "carm";
   static const prefixChiefOfNavy = "cnav";
   static const prefixChiefOfAirForce = "cair";
+
+  static List<Position> get government {
+    return [
+      Position.headOfGovernment,
+      Position.foreignMinister,
+      Position.economyMinister,
+      Position.securityMinister
+    ];
+  }
+
+  static List<Position> get military {
+    return [
+      Position.chiefOfStaff,
+      Position.chiefOfArmy,
+      Position.chiefOfNavy,
+      Position.chiefOfAirForce
+    ];
+  }
 
   String getLocalization(BuildContext context) {
     switch (this) {
@@ -95,5 +113,10 @@ class Character {
     List<String> names = lines.split(',');
     names = names.map((name) => name.trim()).toList();
     return names;
+  }
+
+  static String randomTrait(Position position, List<String> traits) {
+    final random = Random();
+    return traits[random.nextInt(traits.length)];
   }
 }

@@ -1,21 +1,12 @@
 import 'dart:io';
 
-import 'package:automator/core/position.dart';
-import 'package:automator/core/reader.dart';
+import 'package:automator/characters/character.dart';
 
 class Traits {
   const Traits._();
 
-  static const _contentStart = "leader_traits";
-
   static Future<Map<Position, List<String>>> fetch(File file) async {
     final source = await file.readAsLines();
-    if (source.isEmpty) {
-      throw MissingContentError();
-    } else if (!source[0].startsWith(_contentStart)) {
-      throw InvalidSourceError();
-    }
-
     return {
       Position.headOfGovernment: fetchHeadofGovernment(source),
       Position.foreignMinister: fetchForeignMinister(source),

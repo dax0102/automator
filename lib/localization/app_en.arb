@@ -1,6 +1,7 @@
 {
     "app_name": "Automator",
     "navigation_characters": "Characters",
+    "navigation_traits": "Traits",
     "navigation_tags": "Tags",
     "generated_code_preview": "Generated Code",
     "hint_name": "Name",
@@ -34,6 +35,8 @@
             }
         }
     },
+    "position_type_government": "Government",
+    "position_type_military": "Military",
     "position_hog": "Head of Government",
     "position_for": "Foreign Minister",
     "position_eco": "Economy Minister",
