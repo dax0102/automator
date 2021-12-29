@@ -127,6 +127,9 @@ class Character {
   final bool fieldMarshal;
   final bool corpCommander;
   final bool admiral;
+  final bool civilianPortrait;
+  final bool armyPortrait;
+  final bool navyPortrait;
   final String? skills;
 
   Character({
@@ -141,6 +144,9 @@ class Character {
     this.fieldMarshal = false,
     this.corpCommander = false,
     this.admiral = false,
+    this.civilianPortrait = false,
+    this.armyPortrait = false,
+    this.navyPortrait = false,
     this.skills,
   });
 
@@ -183,13 +189,6 @@ class Character {
 
   static bool hasNavalPosition(List<Position> positions) {
     return positions.contains(Position.chiefOfNavy);
-  }
-
-  static Future<List<String>> getNamesFromCSV(File source) async {
-    final lines = await source.readAsString();
-    List<String> names = lines.split(',');
-    names = names.map((name) => name.trim()).toList();
-    return names;
   }
 
   static String randomTrait(Position position, List<String> traits) {
