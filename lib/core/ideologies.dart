@@ -1,18 +1,34 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_gen/gen_l10n/translations.dart';
+import 'package:hive/hive.dart';
 
+part 'ideologies.g.dart';
+
+@HiveType(typeId: 2)
 enum Ideology {
+  @HiveField(0)
   none,
+  @HiveField(1)
   vanguardist,
+  @HiveField(2)
   collectivist,
+  @HiveField(3)
   libertarianSocialist,
+  @HiveField(4)
   socialDemocrat,
+  @HiveField(5)
   socialLiberal,
+  @HiveField(6)
   marketLiberal,
+  @HiveField(7)
   socialConservative,
+  @HiveField(8)
   authoritarianDemocrat,
+  @HiveField(9)
   paternalAutocrat,
+  @HiveField(10)
   nationalPopulist,
+  @HiveField(11)
   valkist
 }
 

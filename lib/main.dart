@@ -1,6 +1,7 @@
 import 'package:automator/characters/characters_notifier.dart';
 import 'package:automator/characters/characters_page.dart';
 import 'package:automator/core/navigation.dart';
+import 'package:automator/database/database.dart';
 import 'package:automator/localization/locales.dart';
 import 'package:automator/ministers/ministers_notifier.dart';
 import 'package:automator/ministers/ministers_page.dart';
@@ -15,7 +16,8 @@ import 'package:flutter_gen/gen_l10n/translations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 
-void main() {
+void main() async {
+  await HiveDatabase.init();
   runApp(const Automator());
 }
 
