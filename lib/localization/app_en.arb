@@ -79,6 +79,7 @@
     "position_carm": "Chief of Army",
     "position_cnav": "Chief of Navy",
     "position_cair": "Chief of Air Force",
+    "ideology_none": "Not Applicable",
     "ideology_van": "National Collectivist",
     "ideology_col": "Socialist",
     "ideology_lib": "Libertarian Socialist",
