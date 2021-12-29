@@ -53,3 +53,28 @@ If you are done in tweaking the characters, you can export it by clicking the
 "Export" button. This prompts you to save the file; and wait for the task to
 finish. You can rename the file if you want and view the file for vertification.
 If you're done, put it in the 'common/characters/' folder.
+
+---
+
+### What are traits?
+Traits are for the minister traits of Führerredux. If it's not empty you will
+be presented to select one rather than manually inputting it when creating or
+importing characters.
+
+---
+
+### Why I can't add traits individually?
+You'll need to import them from file, commonly found in 'common/country_leaders/00_minister_traits.txt'.
+Select that file and you will be presented its contents; assuming it's correct.
+
+---
+
+### How about the leader and commander traits from Vanilla?
+Those traits are not supported yet, so you'll need to enter them manually.
+
+---
+
+### I encountered an error
+If you encounted an error such as the tool crashed or the generated file is
+invalid, report it to me. Do note that I need to know what you are doing so
+that I could debug it.
