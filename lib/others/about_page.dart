@@ -13,41 +13,52 @@ class AboutPage extends StatefulWidget {
 class _AboutPageState extends State<AboutPage> {
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Padding(
-        padding: ThemeComponents.defaultPadding,
-        child: Column(
-          children: [
-            Header(
-              title: Translations.of(context)!.navigation_about,
-            ),
-            Card(
-              child: Padding(
-                padding: ThemeComponents.defaultPadding,
-                child: Column(
-                  children: [
-                    const Image(
-                      image: AssetImage('assets/appicon.png'),
-                      width: 256,
-                      height: 256,
+    return Padding(
+      padding: ThemeComponents.defaultPadding,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Header(
+            title: Translations.of(context)!.navigation_about,
+          ),
+          Expanded(
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Card(
+                    child: Padding(
+                      padding: ThemeComponents.defaultPadding,
+                      child: Column(
+                        children: [
+                          const Image(
+                            image: AssetImage('assets/appicon.png'),
+                            width: 256,
+                            height: 256,
+                          ),
+                          Text(
+                            Translations.of(context)!.about_app_title,
+                            style: Theme.of(context).textTheme.headline5,
+                          ),
+                          SizedBox(height: ThemeComponents.spacing),
+                          Text(
+                            Translations.of(context)!.about_app_subtitle,
+                            style: const TextStyle(color: Colors.grey),
+                          ),
+                          const SizedBox(height: 8),
+                          Text(
+                            Translations.of(context)!.about_author,
+                            style: const TextStyle(fontSize: 18),
+                          ),
+                        ],
+                      ),
                     ),
-                    Text(
-                      Translations.of(context)!.about_app_title,
-                      style: Theme.of(context).textTheme.headline5,
-                    ),
-                    SizedBox(height: ThemeComponents.spacing),
-                    Text(
-                      Translations.of(context)!.about_app_subtitle,
-                      style: const TextStyle(color: Colors.grey),
-                    ),
-                    const SizedBox(height: 8),
-                    Text(Translations.of(context)!.about_author),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

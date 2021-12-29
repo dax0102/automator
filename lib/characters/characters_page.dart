@@ -47,24 +47,33 @@ class _CharactersPageState extends State<CharactersPage> {
       allowedExtensions: ['csv'],
     );
     if (result != null) {
-      final file = File(result.files.single.path!);
-      final names = await Reader.getNamesFromCSV(file);
-      Navigator.push(
-        context,
-        PageRouteBuilder(
-          pageBuilder: (context, _, __) => CharacterImport(
-            names: names,
+      try {
+        final file = File(result.files.single.path!);
+        final names = await Reader.importNames(file);
+        Navigator.push(
+          context,
+          PageRouteBuilder(
+            pageBuilder: (context, _, __) => CharacterImport(
+              names: names,
+            ),
+            transitionsBuilder:
+                (context, animation, secondaryAnimation, child) {
+              return SharedAxisTransition(
+                animation: animation,
+                secondaryAnimation: secondaryAnimation,
+                transitionType: SharedAxisTransitionType.horizontal,
+                child: child,
+              );
+            },
           ),
-          transitionsBuilder: (context, animation, secondaryAnimation, child) {
-            return SharedAxisTransition(
-              animation: animation,
-              secondaryAnimation: secondaryAnimation,
-              transitionType: SharedAxisTransitionType.horizontal,
-              child: child,
-            );
-          },
-        ),
-      );
+        );
+      } on MissingContentError {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(Translations.of(context)!.feedback_empty_file),
+          ),
+        );
+      }
     }
   }
 
@@ -91,16 +100,22 @@ class _CharactersPageState extends State<CharactersPage> {
     return TableRow(children: [
       TableCell(
         verticalAlignment: ThemeComponents.cellAlignment,
-        child: Text(
-          Translations.of(context)!.hint_tag,
-          textAlign: ThemeComponents.textAlignment,
+        child: Padding(
+          padding: ThemeComponents.defaultPadding,
+          child: Text(
+            Translations.of(context)!.hint_tag,
+            textAlign: ThemeComponents.textAlignment,
+          ),
         ),
       ),
       TableCell(
         verticalAlignment: ThemeComponents.cellAlignment,
-        child: Text(
-          Translations.of(context)!.hint_name,
-          textAlign: ThemeComponents.textAlignment,
+        child: Padding(
+          padding: ThemeComponents.defaultPadding,
+          child: Text(
+            Translations.of(context)!.hint_name,
+            textAlign: ThemeComponents.textAlignment,
+          ),
         ),
       ),
       TableCell(
@@ -148,126 +163,127 @@ class _CharactersPageState extends State<CharactersPage> {
     ]);
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Padding(
-        padding: ThemeComponents.defaultPadding,
-        child: Column(
-          children: [
-            Header(
-              title: Translations.of(context)!.navigation_characters,
-              actions: Header.getDefault(
-                context,
-                onAdd: _onAdd,
-                onImport: _onImport,
-                onExport: _onExport,
-              ),
-            ),
-            Consumer<CharactersNotifier>(
-              builder: (context, notifier, _) {
-                final characters = notifier.characters;
-                return characters.isNotEmpty
-                    ? Table(
-                        border: TableBorder.all(
-                          color: Theme.of(context).colorScheme.surface,
-                        ),
-                        columnWidths: const {
-                          0: FractionColumnWidth(0.05),
-                          1: FractionColumnWidth(0.2),
-                          2: FractionColumnWidth(0.2),
-                          3: FractionColumnWidth(0.3)
-                        },
-                        children: [
-                          _headers,
-                          ...characters.map((character) {
-                            return TableRow(children: [
-                              TableCell(
-                                verticalAlignment:
-                                    ThemeComponents.cellAlignment,
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 8.0),
-                                  child: Text(character.tag),
-                                ),
-                              ),
-                              TableCell(
-                                verticalAlignment:
-                                    ThemeComponents.cellAlignment,
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 8.0),
-                                  child: Text(character.name),
-                                ),
-                              ),
-                              TableCell(
-                                verticalAlignment:
-                                    ThemeComponents.cellAlignment,
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 8.0),
-                                  child: Text(character.ideology
-                                      .getLocalization(context)),
-                                ),
-                              ),
-                              TableCell(
-                                verticalAlignment:
-                                    ThemeComponents.cellAlignment,
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Wrap(
-                                    spacing: 8,
-                                    runSpacing: 8,
-                                    children:
-                                        character.positions.map((position) {
-                                      return Chip(
-                                        label: Text(
-                                            position.getLocalization(context)),
-                                      );
-                                    }).toList(),
-                                  ),
-                                ),
-                              ),
-                              TableCell(
-                                verticalAlignment:
-                                    ThemeComponents.cellAlignment,
-                                child: Icon(character.headOfState
-                                    ? Icons.check
-                                    : Icons.clear),
-                              ),
-                              TableCell(
-                                verticalAlignment:
-                                    ThemeComponents.cellAlignment,
-                                child: Icon(character.fieldMarshal
-                                    ? Icons.check
-                                    : Icons.clear),
-                              ),
-                              TableCell(
-                                verticalAlignment:
-                                    ThemeComponents.cellAlignment,
-                                child: Icon(character.corpCommander
-                                    ? Icons.check
-                                    : Icons.clear),
-                              ),
-                              TableCell(
-                                verticalAlignment:
-                                    ThemeComponents.cellAlignment,
-                                child: Icon(character.admiral
-                                    ? Icons.check
-                                    : Icons.clear),
-                              ),
-                            ]);
-                          })
-                        ],
-                      )
-                    : EmptyState(
-                        title:
-                            Translations.of(context)!.state_empty_characters);
-              },
-            )
-          ],
-        ),
+  Widget get _header {
+    return Header(
+      title: Translations.of(context)!.navigation_characters,
+      actions: Header.getDefault(
+        context,
+        onAdd: _onAdd,
+        onImport: _onImport,
+        onExport: _onExport,
       ),
     );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Consumer<CharactersNotifier>(builder: (context, notifier, _) {
+      final characters = notifier.characters;
+      return characters.isEmpty
+          ? Padding(
+              padding: ThemeComponents.defaultPadding,
+              child: Column(
+                children: [
+                  _header,
+                  EmptyState(
+                    title: Translations.of(context)!.state_empty_characters,
+                  ),
+                ],
+              ),
+            )
+          : SingleChildScrollView(
+              child: Padding(
+                padding: ThemeComponents.defaultPadding,
+                child: Column(
+                  children: [
+                    _header,
+                    Table(
+                      border: TableBorder.all(
+                        color: Theme.of(context).colorScheme.surface,
+                      ),
+                      columnWidths: const {
+                        0: FractionColumnWidth(0.05),
+                        1: FractionColumnWidth(0.2),
+                        2: FractionColumnWidth(0.2),
+                        3: FractionColumnWidth(0.3)
+                      },
+                      children: [
+                        _headers,
+                        ...characters.map((character) {
+                          return TableRow(children: [
+                            TableCell(
+                              verticalAlignment: ThemeComponents.cellAlignment,
+                              child: Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 8.0),
+                                child: Text(character.tag),
+                              ),
+                            ),
+                            TableCell(
+                              verticalAlignment: ThemeComponents.cellAlignment,
+                              child: Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 8.0),
+                                child: Text(character.name),
+                              ),
+                            ),
+                            TableCell(
+                              verticalAlignment: ThemeComponents.cellAlignment,
+                              child: Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 8.0),
+                                child: Text(character.ideology
+                                    .getLocalization(context)),
+                              ),
+                            ),
+                            TableCell(
+                              verticalAlignment: ThemeComponents.cellAlignment,
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Wrap(
+                                  spacing: 8,
+                                  runSpacing: 8,
+                                  children: character.positions.map((position) {
+                                    return Chip(
+                                      label: Text(
+                                          position.getLocalization(context)),
+                                    );
+                                  }).toList(),
+                                ),
+                              ),
+                            ),
+                            TableCell(
+                              verticalAlignment: ThemeComponents.cellAlignment,
+                              child: Icon(character.headOfState
+                                  ? Icons.check
+                                  : Icons.clear),
+                            ),
+                            TableCell(
+                              verticalAlignment: ThemeComponents.cellAlignment,
+                              child: Icon(character.fieldMarshal
+                                  ? Icons.check
+                                  : Icons.clear),
+                            ),
+                            TableCell(
+                              verticalAlignment: ThemeComponents.cellAlignment,
+                              child: Icon(character.corpCommander
+                                  ? Icons.check
+                                  : Icons.clear),
+                            ),
+                            TableCell(
+                              verticalAlignment: ThemeComponents.cellAlignment,
+                              child: Icon(character.admiral
+                                  ? Icons.check
+                                  : Icons.clear),
+                            ),
+                          ]);
+                        })
+                      ],
+                    )
+                  ],
+                ),
+              ),
+            );
+    });
   }
 }
