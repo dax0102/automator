@@ -1,7 +1,15 @@
 import 'package:flutter/material.dart';
 
+class ThemeComponents {
+  const ThemeComponents._();
+
+  static double get spacing => 16;
+  static EdgeInsets get defaultPadding => EdgeInsets.all(spacing);
+  static InputBorder get inputBorder => const OutlineInputBorder();
+}
+
 ThemeData get dark {
-  final base = ThemeData(brightness: Brightness.dark);
+  final base = ThemeData(brightness: Brightness.dark, fontFamily: 'Rubik');
 
   const primary = Color(0xff4299E1);
   const onPrimary = Color(0xff000000);
@@ -34,6 +42,9 @@ ThemeData get dark {
     chipTheme: base.chipTheme.copyWith(
       backgroundColor: Color.lerp(surface, Colors.white, 0.05),
       selectedColor: Color.lerp(primary, Colors.transparent, 0.05),
+    ),
+    dialogTheme: base.dialogTheme.copyWith(
+      backgroundColor: surface,
     ),
   );
 }
