@@ -83,7 +83,7 @@ Select that file and you will be presented its contents; assuming it's correct.
 
 ---
 
-## How about leader and commander traits from Vanilla?
+## How about the leader and commander traits from Vanilla?
 Those traits are not supported yet, so you'll need to enter them manually.
 
 ---
