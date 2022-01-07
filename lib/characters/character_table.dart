@@ -191,19 +191,23 @@ class CharacterTable extends StatelessWidget {
               child: Icon(character.admiral ? Icons.check : Icons.clear),
             ),
             TableCell(
-                child: IconButton(
-              icon: const Icon(Icons.edit_outlined),
-              onPressed: () {
-                onEdit(character);
-              },
-            )),
+              verticalAlignment: ThemeComponents.cellAlignment,
+              child: IconButton(
+                icon: const Icon(Icons.edit_outlined),
+                onPressed: () {
+                  onEdit(character);
+                },
+              ),
+            ),
             TableCell(
-                child: IconButton(
-              icon: const Icon(Icons.delete_outline),
-              onPressed: () {
-                onRemove(character);
-              },
-            )),
+              verticalAlignment: ThemeComponents.cellAlignment,
+              child: IconButton(
+                icon: const Icon(Icons.delete_outline),
+                onPressed: () {
+                  onRemove(character);
+                },
+              ),
+            ),
           ]);
         })
       ],

@@ -274,7 +274,6 @@ class Writer {
       // Corp Commander
       if (character.corpCommander) {
         await output.writeAsString(_corpCommander, mode: _mode);
-        await output.writeAsString(_traits, mode: _mode);
         if (character.commanderLandTraits.isNotEmpty) {
           await output.writeAsString(_traits, mode: _mode);
           for (String trait in character.leaderTraits) {
@@ -345,13 +344,15 @@ class Writer {
       for (Position position in character.positions) {
         String trait = character.ministerTraits
             .firstWhere((trait) => trait.startsWith(position.prefix));
+        String token = character.ideology != Ideology.none
+            ? '$_ideaToken ${character.token}_${position.prefix}_${character.ideology.prefix}'
+            : '$_ideaToken ${character.token}_${position.prefix}';
 
         await output.writeAsString(_advisor, mode: _mode);
         await output.writeAsString('$_cost ${character.cost}', mode: _mode);
         await output.writeAsString('$_slot ${position.token}', mode: _mode);
-        await output.writeAsString(
-            '$_ideaToken ${character.token}_${position.prefix}_${character.ideology.prefix}',
-            mode: _mode);
+        await output.writeAsString(_available, mode: _mode);
+        await output.writeAsString(token, mode: _mode);
         await output.writeAsString(_traits, mode: _mode);
         await output.writeAsString('\n\t\t\t\t${position.token}', mode: _mode);
         await output.writeAsString('\n\t\t\t\t${character.ideology.token}',
@@ -397,6 +398,7 @@ class Writer {
   static const _advisor = "\n\t\tadvisor = {";
   static const _cost = "\n\t\t\tcost =";
   static const _slot = "\n\t\t\tslot =";
+  static const _available = "\n\t\t\tavailable = { can_replace_minister = no }";
   static const _ideaToken = "\n\t\t\tidea_token =";
 
   static const _mode = FileMode.append;
