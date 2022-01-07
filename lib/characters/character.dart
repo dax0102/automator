@@ -107,7 +107,8 @@ class Character {
   }
 
   static String buildToken(String tag, String name) {
-    return '${tag}_${name.replaceAll(" ", "_")}';
+    String n = name.replaceAll('.', '');
+    return '${tag}_${n.replaceAll(" ", "_")}';
   }
 
   static bool hasGovernmentPosition(List<Position> positions) {
