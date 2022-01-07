@@ -182,14 +182,14 @@ class Writer {
         await output.writeAsString(_army, mode: _mode);
         if (character.armyPortrait) {
           String generated =
-              '$_large $portraitLargePrefix${character.tag}/Portrait_${character.token}_army$portraitSuffix';
+              '$_large "$portraitLargePrefix${character.tag}/Portrait_${character.token}_army$portraitSuffix"';
 
           await output.writeAsString(character.armyLargePortrait ?? generated,
               mode: _mode);
         }
         if (character.hasArmyRole) {
           String generated =
-              '$_small $portraitSmallPrefix${character.tag}/${character.token}$portraitSuffix';
+              '$_small "$portraitSmallPrefix${character.tag}/${character.token}$portraitSuffix"';
 
           await output.writeAsString(character.armySmallPortait ?? generated,
               mode: _mode);
@@ -202,14 +202,14 @@ class Writer {
         await output.writeAsString(_navy, mode: _mode);
         if (character.navyPortrait) {
           String generated =
-              '$_large $portraitLargePrefix${character.tag}/Portrait_${character.token}_navy$portraitSuffix';
+              '$_large "$portraitLargePrefix${character.tag}/Portrait_${character.token}_navy$portraitSuffix"';
 
           await output.writeAsString(character.navyLargePortrait ?? generated,
               mode: _mode);
         }
         if (character.hasNavalRole) {
           String generated =
-              '$_small $portraitSmallPrefix${character.tag}/${character.token}$portraitSuffix';
+              '$_small "$portraitSmallPrefix${character.tag}/${character.token}$portraitSuffix"';
 
           await output.writeAsString(character.navySmallPortrait ?? generated,
               mode: _mode);
