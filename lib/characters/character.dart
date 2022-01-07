@@ -10,27 +10,27 @@ class Character {
   @HiveField(0)
   final String name;
   @HiveField(1)
-  final String tag;
+  String tag;
   @HiveField(2)
-  final Ideology ideology;
+  Ideology ideology;
   @HiveField(3)
-  final List<Position> positions;
+  List<Position> positions;
   @HiveField(4)
-  final List<String> leaderTraits;
+  List<String> leaderTraits;
   @HiveField(5)
-  final List<String> commanderLandTraits;
+  List<String> commanderLandTraits;
   @HiveField(6)
-  final List<String> commanderSeaTraits;
+  List<String> commanderSeaTraits;
   @HiveField(7)
-  final List<String> ministerTraits;
+  List<String> ministerTraits;
   @HiveField(8)
-  final bool headOfState;
+  bool headOfState;
   @HiveField(9)
-  final bool fieldMarshal;
+  bool fieldMarshal;
   @HiveField(10)
-  final bool corpCommander;
+  bool corpCommander;
   @HiveField(11)
-  final bool admiral;
+  bool admiral;
   @HiveField(12)
   final bool civilianPortrait;
   @HiveField(13)

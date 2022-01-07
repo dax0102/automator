@@ -144,6 +144,35 @@ extension IdeologyExtension on Ideology {
         return Translations.of(context)!.ideology_val;
     }
   }
+
+  static Ideology parseFromPrefix(String prefix) {
+    switch (prefix) {
+      case prefixVan:
+        return Ideology.vanguardist;
+      case prefixCol:
+        return Ideology.collectivist;
+      case prefixLib:
+        return Ideology.libertarianSocialist;
+      case prefixSde:
+        return Ideology.socialDemocrat;
+      case prefixSli:
+        return Ideology.socialLiberal;
+      case prefixMli:
+        return Ideology.marketLiberal;
+      case prefixSco:
+        return Ideology.socialConservative;
+      case prefixAde:
+        return Ideology.authoritarianDemocrat;
+      case prefixPau:
+        return Ideology.paternalAutocrat;
+      case prefixNpo:
+        return Ideology.nationalPopulist;
+      case prefixVal:
+        return Ideology.valkist;
+      default:
+        return Ideology.none;
+    }
+  }
 }
 
 enum IdeologyKR {

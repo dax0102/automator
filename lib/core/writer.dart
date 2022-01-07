@@ -31,6 +31,7 @@ class Writer {
         String trait = minister.traits
             .firstWhere((trait) => trait.startsWith(position.prefix));
         String nameNoSpace = minister.name.replaceAll(" ", "_");
+        nameNoSpace = minister.name.replaceAll(".", "");
 
         await output.writeAsString(
             '\n\t\t${minister.token}_${position.prefix}_${minister.ideology.prefix} = {',
@@ -160,7 +161,7 @@ class Writer {
         await output.writeAsString(_civilian, mode: _mode);
         if (character.civilianPortrait) {
           String generated =
-              '$_large $portraitLargePrefix${character.tag}/Portrait_${character.token}$portraitSuffix';
+              '$_large "$portraitLargePrefix${character.tag}/Portrait_${character.token}$portraitSuffix"';
 
           await output.writeAsString(
               character.civilianLargePortrait ?? generated,
@@ -168,7 +169,7 @@ class Writer {
         }
         if (character.hasGovernmentRole) {
           String generated =
-              '$_small $portraitSmallPrefix${character.tag}/${character.token}$portraitSuffix';
+              '$_small "$portraitSmallPrefix${character.tag}/${character.token}$portraitSuffix"';
 
           await output.writeAsString(
               character.civilianSmallPortrait ?? generated,
@@ -396,7 +397,7 @@ class Writer {
   static const _advisor = "\n\t\tadvisor = {";
   static const _cost = "\n\t\t\tcost = ";
   static const _slot = "\n\t\t\tslot =";
-  static const _ideaToken = "\n\t\t\tidea_token = ";
+  static const _ideaToken = "\n\t\t\tidea_token =";
 
   static const _mode = FileMode.append;
   static const portraitLargePrefix = "gfx/leaders/";

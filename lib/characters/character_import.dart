@@ -14,9 +14,9 @@ import 'package:provider/provider.dart';
 class CharacterImport extends StatefulWidget {
   const CharacterImport({
     Key? key,
-    required this.names,
+    required this.characters,
   }) : super(key: key);
-  final List<String> names;
+  final List<Character> characters;
 
   @override
   _CharacterImportState createState() => _CharacterImportState();
@@ -25,23 +25,13 @@ class CharacterImport extends StatefulWidget {
 class _CharacterImportState extends State<CharacterImport> {
   final _formKey = GlobalKey<FormState>();
   final _tagController = TextEditingController();
-  final Map<String, Map<Position, String>> _positions = {};
-  Map<String, Ideology> _ideologies = {};
-  Map<String, List<String>> _leaderTraits = {};
-  Map<String, List<String>> _commanderLandTraits = {};
-  Map<String, List<String>> _commanderSeaTraits = {};
-  Map<String, bool> _headOfState = {};
-  Map<String, bool> _fieldMarshal = {};
-  Map<String, bool> _corpCommander = {};
-  Map<String, bool> _admiral = {};
+  List<Character> _characters = [];
   Map<String, int> _portraits = {};
 
   @override
   void initState() {
     super.initState();
-    for (var name in widget.names) {
-      _ideologies[name] = Ideology.vanguardist;
-    }
+    _characters = [...widget.characters];
   }
 
   void _onSave() {
@@ -50,25 +40,26 @@ class _CharacterImportState extends State<CharacterImport> {
     }
 
     final List<Character> characters = [];
-    for (String name in widget.names) {
+    for (Character _character in widget.characters) {
+      String name = _character.name;
       final portrait = _portraits[name] ?? 0;
 
       Character character = Character(
         name: name,
         tag: _tagController.text,
-        ideology: _ideologies[name] ?? Ideology.values.first,
-        positions: _positions[name]?.keys.toList() ?? [],
-        headOfState: _headOfState[name] ?? false,
-        fieldMarshal: _fieldMarshal[name] ?? false,
-        corpCommander: _corpCommander[name] ?? false,
-        admiral: _admiral[name] ?? false,
-        ministerTraits: _positions[name]?.values.toList() ?? [],
+        ideology: _character.ideology,
+        positions: _character.positions,
+        headOfState: _character.headOfState,
+        fieldMarshal: _character.fieldMarshal,
+        corpCommander: _character.corpCommander,
+        admiral: _character.admiral,
+        ministerTraits: _character.ministerTraits,
         civilianPortrait: portrait & _civilianPortrait == _civilianPortrait,
         armyPortrait: portrait & _armyPortrait == _armyPortrait,
         navyPortrait: portrait & _navyPortrait == _navyPortrait,
-        leaderTraits: _leaderTraits[name] ?? [],
-        commanderLandTraits: _commanderLandTraits[name] ?? [],
-        commanderSeaTraits: _commanderSeaTraits[name] ?? [],
+        leaderTraits: _character.leaderTraits,
+        commanderLandTraits: _character.commanderLandTraits,
+        commanderSeaTraits: _character.commanderSeaTraits,
       );
       characters.add(character);
       Provider.of<CharactersNotifier>(context, listen: false).put(character);
@@ -249,7 +240,8 @@ class _CharacterImportState extends State<CharacterImport> {
     );
   }
 
-  Future<List<String>?> _showTraitEditor(String name, {int type = 0}) async {
+  Future<List<String>?> _showTraitEditor(Character character,
+      {int type = 0}) async {
     return await showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -257,13 +249,13 @@ class _CharacterImportState extends State<CharacterImport> {
         List<String> traits = [];
         switch (type) {
           case 0:
-            traits = _leaderTraits[name] ?? [];
+            traits = character.leaderTraits;
             break;
           case 1:
-            traits = _commanderLandTraits[name] ?? [];
+            traits = character.commanderLandTraits;
             break;
           case 2:
-            traits = _commanderSeaTraits[name] ?? [];
+            traits = character.commanderSeaTraits;
             break;
         }
         final traitController = TextEditingController(text: traits.join(','));
@@ -487,13 +479,13 @@ class _CharacterImportState extends State<CharacterImport> {
                       ),
                     ),
                   ]),
-                  ...widget.names.map((name) {
+                  ...widget.characters.map((character) {
                     return TableRow(children: [
                       TableCell(
                         verticalAlignment: TableCellVerticalAlignment.middle,
                         child: Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 8),
-                          child: Text(name),
+                          child: Text(character.name),
                         ),
                       ),
                       TableCell(
@@ -501,25 +493,30 @@ class _CharacterImportState extends State<CharacterImport> {
                         child: TextButton(
                           onPressed: () async {
                             final ideology =
-                                await _showIdeologyPicker(_ideologies[name]!);
+                                await _showIdeologyPicker(character.ideology);
                             if (ideology != null) {
-                              final ideologies = _ideologies;
-                              ideologies[name] = ideology;
+                              final characters = _characters;
+                              character.ideology = ideology;
+                              int index = characters
+                                  .indexWhere((c) => c.name == character.name);
+                              characters[index] = character;
+
+                              if (character.headOfState) {
+                                character.headOfState = false;
+                              }
                               setState(() {
-                                _ideologies = ideologies;
-                                if (_headOfState[name] == true) {
-                                  _headOfState[name] = false;
-                                }
+                                _characters = characters;
                               });
                             }
                           },
                           child:
-                              Text(_ideologies[name]!.getLocalization(context)),
+                              Text(character.ideology.getLocalization(context)),
                         ),
                       ),
                       TableCell(
                         verticalAlignment: TableCellVerticalAlignment.fill,
-                        child: _configureButton(name, _portraits[name] ?? 0),
+                        child: _configureButton(
+                            character.name, _portraits[character.name] ?? 0),
                       ),
                       TableCell(
                         verticalAlignment: TableCellVerticalAlignment.middle,
@@ -529,25 +526,17 @@ class _CharacterImportState extends State<CharacterImport> {
                             spacing: 4,
                             runSpacing: 4,
                             children: [
-                              if (_positions[name]?.values != null)
-                                ..._positions[name]!
-                                    .keys
-                                    .map((position) => Chip(
-                                          label: Text(position
-                                              .getLocalization(context)),
-                                          onDeleted: () {
-                                            final Map<Position, String>
-                                                positions =
-                                                _positions[name] ?? {};
-                                            if (positions
-                                                .containsKey(position)) {
-                                              positions.remove(position);
-                                              setState(() =>
-                                                  _positions[name] = positions);
-                                            }
-                                          },
-                                        ))
-                                    .toList(),
+                              ...character.positions.map((position) => Chip(
+                                    label:
+                                        Text(position.getLocalization(context)),
+                                    onDeleted: () {
+                                      final characters = _characters;
+                                      characters.removeWhere(
+                                          (c) => c.name == character.name);
+
+                                      setState(() => _characters = characters);
+                                    },
+                                  )),
                               ActionChip(
                                 avatar: const Icon(Icons.add_outlined),
                                 label:
@@ -556,10 +545,21 @@ class _CharacterImportState extends State<CharacterImport> {
                                   Role? role =
                                       await _showPositionAndTraitPicker();
                                   if (role != null) {
-                                    final positions = _positions[name] ?? {};
-                                    positions[role.position] = role.trait;
-                                    setState(
-                                        () => _positions[name] = positions);
+                                    final characters = _characters;
+                                    List<Position> positions = [
+                                      ...character.positions
+                                    ];
+                                    List<String> ministerTraits = [
+                                      ...character.ministerTraits
+                                    ];
+                                    positions.add(role.position);
+                                    ministerTraits.add(role.trait);
+
+                                    character.positions = positions;
+                                    character.ministerTraits = ministerTraits;
+                                    setState(() {
+                                      _characters = characters;
+                                    });
                                   }
                                 },
                               )
@@ -571,21 +571,27 @@ class _CharacterImportState extends State<CharacterImport> {
                         verticalAlignment: ThemeComponents.cellAlignment,
                         child: Checkbox(
                           activeColor: Theme.of(context).colorScheme.primary,
-                          value: _headOfState[name] ?? false,
-                          onChanged: _ideologies[name] != Ideology.none
+                          value: character.headOfState,
+                          onChanged: character.ideology != Ideology.none
                               ? (checked) async {
-                                  final headOfState = _headOfState;
-                                  headOfState[name] = checked ?? false;
-                                  setState(() => _headOfState = headOfState);
+                                  final characters = _characters;
+                                  character.headOfState = checked ?? false;
+
+                                  int index = characters.indexWhere(
+                                      (c) => c.name == character.name);
+                                  if (index > -1) {
+                                    characters[index] = character;
+                                  }
+
                                   if (checked == true) {
-                                    final traits = await _showTraitEditor(name);
+                                    final traits =
+                                        await _showTraitEditor(character);
                                     if (traits != null) {
-                                      final leaderTrait = _leaderTraits;
-                                      leaderTrait[name] = traits;
-                                      setState(
-                                          () => _leaderTraits = leaderTrait);
+                                      character.leaderTraits = traits;
                                     }
                                   }
+
+                                  setState(() => _characters = characters);
                                 }
                               : null,
                         ),
@@ -594,24 +600,29 @@ class _CharacterImportState extends State<CharacterImport> {
                         verticalAlignment: ThemeComponents.cellAlignment,
                         child: Checkbox(
                           activeColor: Theme.of(context).colorScheme.primary,
-                          value: _fieldMarshal[name] ?? false,
-                          onChanged: _corpCommander[name] == true
+                          value: character.fieldMarshal,
+                          onChanged: character.corpCommander
                               ? null
                               : (checked) async {
-                                  final fieldMarshal = _fieldMarshal;
-                                  fieldMarshal[name] = checked ?? false;
-                                  setState(() => _fieldMarshal = fieldMarshal);
+                                  final characters = _characters;
+                                  character.fieldMarshal = checked ?? false;
+
+                                  int index = characters.indexWhere(
+                                      (c) => c.name == character.name);
+                                  if (index > -1) {
+                                    characters[index] = character;
+                                  }
+
                                   if (checked == true) {
-                                    final traits =
-                                        await _showTraitEditor(name, type: 1);
+                                    final traits = await _showTraitEditor(
+                                        character,
+                                        type: 1);
                                     if (traits != null) {
-                                      final commanderTrait =
-                                          _commanderLandTraits;
-                                      commanderTrait[name] = traits;
-                                      setState(() => _commanderLandTraits =
-                                          commanderTrait);
+                                      character.commanderLandTraits = traits;
                                     }
                                   }
+
+                                  setState(() => _characters = characters);
                                 },
                         ),
                       ),
@@ -619,25 +630,29 @@ class _CharacterImportState extends State<CharacterImport> {
                         verticalAlignment: ThemeComponents.cellAlignment,
                         child: Checkbox(
                           activeColor: Theme.of(context).colorScheme.primary,
-                          value: _corpCommander[name] ?? false,
-                          onChanged: _fieldMarshal[name] == true
+                          value: character.corpCommander,
+                          onChanged: character.fieldMarshal
                               ? null
                               : (checked) async {
-                                  final corpCommander = _corpCommander;
-                                  corpCommander[name] = checked ?? false;
-                                  setState(
-                                      () => _corpCommander = corpCommander);
+                                  final characters = _characters;
+                                  character.corpCommander = checked ?? false;
+
+                                  int index = characters.indexWhere(
+                                      (c) => c.name == character.name);
+                                  if (index > -1) {
+                                    characters[index] = character;
+                                  }
+
                                   if (checked == true) {
-                                    final traits =
-                                        await _showTraitEditor(name, type: 1);
+                                    final traits = await _showTraitEditor(
+                                        character,
+                                        type: 1);
                                     if (traits != null) {
-                                      final commanderTrait =
-                                          _commanderLandTraits;
-                                      commanderTrait[name] = traits;
-                                      setState(() => _commanderLandTraits =
-                                          commanderTrait);
+                                      character.commanderLandTraits = traits;
                                     }
                                   }
+
+                                  setState(() => _characters = characters);
                                 },
                         ),
                       ),
@@ -645,21 +660,26 @@ class _CharacterImportState extends State<CharacterImport> {
                         verticalAlignment: ThemeComponents.cellAlignment,
                         child: Checkbox(
                           activeColor: Theme.of(context).colorScheme.primary,
-                          value: _admiral[name] ?? false,
+                          value: character.admiral,
                           onChanged: (checked) async {
-                            final admiral = _admiral;
-                            admiral[name] = checked ?? false;
-                            setState(() => _admiral = admiral);
+                            final characters = _characters;
+                            character.admiral = checked ?? false;
+
+                            int index = characters
+                                .indexWhere((c) => c.name == character.name);
+                            if (index > -1) {
+                              characters[index] = character;
+                            }
+
                             if (checked == true) {
                               final traits =
-                                  await _showTraitEditor(name, type: 2);
+                                  await _showTraitEditor(character, type: 1);
                               if (traits != null) {
-                                final commanderTrait = _commanderSeaTraits;
-                                commanderTrait[name] = traits;
-                                setState(
-                                    () => _commanderSeaTraits = commanderTrait);
+                                character.commanderSeaTraits = traits;
                               }
                             }
+
+                            setState(() => _characters = characters);
                           },
                         ),
                       ),

@@ -6,6 +6,7 @@ import 'package:automator/characters/character_editor.dart';
 import 'package:automator/characters/character_import.dart';
 import 'package:automator/characters/character_table.dart';
 import 'package:automator/characters/characters_notifier.dart';
+import 'package:automator/core/ideologies.dart';
 import 'package:automator/core/reader.dart';
 import 'package:automator/core/writer.dart';
 import 'package:automator/shared/custom/header.dart';
@@ -25,11 +26,11 @@ class CharactersPage extends StatefulWidget {
 }
 
 class _CharactersPageState extends State<CharactersPage> {
-  Future _onExtractionComplete(List<String> items) async {
+  Future _onExtractionComplete(List<Character> items) async {
     return await showDialog(
       context: context,
       builder: (BuildContext context) {
-        List<String> names = items;
+        List<Character> names = items;
 
         return StatefulBuilder(
           builder: (BuildContext context, setState) {
@@ -43,14 +44,14 @@ class _CharactersPageState extends State<CharactersPage> {
                     shrinkWrap: true,
                     itemCount: names.length,
                     itemBuilder: (context, index) {
-                      final name = names[index];
+                      final character = names[index];
                       return ListTile(
-                        title: Text(name),
+                        title: Text(character.name),
                         leading: IconButton(
                           icon: const Icon(Icons.delete_outline),
                           onPressed: () {
                             final _names = names;
-                            names.remove(name);
+                            names.remove(character);
                             setState(() => names = _names);
                           },
                         ),
@@ -67,7 +68,7 @@ class _CharactersPageState extends State<CharactersPage> {
                       context,
                       PageRouteBuilder(
                         pageBuilder: (context, _, __) => CharacterImport(
-                          names: names,
+                          characters: names,
                         ),
                         transitionsBuilder:
                             (context, animation, secondaryAnimation, child) {
@@ -170,11 +171,14 @@ class _CharactersPageState extends State<CharactersPage> {
       try {
         final file = File(result.files.single.path!);
         final names = await Reader.importNamesFromCSV(file);
+        List<Character> characters = names.map((name) {
+          return Character(name: name, tag: "", ideology: Ideology.none);
+        }).toList();
         Navigator.push(
           context,
           PageRouteBuilder(
             pageBuilder: (context, _, __) => CharacterImport(
-              names: names,
+              characters: characters,
             ),
             transitionsBuilder:
                 (context, animation, secondaryAnimation, child) {
