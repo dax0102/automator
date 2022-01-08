@@ -456,7 +456,7 @@ class Writer {
   static const _coordinationSkill = "\n\t\t\tcoordination_skill =";
   static const _fieldMarshal = "\n\t\tfield_marshal = {";
   static const _corpCommander = "\n\t\tcorps_commander = {";
-  static const _admiral = "\n\t\tadmiral = {";
+  static const _admiral = "\n\t\tnavy_leader = {";
   static const _advisor = "\n\t\tadvisor = {";
   static const _cost = "\n\t\t\tcost =";
   static const _slot = "\n\t\t\tslot =";
