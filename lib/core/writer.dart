@@ -343,7 +343,6 @@ class Writer {
       // Admiral
       if (character.admiral) {
         await output.writeAsString(_admiral, mode: _mode);
-        await output.writeAsString(_traits, mode: _mode);
         if (character.commanderSeaTraits.isNotEmpty) {
           await output.writeAsString(_traits, mode: _mode);
           for (String trait in character.leaderTraits) {
