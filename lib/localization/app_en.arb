@@ -61,7 +61,7 @@
     "feedback_trait_exists": "Trait already exists",
     "feedback_invalid_file": "Invalid file",
     "feedback_empty_file": "Empty file",
-    "feedbacK_empty_output": "There is no data to export",
+    "feedback_empty_output": "There is no data to export",
     "feedback_operation_complete": "Operation Complete",
     "state_empty_characters": "No Characters",
     "state_empty_ministers": "No Ministers",

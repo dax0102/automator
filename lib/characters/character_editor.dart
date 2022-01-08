@@ -374,8 +374,6 @@ class _CharacterEditorState extends State<CharacterEditor> {
             TextFormField(
               decoration: InputDecoration(
                 border: ThemeComponents.inputBorder,
-                prefixText: Writer.portraitLargePrefix,
-                suffixText: Writer.portraitSuffix,
               ),
               controller: _civilianLargePortrait,
             ),
@@ -393,8 +391,6 @@ class _CharacterEditorState extends State<CharacterEditor> {
             TextFormField(
               decoration: InputDecoration(
                 border: ThemeComponents.inputBorder,
-                prefixText: Writer.portraitSmallPrefix,
-                suffixText: Writer.portraitSuffix,
               ),
               controller: _civilianSmallPortrait,
             ),
@@ -422,8 +418,6 @@ class _CharacterEditorState extends State<CharacterEditor> {
             TextFormField(
               decoration: InputDecoration(
                 border: ThemeComponents.inputBorder,
-                prefixText: Writer.portraitLargePrefix,
-                suffixText: Writer.portraitSuffix,
               ),
               controller: _armyLargePortrait,
             ),
@@ -441,8 +435,6 @@ class _CharacterEditorState extends State<CharacterEditor> {
             TextFormField(
               decoration: InputDecoration(
                 border: ThemeComponents.inputBorder,
-                prefixText: Writer.portraitSmallPrefix,
-                suffixText: Writer.portraitSuffix,
               ),
               controller: _armySmallPortrait,
             ),
@@ -470,8 +462,6 @@ class _CharacterEditorState extends State<CharacterEditor> {
             TextFormField(
               decoration: InputDecoration(
                 border: ThemeComponents.inputBorder,
-                prefixText: Writer.portraitLargePrefix,
-                suffixText: Writer.portraitSuffix,
               ),
               controller: _navyLargePortrait,
             ),
@@ -489,8 +479,6 @@ class _CharacterEditorState extends State<CharacterEditor> {
             TextFormField(
               decoration: InputDecoration(
                 border: ThemeComponents.inputBorder,
-                prefixText: Writer.portraitSmallPrefix,
-                suffixText: Writer.portraitSuffix,
               ),
               controller: _navySmallPortrait,
             ),

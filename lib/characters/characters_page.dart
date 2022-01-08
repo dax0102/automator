@@ -265,7 +265,7 @@ class _CharactersPageState extends State<CharactersPage> {
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(Translations.of(context)!.feedbacK_empty_output),
+          content: Text(Translations.of(context)!.feedback_empty_output),
         ),
       );
     }
@@ -276,7 +276,13 @@ class _CharactersPageState extends State<CharactersPage> {
         Provider.of<CharactersNotifier>(context, listen: false).characters;
     String? path = await FilePicker.platform.getDirectoryPath();
     if (path != null) {
-      Writer.appendToHistory(path, characters);
+      await Writer.appendToHistory(path, characters);
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(Translations.of(context)!.feedback_empty_output),
+        ),
+      );
     }
   }
 
