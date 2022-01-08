@@ -26,6 +26,30 @@ class CharactersPage extends StatefulWidget {
 }
 
 class _CharactersPageState extends State<CharactersPage> {
+  void _onExportPrompt() async {
+    final Future? response = await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(Translations.of(context)!.dialog_exporting),
+          content: Text(Translations.of(context)!.dialog_exporting_subtitle),
+          actions: <Widget>[
+            TextButton(
+              child: Text(Translations.of(context)!.button_continue),
+              onPressed: () {
+                Navigator.pop(context, Future.value(true));
+              },
+            )
+          ],
+        );
+      },
+    );
+
+    if (response != null) {
+      _onExport();
+    }
+  }
+
   Future _onExtractionComplete(List<Character> items) async {
     return await showDialog(
       context: context,
@@ -250,7 +274,7 @@ class _CharactersPageState extends State<CharactersPage> {
           context,
           onAdd: _onAdd,
           onImport: _onImport,
-          onExport: _onExport,
+          onExport: _onExportPrompt,
           onReset: characters.isNotEmpty ? notifier.reset : null,
         ),
         ElevatedButton.icon(

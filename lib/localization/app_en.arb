@@ -51,6 +51,8 @@
     "dialog_remove_character_subtitle": "This action cannot be undone.",
     "dialog_name_extraction": "Name Extraction",
     "dialog_name_extraction_subtitle": "Here you can remove invalid entries that are not names.",
+    "dialog_exporting": "Exporting",
+    "dialog_exporting_subtitle": "In the dialog that appears, select the 'characters' folder on your mod.",
     "feedback_invalid_tag": "Invalid tag",
     "feedback_invalid_trait": "Invalid trait",
     "feedback_trait_added": "Trait added",
