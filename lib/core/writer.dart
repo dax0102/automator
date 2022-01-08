@@ -4,6 +4,7 @@ import 'package:automator/characters/character.dart';
 import 'package:automator/core/ideologies.dart';
 import 'package:automator/core/position.dart';
 import 'package:automator/ministers/minister.dart';
+import 'package:path/path.dart';
 
 class Writer {
   const Writer._();
@@ -142,6 +143,40 @@ class Writer {
     await output.writeAsString('\n}', mode: _mode);
   }
 
+  static Future appendToHistory(String path, List<Character> characters) async {
+    final directory = Directory('$path/history/countries');
+    final List<FileSystemEntity> entities = await directory.list().toList();
+
+    List<String> tags = characters.map((character) => character.tag).toList();
+    tags = tags.toSet().toList();
+
+    final List<File> items = entities.map((e) => e as File).where((e) {
+      String name = basename(e.path);
+      bool exists = false;
+      for (String tag in tags) {
+        if (name.startsWith(tag)) {
+          exists = true;
+        }
+      }
+      return exists;
+    }).toList();
+    for (File file in items) {
+      List<String> content = await file.readAsLines();
+      content.removeWhere((e) => e.startsWith('recruit_character'));
+      await file.writeAsString(content.join('\n'));
+
+      String name = basename(file.path);
+      String tag = name.substring(0, name.indexOf('-')).trim();
+      await file.writeAsString('\n', mode: _mode);
+      for (Character character in characters) {
+        if (character.tag == tag) {
+          await file.writeAsString('\nrecruit_character = ${character.token}',
+              mode: _mode);
+        }
+      }
+    }
+  }
+
   static Future saveCharacters(String path, List<Character> characters) async {
     final output = File(path);
     if (await output.exists()) {
@@ -182,7 +217,7 @@ class Writer {
         await output.writeAsString(_army, mode: _mode);
         if (character.armyPortrait) {
           String generated =
-              '$_large "$portraitLargePrefix${character.tag}/Portrait_${character.token}_army$portraitSuffix"';
+              '$_large "$portraitLargePrefix${character.tag}/Portrait_${character.token}$portraitSuffix"';
 
           await output.writeAsString(character.armyLargePortrait ?? generated,
               mode: _mode);
@@ -202,7 +237,7 @@ class Writer {
         await output.writeAsString(_navy, mode: _mode);
         if (character.navyPortrait) {
           String generated =
-              '$_large "$portraitLargePrefix${character.tag}/Portrait_${character.token}_navy$portraitSuffix"';
+              '$_large "$portraitLargePrefix${character.tag}/Portrait_${character.token}$portraitSuffix"';
 
           await output.writeAsString(character.navyLargePortrait ?? generated,
               mode: _mode);

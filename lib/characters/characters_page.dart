@@ -255,6 +255,12 @@ class _CharactersPageState extends State<CharactersPage> {
         for (MapEntry<String, List<Character>> item in items.entries) {
           await Writer.saveCharacters('$output/${item.key}.txt', item.value);
         }
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content:
+                Text(Translations.of(context)!.feedback_operation_complete),
+          ),
+        );
       }
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -262,6 +268,15 @@ class _CharactersPageState extends State<CharactersPage> {
           content: Text(Translations.of(context)!.feedbacK_empty_output),
         ),
       );
+    }
+  }
+
+  void _onAppend() async {
+    final characters =
+        Provider.of<CharactersNotifier>(context, listen: false).characters;
+    String? path = await FilePicker.platform.getDirectoryPath();
+    if (path != null) {
+      Writer.appendToHistory(path, characters);
     }
   }
 
@@ -281,6 +296,11 @@ class _CharactersPageState extends State<CharactersPage> {
           onPressed: _onExtract,
           icon: const Icon(Icons.read_more_outlined),
           label: Text(Translations.of(context)!.button_extract),
+        ),
+        ElevatedButton.icon(
+          icon: const Icon(Icons.history_edu_outlined),
+          label: Text(Translations.of(context)!.button_append_to_history),
+          onPressed: _onAppend,
         )
       ],
     );
