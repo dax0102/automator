@@ -129,7 +129,7 @@ class _MinistersPageState extends State<MinistersPage> {
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(Translations.of(context)!.feedbacK_empty_output),
+          content: Text(Translations.of(context)!.feedback_empty_output),
         ),
       );
     }
