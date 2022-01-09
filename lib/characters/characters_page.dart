@@ -9,6 +9,7 @@ import 'package:automator/characters/characters_notifier.dart';
 import 'package:automator/core/ideologies.dart';
 import 'package:automator/core/reader.dart';
 import 'package:automator/core/writer.dart';
+import 'package:automator/settings/settings_notifier.dart';
 import 'package:automator/shared/custom/header.dart';
 import 'package:automator/shared/custom/state.dart';
 import 'package:automator/shared/theme.dart';
@@ -26,13 +27,14 @@ class CharactersPage extends StatefulWidget {
 }
 
 class _CharactersPageState extends State<CharactersPage> {
-  void _onExportPrompt() async {
-    final Future? response = await showDialog(
+  Future _onBrowsePrompt() async {
+    return await showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text(Translations.of(context)!.dialog_exporting),
-          content: Text(Translations.of(context)!.dialog_exporting_subtitle),
+          title: Text(Translations.of(context)!.dialog_browse_directory),
+          content:
+              Text(Translations.of(context)!.dialog_browse_directory_subtitle),
           actions: <Widget>[
             TextButton(
               child: Text(Translations.of(context)!.button_continue),
@@ -44,10 +46,6 @@ class _CharactersPageState extends State<CharactersPage> {
         );
       },
     );
-
-    if (response != null) {
-      _onExport();
-    }
   }
 
   Future _onExtractionComplete(List<Character> items) async {
@@ -88,6 +86,7 @@ class _CharactersPageState extends State<CharactersPage> {
                 TextButton(
                   child: Text(Translations.of(context)!.button_continue),
                   onPressed: () {
+                    Navigator.pop(context);
                     Navigator.push(
                       context,
                       PageRouteBuilder(
@@ -248,24 +247,43 @@ class _CharactersPageState extends State<CharactersPage> {
   void _onExport() async {
     final characters =
         Provider.of<CharactersNotifier>(context, listen: false).characters;
-    if (characters.isNotEmpty) {
-      String? output = await FilePicker.platform.getDirectoryPath();
-      if (output != null) {
-        final items = characters.groupBy((c) => c.tag);
-        for (MapEntry<String, List<Character>> item in items.entries) {
-          await Writer.saveCharacters('$output/${item.key}.txt', item.value);
-        }
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content:
-                Text(Translations.of(context)!.feedback_operation_complete),
-          ),
-        );
-      }
-    } else {
+
+    if (characters.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(Translations.of(context)!.feedback_empty_output),
+        ),
+      );
+    }
+
+    String? directory =
+        await Provider.of<SettingsNotifier>(context, listen: false)
+            .getWorkspaceDirectory();
+
+    if (directory == null) {
+      bool? response = await _onBrowsePrompt();
+      if (response == null) {
+        return;
+      }
+      directory = await FilePicker.platform.getDirectoryPath();
+    }
+
+    if (directory != null) {
+      final items = characters.groupBy((c) => c.tag);
+      String destination = '$directory/common/characters/';
+      for (MapEntry<String, List<Character>> item in items.entries) {
+        await Writer.saveCharacters('$destination${item.key}.txt', item.value);
+      }
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(Translations.of(context)!.feedback_operation_complete),
+        ),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content:
+              Text(Translations.of(context)!.feedback_provide_valid_directory),
         ),
       );
     }
@@ -274,13 +292,40 @@ class _CharactersPageState extends State<CharactersPage> {
   void _onAppend() async {
     final characters =
         Provider.of<CharactersNotifier>(context, listen: false).characters;
-    String? path = await FilePicker.platform.getDirectoryPath();
-    if (path != null) {
-      await Writer.appendToHistory(path, characters);
 
+    if (characters.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(Translations.of(context)!.feedback_empty_output),
+        ),
+      );
+    }
+
+    String? directory =
+        await Provider.of<SettingsNotifier>(context, listen: false)
+            .getWorkspaceDirectory();
+
+    if (directory == null) {
+      bool? response = await _onBrowsePrompt();
+      if (response == null) {
+        return;
+      }
+      directory = await FilePicker.platform.getDirectoryPath();
+    }
+
+    if (directory != null) {
+      await Writer.appendToHistory(directory, characters);
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(Translations.of(context)!.feedback_operation_complete),
+        ),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content:
+              Text(Translations.of(context)!.feedback_provide_valid_directory),
         ),
       );
     }
@@ -295,7 +340,7 @@ class _CharactersPageState extends State<CharactersPage> {
           context,
           onAdd: _onAdd,
           onImport: _onImport,
-          onExport: _onExportPrompt,
+          onExport: _onExport,
           onReset: characters.isNotEmpty ? notifier.reset : null,
         ),
         ElevatedButton.icon(
