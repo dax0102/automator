@@ -283,21 +283,94 @@ class Writer {
 
       if (character.headOfState) {
         // Country Leader
-        await output.writeAsString(_countryLeader, mode: _mode);
-        await output.writeAsString(
-            '$_ideology ${character.ideology.token}_subtype',
-            mode: _mode);
-        if (character.leaderTraits.isNotEmpty) {
-          await output.writeAsString(_traits, mode: _mode);
-          for (String trait in character.leaderTraits) {
-            await output.writeAsString('\n\t\t\t\t$trait', mode: _mode);
+
+        if (character.spanLeftistIdeologies == true) {
+          List<Ideology> leftistIdeologies = IdeologyExtension.left;
+
+          for (Ideology ideology in leftistIdeologies) {
+            await output.writeAsString(_countryLeader, mode: _mode);
+            await output.writeAsString('$_ideology ${ideology.token}_subtype',
+                mode: _mode);
+            if (character.leaderTraits.isNotEmpty) {
+              await output.writeAsString(_traits, mode: _mode);
+              for (String trait in character.leaderTraits) {
+                await output.writeAsString('\n\t\t\t\t$trait', mode: _mode);
+              }
+              await output.writeAsString('\n\t\t\t}',
+                  mode: _mode); // close traits
+            } else {
+              await output.writeAsString('$_traits }', mode: _mode);
+            }
+
+            await output.writeAsString('\n\t\t}', mode: _mode);
           }
-          await output.writeAsString('\n\t\t\t}', mode: _mode); // close traits
-        } else {
-          await output.writeAsString('$_traits }', mode: _mode);
+        }
+        if (character.spanCentristIdeologies == true) {
+          List<Ideology> centristIdeologies = IdeologyExtension.center;
+
+          for (Ideology ideology in centristIdeologies) {
+            await output.writeAsString(_countryLeader, mode: _mode);
+            await output.writeAsString('$_ideology ${ideology.token}_subtype',
+                mode: _mode);
+            if (character.leaderTraits.isNotEmpty) {
+              await output.writeAsString(_traits, mode: _mode);
+              for (String trait in character.leaderTraits) {
+                await output.writeAsString('\n\t\t\t\t$trait', mode: _mode);
+              }
+              await output.writeAsString('\n\t\t\t}',
+                  mode: _mode); // close traits
+            } else {
+              await output.writeAsString('$_traits }', mode: _mode);
+            }
+
+            await output.writeAsString('\n\t\t}', mode: _mode);
+          }
+        }
+        if (character.spanRightistIdeologies == true) {
+          List<Ideology> rightistIdeologies = IdeologyExtension.right;
+
+          for (Ideology ideology in rightistIdeologies) {
+            await output.writeAsString(_countryLeader, mode: _mode);
+            await output.writeAsString('$_ideology ${ideology.token}_subtype',
+                mode: _mode);
+            if (character.leaderTraits.isNotEmpty) {
+              await output.writeAsString(_traits, mode: _mode);
+              for (String trait in character.leaderTraits) {
+                await output.writeAsString('\n\t\t\t\t$trait', mode: _mode);
+              }
+              await output.writeAsString('\n\t\t\t}',
+                  mode: _mode); // close traits
+            } else {
+              await output.writeAsString('$_traits }', mode: _mode);
+            }
+
+            await output.writeAsString('\n\t\t}', mode: _mode);
+          }
         }
 
-        await output.writeAsString('\n\t\t}', mode: _mode);
+        if ((character.ideology.isLeft &&
+                character.spanLeftistIdeologies != true) ||
+            (character.ideology.isCenter &&
+                character.spanCentristIdeologies != true) ||
+            (character.ideology.isRight &&
+                character.spanRightistIdeologies != true)) {
+          await output.writeAsString(_countryLeader, mode: _mode);
+          await output.writeAsString(
+              '$_ideology ${character.ideology.token}_subtype',
+              mode: _mode);
+          if (character.leaderTraits.isNotEmpty) {
+            await output.writeAsString(_traits, mode: _mode);
+            for (String trait in character.leaderTraits) {
+              await output.writeAsString('\n\t\t\t\t$trait', mode: _mode);
+            }
+            await output.writeAsString('\n\t\t\t}',
+                mode: _mode); // close traits
+          } else {
+            await output.writeAsString('$_traits }', mode: _mode);
+          }
+
+          await output.writeAsString('\n\t\t}', mode: _mode);
+        }
       } // close country leader
 
       // Field Marshal

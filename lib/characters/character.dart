@@ -54,6 +54,12 @@ class Character {
   final String? navySmallPortrait;
   @HiveField(22)
   final int cost;
+  @HiveField(23)
+  final bool? spanLeftistIdeologies;
+  @HiveField(24)
+  final bool? spanCentristIdeologies;
+  @HiveField(25)
+  final bool? spanRightistIdeologies;
 
   Character({
     required this.name,
@@ -79,6 +85,9 @@ class Character {
     this.navyLargePortrait,
     this.navySmallPortrait,
     this.cost = 150,
+    this.spanLeftistIdeologies,
+    this.spanCentristIdeologies,
+    this.spanRightistIdeologies,
   });
 
   bool hasCustomPortraitPath() {

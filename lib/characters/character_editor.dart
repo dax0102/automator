@@ -44,6 +44,9 @@ class _CharacterEditorState extends State<CharacterEditor> {
   bool _civilianPortrait = false;
   bool _armyPortrait = false;
   bool _navyPortrait = false;
+  bool _spanToLeft = false;
+  bool _spanToCenter = false;
+  bool _spanToRight = false;
 
   @override
   void initState() {
@@ -107,7 +110,6 @@ class _CharacterEditorState extends State<CharacterEditor> {
 
   void _onSave() {
     final tag = _tagController.text;
-    final token = Character.buildToken(tag, _nameController.text);
 
     final character = Character(
       name: _nameController.text,
@@ -139,6 +141,9 @@ class _CharacterEditorState extends State<CharacterEditor> {
           _navyLargePortrait.text.isEmpty ? null : _navyLargePortrait.text,
       navySmallPortrait:
           _navySmallPortrait.text.isEmpty ? null : _navySmallPortrait.text,
+      spanLeftistIdeologies: _spanToLeft,
+      spanCentristIdeologies: _spanToCenter,
+      spanRightistIdeologies: _spanToRight,
     );
     Provider.of<CharactersNotifier>(context, listen: false).put(character);
     Navigator.pop(context);
@@ -185,6 +190,34 @@ class _CharacterEditorState extends State<CharacterEditor> {
       positions.add(position);
     }
     setState(() => _positions = positions);
+  }
+
+  List<Widget> get _headOfStateSpanning {
+    return <Widget>[
+      CheckboxForm(
+        value: _spanToLeft,
+        onChanged: (checked) {
+          setState(() => _spanToLeft = checked ?? false);
+        },
+        title: Text(
+          Translations.of(context)!.hint_span_to_leftist_ideologies,
+        ),
+      ),
+      CheckboxForm(
+        value: _spanToCenter,
+        onChanged: (checked) {
+          setState(() => _spanToCenter = checked ?? false);
+        },
+        title: Text(Translations.of(context)!.hint_span_to_centrist_ideologies),
+      ),
+      CheckboxForm(
+        value: _spanToRight,
+        onChanged: (checked) {
+          setState(() => _spanToRight = checked ?? false);
+        },
+        title: Text(Translations.of(context)!.hint_span_to_rightist_ideologies),
+      )
+    ];
   }
 
   List<Widget> get _form {
@@ -292,6 +325,14 @@ class _CharacterEditorState extends State<CharacterEditor> {
           }
         },
       ),
+      if (_headOfState)
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: _headOfStateSpanning,
+          ),
+        ),
       if (_headOfState) _hosTraits,
       CheckboxForm(
         title: Text(Translations.of(context)!.hint_field_marshal),

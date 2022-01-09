@@ -173,6 +173,44 @@ extension IdeologyExtension on Ideology {
         return Ideology.none;
     }
   }
+
+  static List<Ideology> get left {
+    return [
+      Ideology.vanguardist,
+      Ideology.collectivist,
+      Ideology.libertarianSocialist
+    ];
+  }
+
+  static List<Ideology> get center {
+    return [
+      Ideology.socialDemocrat,
+      Ideology.socialLiberal,
+      Ideology.marketLiberal,
+      Ideology.socialConservative
+    ];
+  }
+
+  static List<Ideology> get right {
+    return [
+      Ideology.authoritarianDemocrat,
+      Ideology.paternalAutocrat,
+      Ideology.nationalPopulist,
+      Ideology.valkist
+    ];
+  }
+
+  bool get isLeft {
+    return left.contains(this);
+  }
+
+  bool get isCenter {
+    return center.contains(this);
+  }
+
+  bool get isRight {
+    return right.contains(this);
+  }
 }
 
 enum IdeologyKR {
