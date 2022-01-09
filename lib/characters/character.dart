@@ -1,6 +1,7 @@
 import 'dart:math';
 import 'package:automator/core/ideologies.dart';
 import 'package:automator/core/position.dart';
+import 'package:automator/shared/tools.dart';
 import 'package:hive/hive.dart';
 
 part 'character.g.dart';
@@ -107,8 +108,9 @@ class Character {
   }
 
   static String buildToken(String tag, String name) {
-    String n = name.replaceAll('.', '');
-    return '${tag}_${n.replaceAll(" ", "_")}';
+    String token = name.withoutDiacriticalMarks;
+    token = token.replaceAll('.', '');
+    return '${tag}_${token.replaceAll(" ", "_")}';
   }
 
   static bool hasGovernmentPosition(List<Position> positions) {
