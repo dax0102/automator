@@ -127,20 +127,26 @@ class _CharacterEditorState extends State<CharacterEditor> {
       civilianPortrait: _civilianPortrait,
       armyPortrait: _armyPortrait,
       navyPortrait: _navyPortrait,
-      civilianLargePortrait: _civilianLargePortrait.text.isEmpty
+      civilianLargePortrait:
+          !_customPaths || _civilianLargePortrait.text.isEmpty
+              ? null
+              : _civilianLargePortrait.text,
+      civilianSmallPortrait:
+          !_customPaths || _civilianSmallPortrait.text.isEmpty
+              ? null
+              : _civilianSmallPortrait.text,
+      armyLargePortrait: !_customPaths || _armyLargePortrait.text.isEmpty
           ? null
-          : _civilianLargePortrait.text,
-      civilianSmallPortrait: _civilianSmallPortrait.text.isEmpty
+          : _armyLargePortrait.text,
+      armySmallPortait: !_customPaths || _armySmallPortrait.text.isEmpty
           ? null
-          : _civilianSmallPortrait.text,
-      armyLargePortrait:
-          _armyLargePortrait.text.isEmpty ? null : _armyLargePortrait.text,
-      armySmallPortait:
-          _armySmallPortrait.text.isEmpty ? null : _armySmallPortrait.text,
-      navyLargePortrait:
-          _navyLargePortrait.text.isEmpty ? null : _navyLargePortrait.text,
-      navySmallPortrait:
-          _navySmallPortrait.text.isEmpty ? null : _navySmallPortrait.text,
+          : _armySmallPortrait.text,
+      navyLargePortrait: !_customPaths || _navyLargePortrait.text.isEmpty
+          ? null
+          : _navyLargePortrait.text,
+      navySmallPortrait: !_customPaths || _navySmallPortrait.text.isEmpty
+          ? null
+          : _navySmallPortrait.text,
       spanLeftistIdeologies: _spanToLeft,
       spanCentristIdeologies: _spanToCenter,
       spanRightistIdeologies: _spanToRight,
