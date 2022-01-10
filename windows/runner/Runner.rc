@@ -90,7 +90,7 @@ BEGIN
         BLOCK "040904e4"
         BEGIN
             VALUE "CompanyName", "io.github.dax" "\0"
-            VALUE "FileDescription", "A new Flutter project." "\0"
+            VALUE "FileDescription", "Component Generation Tool for Fuhrerredux and Kaiserredux." "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
             VALUE "InternalName", "automator" "\0"
             VALUE "LegalCopyright", "Copyright (C) 2021 io.github.dax. All rights reserved." "\0"
