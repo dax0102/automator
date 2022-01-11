@@ -119,6 +119,8 @@ class Character {
   static String buildToken(String tag, String name) {
     String token = name.withoutDiacriticalMarks;
     token = token.replaceAll('.', '');
+    token = token.replaceAll('\'', '_');
+    token = token.replaceAll('-', '_');
     return '${tag}_${token.replaceAll(" ", "_")}';
   }
 
