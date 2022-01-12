@@ -77,6 +77,11 @@ class _MinisterEditorState extends State<MinisterEditor> {
       positions.remove(position);
     } else {
       positions.add(position);
+      final traits = Provider.of<TraitsNotifier>(context, listen: false).traits;
+      final trait = traits[position]?.first;
+      if (trait != null) {
+        _ministerTraits[position] = trait;
+      }
     }
     setState(() => _positions = positions);
   }

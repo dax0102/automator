@@ -30,8 +30,6 @@ class Writer {
         if (minister.positions.contains(position)) {
           String trait = minister.traits
               .firstWhere((trait) => trait.startsWith(position.prefix));
-          String nameNoSpace = minister.name.replaceAll(" ", "_");
-          nameNoSpace = minister.name.replaceAll(".", "");
 
           await output.writeAsString(
               '\n\t\t${minister.token}_${position.prefix}_${minister.ideology.prefix} = {',
@@ -53,7 +51,7 @@ class Writer {
           if (position.isMilitary()) {
             await output.writeAsString('\n\t\t\tvisible = {', mode: _mode);
             await output.writeAsString(
-                '\n\t\t\t\tNOT = { has_country_flag = ${nameNoSpace}_dead }',
+                '\n\t\t\t\tNOT = { has_country_flag = ${minister.token}_dead }',
                 mode: _mode);
             await output.writeAsString('\n\t\t\t}', mode: _mode);
           }

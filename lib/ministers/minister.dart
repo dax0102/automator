@@ -30,6 +30,10 @@ class Minister {
   }
 
   static String buildToken(String tag, String name) {
-    return '${tag}_${name.replaceAll(" ", "_")}';
+    String token = name.replaceAll('\'', '_');
+    token = token.replaceAll('-', '_');
+    token = token.replaceAll('.', '');
+    token = token.replaceAll(' ', '_');
+    return '${tag}_$token';
   }
 }
