@@ -213,16 +213,27 @@ extension IdeologyExtension on Ideology {
   }
 }
 
+@HiveType(typeId: 4)
 enum IdeologyKR {
+  @HiveField(0)
   totalist,
+  @HiveField(1)
   syndicalist,
+  @HiveField(2)
   radicalSocialist,
+  @HiveField(3)
   socialDemocrat,
+  @HiveField(4)
   socialLiberal,
+  @HiveField(5)
   marketLiberal,
+  @HiveField(6)
   socialConservative,
+  @HiveField(7)
   authoritarianDemocrat,
+  @HiveField(8)
   paternalAutocrat,
+  @HiveField(9)
   nationalPopulist,
 }
 

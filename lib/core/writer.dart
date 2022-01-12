@@ -27,6 +27,8 @@ class Writer {
           ? 'head_of_gov_available'
           : 'minister_available';
 
+      ministers.values.forEach(print);
+
       await output.writeAsString('\n\t${position.token} = {', mode: _mode);
       for (Minister minister in ministersGrouped) {
         String trait = minister.traits

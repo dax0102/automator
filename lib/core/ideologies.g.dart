@@ -94,3 +94,82 @@ class IdeologyAdapter extends TypeAdapter<Ideology> {
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }
+
+class IdeologyKRAdapter extends TypeAdapter<IdeologyKR> {
+  @override
+  final int typeId = 4;
+
+  @override
+  IdeologyKR read(BinaryReader reader) {
+    switch (reader.readByte()) {
+      case 0:
+        return IdeologyKR.totalist;
+      case 1:
+        return IdeologyKR.syndicalist;
+      case 2:
+        return IdeologyKR.radicalSocialist;
+      case 3:
+        return IdeologyKR.socialDemocrat;
+      case 4:
+        return IdeologyKR.socialLiberal;
+      case 5:
+        return IdeologyKR.marketLiberal;
+      case 6:
+        return IdeologyKR.socialConservative;
+      case 7:
+        return IdeologyKR.authoritarianDemocrat;
+      case 8:
+        return IdeologyKR.paternalAutocrat;
+      case 9:
+        return IdeologyKR.nationalPopulist;
+      default:
+        return IdeologyKR.totalist;
+    }
+  }
+
+  @override
+  void write(BinaryWriter writer, IdeologyKR obj) {
+    switch (obj) {
+      case IdeologyKR.totalist:
+        writer.writeByte(0);
+        break;
+      case IdeologyKR.syndicalist:
+        writer.writeByte(1);
+        break;
+      case IdeologyKR.radicalSocialist:
+        writer.writeByte(2);
+        break;
+      case IdeologyKR.socialDemocrat:
+        writer.writeByte(3);
+        break;
+      case IdeologyKR.socialLiberal:
+        writer.writeByte(4);
+        break;
+      case IdeologyKR.marketLiberal:
+        writer.writeByte(5);
+        break;
+      case IdeologyKR.socialConservative:
+        writer.writeByte(6);
+        break;
+      case IdeologyKR.authoritarianDemocrat:
+        writer.writeByte(7);
+        break;
+      case IdeologyKR.paternalAutocrat:
+        writer.writeByte(8);
+        break;
+      case IdeologyKR.nationalPopulist:
+        writer.writeByte(9);
+        break;
+    }
+  }
+
+  @override
+  int get hashCode => typeId.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is IdeologyKRAdapter &&
+          runtimeType == other.runtimeType &&
+          typeId == other.typeId;
+}

@@ -12,8 +12,10 @@ class HiveDatabase {
   static Future init() async {
     await Hive.initFlutter();
     Hive.registerAdapter(CharacterAdapter());
+    Hive.registerAdapter(MinisterAdapter());
     Hive.registerAdapter(PositionAdapter());
     Hive.registerAdapter(IdeologyAdapter());
+    Hive.registerAdapter(IdeologyKRAdapter());
 
     await Hive.openBox<Character>(CharacterRepository.boxName);
     await Hive.openBox<Minister>(MinisterRepository.boxName);
