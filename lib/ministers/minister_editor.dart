@@ -64,7 +64,7 @@ class _MinisterEditorState extends State<MinisterEditor> {
       name: _nameController.text,
       ideology: _ideology,
       tag: tag,
-      positions: _ministerTraits.keys.toList(),
+      positions: _positions,
       traits: _ministerTraits.values.toList(),
     );
     Provider.of<MinistersNotifier>(context, listen: false).put(minister);

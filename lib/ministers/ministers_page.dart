@@ -106,19 +106,13 @@ class _MinistersPageState extends State<MinistersPage> {
   }
 
   void _onExport() async {
-    final List<Minister> raw =
+    final List<Minister> ministers =
         Provider.of<MinistersNotifier>(context, listen: false).ministers;
-    Map<Position, List<Minister>> ministers = {};
-    for (Position position in Position.values) {
-      ministers[position] = [];
-      for (Minister minister in raw) {
-        if (minister.positions.contains(position)) {
-          final items = ministers[position] ?? [];
-          ministers[position] = [minister, ...items];
-        }
-      }
-    }
-    if (raw.isNotEmpty) {
+    ministers.forEach((minister) {
+      minister.positions.forEach(print);
+    });
+
+    if (ministers.isNotEmpty) {
       String? core = await FilePicker.platform.saveFile(
         fileName: 'ministers.txt',
         type: FileType.custom,
