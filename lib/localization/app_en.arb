@@ -69,6 +69,7 @@
     "feedback_operation_complete": "Operation Complete",
     "feedback_workspace_directory_set": "Updated workspace directory",
     "feedback_provide_valid_directory": "Provide a valid directory",
+    "feedback_writing_files": "Writing Files",
     "state_empty_characters": "No Characters",
     "state_empty_ministers": "No Ministers",
     "state_empty_traits": "No Traits",

@@ -11,6 +11,7 @@ import 'package:automator/core/reader.dart';
 import 'package:automator/core/writer.dart';
 import 'package:automator/settings/settings_notifier.dart';
 import 'package:automator/shared/custom/header.dart';
+import 'package:automator/shared/custom/indicator.dart';
 import 'package:automator/shared/custom/state.dart';
 import 'package:automator/shared/theme.dart';
 import 'package:automator/shared/tools.dart';
@@ -27,6 +28,24 @@ class CharactersPage extends StatefulWidget {
 }
 
 class _CharactersPageState extends State<CharactersPage> {
+  void _invokeIndicator() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return WillPopScope(
+            child: AlertDialog(
+              shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(8.0)),
+              ),
+              backgroundColor: Colors.black87,
+              content: Indicator(
+                  heading: Translations.of(context)!.feedback_writing_files),
+            ),
+            onWillPop: () async => false);
+      },
+    );
+  }
+
   Future _onBrowsePrompt() async {
     return await showDialog(
       context: context,
@@ -256,6 +275,7 @@ class _CharactersPageState extends State<CharactersPage> {
       );
     }
 
+    _invokeIndicator();
     String? directory =
         await Provider.of<SettingsNotifier>(context, listen: false)
             .getWorkspaceDirectory();
@@ -274,6 +294,8 @@ class _CharactersPageState extends State<CharactersPage> {
       for (MapEntry<String, List<Character>> item in items.entries) {
         await Writer.saveCharacters('$destination${item.key}.txt', item.value);
       }
+
+      Navigator.pop(context);
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(Translations.of(context)!.feedback_operation_complete),

@@ -6,6 +6,7 @@ import 'package:automator/ministers/minister_editor.dart';
 import 'package:automator/ministers/ministers_notifier.dart';
 import 'package:automator/ministers/ministers_table.dart';
 import 'package:automator/shared/custom/header.dart';
+import 'package:automator/shared/custom/indicator.dart';
 import 'package:automator/shared/custom/state.dart';
 import 'package:automator/shared/theme.dart';
 import 'package:file_picker/file_picker.dart';
@@ -21,6 +22,24 @@ class MinistersPage extends StatefulWidget {
 }
 
 class _MinistersPageState extends State<MinistersPage> {
+  void _invokeIndicator() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return WillPopScope(
+            child: AlertDialog(
+              shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(8.0)),
+              ),
+              backgroundColor: Colors.black87,
+              content: Indicator(
+                  heading: Translations.of(context)!.feedback_writing_files),
+            ),
+            onWillPop: () async => false);
+      },
+    );
+  }
+
   void _onAdd() {
     Navigator.push(
       context,
@@ -105,6 +124,8 @@ class _MinistersPageState extends State<MinistersPage> {
         type: FileType.custom,
         allowedExtensions: ['txt'],
       );
+
+      _invokeIndicator();
       if (core != null) {
         await Writer.saveMinistersCore(core, ministers);
       }
@@ -126,6 +147,8 @@ class _MinistersPageState extends State<MinistersPage> {
       if (gfx != null) {
         await Writer.saveMinistersGFX(gfx, ministers);
       }
+
+      Navigator.pop(context);
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(

@@ -80,7 +80,7 @@ class Writer {
       }
       await output.writeAsString('\n\t}', mode: _mode); // close position
     }
-    await output.writeAsString('}', mode: _mode);
+    await output.writeAsString('\n}', mode: _mode);
   }
 
   static Future saveMinistersLoc(

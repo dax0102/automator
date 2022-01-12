@@ -115,7 +115,7 @@ class _CharacterEditorState extends State<CharacterEditor> {
       name: _nameController.text,
       tag: tag,
       ideology: _ideology,
-      positions: _ministerTraits.keys.toList(),
+      positions: _positions,
       leaderTraits: _leaderTraits,
       commanderLandTraits: _commanderLandTraits,
       commanderSeaTraits: _commanderSeaTraits,
@@ -190,6 +190,7 @@ class _CharacterEditorState extends State<CharacterEditor> {
 
   void _modifyPosition(Position position) {
     final positions = _positions;
+    final traits = _traits;
     if (positions.contains(position)) {
       positions.remove(position);
     } else {

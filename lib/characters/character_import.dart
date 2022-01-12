@@ -527,12 +527,19 @@ class _CharacterImportState extends State<CharacterImport> {
                             runSpacing: 4,
                             children: [
                               ...character.positions.map((position) => Chip(
-                                    label:
-                                        Text(position.getLocalization(context)),
+                                    label: Text(
+                                      position.getLocalization(context),
+                                    ),
                                     onDeleted: () {
                                       final characters = _characters;
-                                      characters.removeWhere(
+                                      final positions = character.positions;
+                                      positions.remove(position);
+
+                                      final index = characters.indexWhere(
                                           (c) => c.name == character.name);
+                                      if (index > -1) {
+                                        characters[index] = character;
+                                      }
 
                                       setState(() => _characters = characters);
                                     },

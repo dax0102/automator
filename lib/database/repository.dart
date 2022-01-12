@@ -1,5 +1,6 @@
 import 'package:automator/characters/character.dart';
 import 'package:automator/core/position.dart';
+import 'package:automator/ministers/minister.dart';
 import 'package:automator/shared/tools.dart';
 import 'package:hive/hive.dart';
 
@@ -42,6 +43,42 @@ class CharacterRepository extends Repository<Character> {
     _characters.removeWhere((c) => c.name == data.name);
     await _box.clear();
     return await _box.addAll(_characters);
+  }
+}
+
+class MinisterRepository extends Repository<Minister> {
+  static const boxName = "ministers";
+  late final Box<Minister> _box;
+  List<Minister> _ministers = [];
+
+  MinisterRepository() {
+    _box = Hive.box(boxName);
+    _ministers = _box.values.toList();
+  }
+
+  @override
+  List<Minister> fetch() {
+    return _ministers;
+  }
+
+  @override
+  Future put(Minister data) async {
+    final index = _ministers.indexWhere((m) => m.name == data.name);
+
+    if (index > -1) {
+      _ministers[index] = data;
+    } else {
+      _ministers.add(data);
+    }
+    await _box.clear();
+    return await _box.addAll(_ministers);
+  }
+
+  @override
+  Future remove(Minister data) async {
+    _ministers.removeWhere((m) => m.name == data.name);
+    await _box.clear();
+    return await _box.addAll(_ministers);
   }
 }
 
