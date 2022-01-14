@@ -4,11 +4,13 @@ import 'package:flutter/foundation.dart';
 
 class CharactersNotifier extends ChangeNotifier {
   final CharacterRepository repository = CharacterRepository();
+  List<Character> _main = [];
   List<Character> _characters = [];
   List<Character> get characters => _characters;
 
   CharactersNotifier() {
-    _characters = repository.fetch();
+    _main = repository.fetch();
+    _characters = [..._main];
   }
 
   put(Character character) {
@@ -25,6 +27,17 @@ class CharactersNotifier extends ChangeNotifier {
 
   reset() {
     _characters.clear();
+    notifyListeners();
+  }
+
+  search(String query) {
+    if (query.isEmpty) {
+      _characters = [..._main];
+    } else {
+      _characters = _main.where((character) {
+        return character.name.toLowerCase().contains(query.toLowerCase());
+      }).toList();
+    }
     notifyListeners();
   }
 }

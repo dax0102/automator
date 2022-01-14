@@ -22,6 +22,8 @@ class MinistersPage extends StatefulWidget {
 }
 
 class _MinistersPageState extends State<MinistersPage> {
+  final TextEditingController _searchController = TextEditingController();
+
   void _invokeIndicator() {
     showDialog(
       context: context,
@@ -163,38 +165,44 @@ class _MinistersPageState extends State<MinistersPage> {
         onExport: _onExport,
         onReset: ministers.isNotEmpty ? notifier.reset : null,
       ),
+      onSearch: (query) {
+        Provider.of<MinistersNotifier>(context, listen: false).search(query);
+      },
+      controller: _searchController,
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<MinistersNotifier>(builder: (context, notifier, _) {
-      final ministers = notifier.ministers;
-      return ministers.isEmpty
-          ? Padding(
-              padding: ThemeComponents.defaultPadding,
-              child: Column(
-                children: [
-                  _getHeader(notifier),
-                  EmptyState(
-                    title: Translations.of(context)!.state_empty_ministers,
-                  )
-                ],
-              ))
-          : SingleChildScrollView(
-              child: Padding(
+    return Consumer<MinistersNotifier>(
+      builder: (context, notifier, _) {
+        final ministers = notifier.ministers;
+        return ministers.isEmpty
+            ? Padding(
                 padding: ThemeComponents.defaultPadding,
                 child: Column(
                   children: [
                     _getHeader(notifier),
-                    MinistersTable(
-                        ministers: ministers,
-                        onEdit: _onEdit,
-                        onRemove: _onRemove)
+                    EmptyState(
+                      title: Translations.of(context)!.state_empty_ministers,
+                    )
                   ],
+                ))
+            : SingleChildScrollView(
+                child: Padding(
+                  padding: ThemeComponents.defaultPadding,
+                  child: Column(
+                    children: [
+                      _getHeader(notifier),
+                      MinistersTable(
+                          ministers: ministers,
+                          onEdit: _onEdit,
+                          onRemove: _onRemove)
+                    ],
+                  ),
                 ),
-              ),
-            );
-    });
+              );
+      },
+    );
   }
 }

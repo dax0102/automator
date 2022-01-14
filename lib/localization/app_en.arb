@@ -33,6 +33,7 @@
     "hint_one_tag": "One Tag",
     "hint_multiple_tags": "Multiple Tags",
     "hint_cost": "Cost",
+    "hint_search": "Search",
     "button_add": "Add",
     "button_edit": "Edit",
     "button_remove": "Remove",

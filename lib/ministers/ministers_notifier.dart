@@ -4,11 +4,13 @@ import 'package:flutter/foundation.dart';
 
 class MinistersNotifier extends ChangeNotifier {
   final MinisterRepository repository = MinisterRepository();
+  List<Minister> _main = [];
   List<Minister> _ministers = [];
   List<Minister> get ministers => _ministers;
 
   MinistersNotifier() {
-    _ministers = repository.fetch();
+    _main = repository.fetch();
+    _ministers = [..._main];
   }
 
   put(Minister minister) {
@@ -23,8 +25,19 @@ class MinistersNotifier extends ChangeNotifier {
     notifyListeners();
   }
 
-  void reset() {
+  reset() {
     _ministers.clear();
+    notifyListeners();
+  }
+
+  search(String query) {
+    if (query.isEmpty) {
+      _ministers = [..._main];
+    } else {
+      _ministers = _main.where((minister) {
+        return minister.name.toLowerCase().contains(query.toLowerCase());
+      }).toList();
+    }
     notifyListeners();
   }
 }

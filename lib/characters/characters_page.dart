@@ -28,6 +28,8 @@ class CharactersPage extends StatefulWidget {
 }
 
 class _CharactersPageState extends State<CharactersPage> {
+  final TextEditingController _searchController = TextEditingController();
+
   void _invokeIndicator() {
     showDialog(
       context: context,
@@ -376,6 +378,10 @@ class _CharactersPageState extends State<CharactersPage> {
           onPressed: _onAppend,
         )
       ],
+      onSearch: (query) {
+        Provider.of<CharactersNotifier>(context, listen: false).search(query);
+      },
+      controller: _searchController,
     );
   }
 

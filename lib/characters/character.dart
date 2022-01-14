@@ -33,11 +33,11 @@ class Character {
   @HiveField(11)
   bool admiral;
   @HiveField(12)
-  final bool civilianPortrait;
+  bool civilianPortrait;
   @HiveField(13)
-  final bool armyPortrait;
+  bool armyPortrait;
   @HiveField(14)
-  final bool navyPortrait;
+  bool navyPortrait;
   @HiveField(15)
   final String? skills;
   @HiveField(16)

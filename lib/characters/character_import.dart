@@ -30,7 +30,6 @@ class _CharacterImportState extends State<CharacterImport> {
   final _formKey = GlobalKey<FormState>();
   final _tagController = TextEditingController();
   List<Character> _characters = [];
-  Map<String, int> _portraits = {};
 
   @override
   void initState() {
@@ -53,29 +52,7 @@ class _CharacterImportState extends State<CharacterImport> {
       return;
     }
 
-    final List<Character> characters = [];
-    for (Character _character in widget.characters) {
-      String name = _character.name;
-      final portrait = _portraits[name] ?? 0;
-
-      Character character = Character(
-        name: name,
-        tag: _tagController.text,
-        ideology: _character.ideology,
-        positions: _character.positions,
-        headOfState: _character.headOfState,
-        fieldMarshal: _character.fieldMarshal,
-        corpCommander: _character.corpCommander,
-        admiral: _character.admiral,
-        ministerTraits: _character.ministerTraits,
-        civilianPortrait: portrait & _civilianPortrait == _civilianPortrait,
-        armyPortrait: portrait & _armyPortrait == _armyPortrait,
-        navyPortrait: portrait & _navyPortrait == _navyPortrait,
-        leaderTraits: _character.leaderTraits,
-        commanderLandTraits: _character.commanderLandTraits,
-        commanderSeaTraits: _character.commanderSeaTraits,
-      );
-      characters.add(character);
+    for (Character character in widget.characters) {
       Provider.of<CharactersNotifier>(context, listen: false).put(character);
     }
     Navigator.pop(context);
@@ -181,55 +158,72 @@ class _CharacterImportState extends State<CharacterImport> {
     );
   }
 
-  Future<int?> _showPortraitChooser(int? portraits) async {
+  Future<int?> _showPortraitChooser(
+    bool hasCivilian,
+    bool hasArmy,
+    bool hasNavy,
+  ) async {
     return await showDialog(
       context: context,
       builder: (BuildContext context) {
-        int _portraits = portraits ?? 0;
+        int portraits = 0;
+        if (hasCivilian) {
+          portraits += _civilianPortrait;
+        }
+        if (hasArmy) {
+          portraits += _armyPortrait;
+        }
+        if (hasNavy) {
+          portraits += _navyPortrait;
+        }
 
-        return StatefulBuilder(builder: (BuildContext context, setState) {
+        return StatefulBuilder(builder: (
+          BuildContext context,
+          StateSetter setState,
+        ) {
           return AlertDialog(
               title: Text(
-                  Translations.of(context)!.dialog_generate_portrait_paths),
+                Translations.of(context)!.dialog_generate_portrait_paths,
+              ),
               content: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   CheckboxForm(
-                    value: _portraits & _civilianPortrait == _civilianPortrait,
+                    value: portraits & _civilianPortrait == _civilianPortrait,
                     onChanged: (checked) {
-                      int portraits = _portraits;
+                      int _portraits = portraits;
                       if (checked == true) {
-                        portraits += _civilianPortrait;
+                        _portraits += _civilianPortrait;
                       } else {
-                        portraits -= _civilianPortrait;
+                        _portraits -= _civilianPortrait;
                       }
-                      setState(() => _portraits = portraits);
+                      setState(() => portraits = _portraits);
                     },
                     title: Text(Translations.of(context)!.hint_civillian),
                   ),
                   CheckboxForm(
-                    value: _portraits & _armyPortrait == _armyPortrait,
+                    value: portraits & _armyPortrait == _armyPortrait,
                     onChanged: (checked) {
-                      int portraits = _portraits;
+                      int _portraits = portraits;
                       if (checked == true) {
-                        portraits += _armyPortrait;
+                        _portraits += _armyPortrait;
                       } else {
-                        portraits -= _armyPortrait;
+                        _portraits -= _armyPortrait;
                       }
-                      setState(() => _portraits = portraits);
+                      setState(() => portraits = _portraits);
                     },
                     title: Text(Translations.of(context)!.hint_army),
                   ),
                   CheckboxForm(
-                    value: _portraits & _navyPortrait == _navyPortrait,
+                    value: portraits & _navyPortrait == _navyPortrait,
                     onChanged: (checked) {
-                      int portraits = _portraits;
+                      int _portraits = portraits;
                       if (checked == true) {
-                        portraits += _navyPortrait;
+                        _portraits += _navyPortrait;
                       } else {
-                        portraits -= _navyPortrait;
+                        _portraits -= _navyPortrait;
                       }
-                      setState(() => _portraits = portraits);
+                      setState(() => portraits = _portraits);
                     },
                     title: Text(Translations.of(context)!.hint_navy),
                   ),
@@ -239,7 +233,7 @@ class _CharacterImportState extends State<CharacterImport> {
                 TextButton(
                   child: Text(Translations.of(context)!.button_save),
                   onPressed: () {
-                    Navigator.pop(context, _portraits);
+                    Navigator.pop(context, portraits);
                   },
                 ),
                 TextButton(
@@ -348,18 +342,18 @@ class _CharacterImportState extends State<CharacterImport> {
     );
   }
 
-  Widget _configureButton(String name, int portraits) {
+  Widget _configureButton(Character character) {
     String label = "";
-    if (portraits & _civilianPortrait == _civilianPortrait) {
+    if (character.civilianPortrait) {
       label += Translations.of(context)!.hint_civillian;
     }
-    if (portraits & _armyPortrait == _armyPortrait) {
+    if (character.armyPortrait) {
       if (label.isNotEmpty) {
         label += ", ";
       }
       label += Translations.of(context)!.hint_army;
     }
-    if (portraits & _navyPortrait == _navyPortrait) {
+    if (character.navyPortrait) {
       if (label.isNotEmpty) {
         label += ", ";
       }
@@ -372,11 +366,20 @@ class _CharacterImportState extends State<CharacterImport> {
         label.isEmpty ? Translations.of(context)!.button_configure : label,
       ),
       onPressed: () async {
-        final result = await _showPortraitChooser(_portraits[name]);
+        final result = await _showPortraitChooser(character.civilianPortrait,
+            character.armyPortrait, character.navyPortrait);
         if (result != null) {
-          final portraits = _portraits;
-          portraits[name] = result;
-          setState(() => _portraits = portraits);
+          final characters = _characters;
+          character.civilianPortrait =
+              result & _civilianPortrait == _civilianPortrait;
+          character.armyPortrait = result & _armyPortrait == _armyPortrait;
+          character.navyPortrait = result & _navyPortrait == _navyPortrait;
+
+          final index = characters.indexWhere((c) => c.name == character.name);
+          if (index > -1) {
+            characters[index] = character;
+            setState(() => _characters = characters);
+          }
         }
       },
     );
@@ -696,8 +699,7 @@ class _CharacterImportState extends State<CharacterImport> {
                       ),
                       TableCell(
                         verticalAlignment: TableCellVerticalAlignment.fill,
-                        child: _configureButton(
-                            character.name, _portraits[character.name] ?? 0),
+                        child: _configureButton(character),
                       ),
                       TableCell(
                         verticalAlignment: TableCellVerticalAlignment.middle,
