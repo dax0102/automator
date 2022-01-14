@@ -44,6 +44,7 @@ class _CharacterEditorState extends State<CharacterEditor> {
   bool _civilianPortrait = false;
   bool _armyPortrait = false;
   bool _navyPortrait = false;
+  List<Ideology> _roles = [];
   bool _spanToLeft = false;
   bool _spanToCenter = false;
   bool _spanToRight = false;
@@ -188,9 +189,50 @@ class _CharacterEditorState extends State<CharacterEditor> {
     );
   }
 
+  Future<List<Ideology>?> _invokeAdditionalRoles() async {
+    return await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        List<Ideology> roles = [];
+        return StatefulBuilder(
+          builder: (BuildContext context, StateSetter setState) {
+            return AlertDialog(
+              title: Text(Translations.of(context)!.dialog_additional_roles),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: Ideology.values.map((ideology) {
+                  return CheckboxForm(
+                    value: roles.contains(ideology),
+                    onChanged: (checked) {
+                      final _roles = roles;
+                      if (checked == true) {
+                        _roles.add(ideology);
+                      } else {
+                        _roles.remove(ideology);
+                      }
+                      setState(() => roles = _roles);
+                    },
+                    title: Text(ideology.getLocalization(context)),
+                  );
+                }).toList(),
+              ),
+              actions: <Widget>[
+                TextButton(
+                  child: Text(Translations.of(context)!.button_continue),
+                  onPressed: () {
+                    Navigator.pop(context, roles);
+                  },
+                )
+              ],
+            );
+          },
+        );
+      },
+    );
+  }
+
   void _modifyPosition(Position position) {
     final positions = _positions;
-    final traits = _traits;
     if (positions.contains(position)) {
       positions.remove(position);
     } else {
@@ -201,28 +243,23 @@ class _CharacterEditorState extends State<CharacterEditor> {
 
   List<Widget> get _headOfStateSpanning {
     return <Widget>[
-      CheckboxForm(
-        value: _spanToLeft,
-        onChanged: (checked) {
-          setState(() => _spanToLeft = checked ?? false);
+      ..._roles.map((role) {
+        return InputChip(
+          onDeleted: () {
+            final roles = _roles;
+            roles.removeWhere((r) => r == role);
+            setState(() => _roles = roles);
+          },
+          label: Text(role.getLocalization(context)),
+        );
+      }),
+      ActionChip(
+        avatar: const Icon(Icons.add_outlined),
+        label: Text(Translations.of(context)!.button_add_roles),
+        onPressed: () async {
+          final roles = await _invokeAdditionalRoles();
+          setState(() => _roles = roles ?? []);
         },
-        title: Text(
-          Translations.of(context)!.hint_span_to_leftist_ideologies,
-        ),
-      ),
-      CheckboxForm(
-        value: _spanToCenter,
-        onChanged: (checked) {
-          setState(() => _spanToCenter = checked ?? false);
-        },
-        title: Text(Translations.of(context)!.hint_span_to_centrist_ideologies),
-      ),
-      CheckboxForm(
-        value: _spanToRight,
-        onChanged: (checked) {
-          setState(() => _spanToRight = checked ?? false);
-        },
-        title: Text(Translations.of(context)!.hint_span_to_rightist_ideologies),
       )
     ];
   }
@@ -329,14 +366,15 @@ class _CharacterEditorState extends State<CharacterEditor> {
           setState(() => _headOfState = selected ?? false);
           if (selected == false) {
             _leaderTraits.clear();
+            _roles.clear();
           }
         },
       ),
       if (_headOfState)
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 8),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
+          child: Wrap(
+            spacing: 4,
             children: _headOfStateSpanning,
           ),
         ),

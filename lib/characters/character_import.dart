@@ -1,12 +1,16 @@
+import 'dart:io';
+
 import 'package:automator/characters/character.dart';
 import 'package:automator/characters/characters_notifier.dart';
 import 'package:automator/core/ideologies.dart';
 import 'package:automator/core/position.dart';
+import 'package:automator/core/reader.dart';
 import 'package:automator/shared/custom/checkbox_form.dart';
 import 'package:automator/shared/custom/dropdown_field.dart';
 import 'package:automator/shared/custom/radio_form.dart';
 import 'package:automator/shared/theme.dart';
 import 'package:automator/traits/traits_notifier.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/translations.dart';
 import 'package:provider/provider.dart';
@@ -32,6 +36,16 @@ class _CharacterImportState extends State<CharacterImport> {
   void initState() {
     super.initState();
     _characters = [...widget.characters];
+  }
+
+  void _onUpdateCharacters(List<Character> characters) {
+    List<Character> result = [];
+    for (Character character in characters) {
+      if (result.indexWhere((c) => character.name == c.name) < 0) {
+        result.add(character);
+      }
+    }
+    setState(() => _characters = result);
   }
 
   void _onSave() {
@@ -308,6 +322,32 @@ class _CharacterImportState extends State<CharacterImport> {
     );
   }
 
+  Future<Source?> _showSourcePicker() async {
+    return await showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text(Translations.of(context)!.dialog_import_source),
+          content: SizedBox(
+            width: 256,
+            height: 128,
+            child: ListView(
+              shrinkWrap: true,
+              children: Source.values.map((source) {
+                return ListTile(
+                  title: Text(source.getLocalization(context)),
+                  onTap: () {
+                    Navigator.pop(context, source);
+                  },
+                );
+              }).toList(),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
   Widget _configureButton(String name, int portraits) {
     String label = "";
     if (portraits & _civilianPortrait == _civilianPortrait) {
@@ -342,6 +382,137 @@ class _CharacterImportState extends State<CharacterImport> {
     );
   }
 
+  void _onAdd() async {
+    final source = await _showSourcePicker();
+    if (source != null) {
+      switch (source) {
+        case Source.csv:
+          final result = await FilePicker.platform.pickFiles(
+            type: FileType.custom,
+            allowedExtensions: ['csv'],
+          );
+          if (result != null) {
+            try {
+              final file = File(result.files.single.path!);
+              final names = await Reader.importNamesFromCSV(file);
+              List<Character> imported = names.map((name) {
+                return Character(name: name, tag: "", ideology: Ideology.none);
+              }).toList();
+
+              _onUpdateCharacters(imported);
+            } on MissingContentError {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(Translations.of(context)!.feedback_empty_file),
+                ),
+              );
+            }
+          }
+          break;
+        case Source.yaml:
+          final result = await FilePicker.platform.pickFiles(
+            type: FileType.custom,
+            allowedExtensions: ['yml'],
+          );
+          if (result != null) {
+            try {
+              final file = File(result.files.single.path!);
+              final imported = await Reader.importNamesFromYAML(file);
+              final names = await _onExtractionComplete(imported);
+              if (names != null) {
+                _onUpdateCharacters(names);
+              }
+            } on MissingContentError {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(Translations.of(context)!.feedback_empty_file),
+                ),
+              );
+            }
+          }
+          break;
+        case Source.history:
+          final result = await FilePicker.platform.pickFiles(
+            type: FileType.custom,
+            allowedExtensions: ['txt'],
+          );
+          if (result != null) {
+            try {
+              final file = File(result.files.single.path!);
+              final names = await Reader.importFromHistory(file);
+              List<Character> imported = names.map((name) {
+                return Character(name: name, tag: "", ideology: Ideology.none);
+              }).toList();
+
+              _onUpdateCharacters(imported);
+            } on MissingContentError {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(Translations.of(context)!.feedback_empty_file),
+                ),
+              );
+            }
+          }
+          break;
+      }
+    }
+  }
+
+  Future<List<Character>?> _onExtractionComplete(List<Character> items) async {
+    return await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        List<Character> names = items;
+
+        return StatefulBuilder(
+          builder: (BuildContext context, setState) {
+            return AlertDialog(
+              title: Text(Translations.of(context)!.dialog_name_extraction),
+              content: SingleChildScrollView(
+                child: SizedBox(
+                  width: 256,
+                  height: 512,
+                  child: ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: names.length,
+                    itemBuilder: (context, index) {
+                      final character = names[index];
+                      return ListTile(
+                        title: Text(character.name),
+                        leading: IconButton(
+                          icon: const Icon(Icons.delete_outline),
+                          onPressed: () {
+                            final _names = names;
+                            names.remove(character);
+                            setState(() => names = _names);
+                          },
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ),
+              actions: <Widget>[
+                TextButton(
+                  child: Text(Translations.of(context)!.button_continue),
+                  onPressed: () {
+                    Navigator.pop(context, names);
+                  },
+                ),
+                TextButton(
+                  child: Text(Translations.of(context)!.button_cancel),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -349,9 +520,18 @@ class _CharacterImportState extends State<CharacterImport> {
         actions: [
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            child: ElevatedButton(
-              onPressed: _onSave,
-              child: Text(Translations.of(context)!.button_save),
+            child: Row(
+              children: [
+                IconButton(
+                  icon: const Icon(Icons.add),
+                  onPressed: _onAdd,
+                ),
+                const SizedBox(width: 16),
+                ElevatedButton(
+                  onPressed: _onSave,
+                  child: Text(Translations.of(context)!.button_save),
+                ),
+              ],
             ),
           )
         ],
@@ -363,6 +543,7 @@ class _CharacterImportState extends State<CharacterImport> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(
+                mainAxisSize: MainAxisSize.max,
                 children: [
                   Expanded(
                     flex: 1,
@@ -479,7 +660,7 @@ class _CharacterImportState extends State<CharacterImport> {
                       ),
                     ),
                   ]),
-                  ...widget.characters.map((character) {
+                  ..._characters.map((character) {
                     return TableRow(children: [
                       TableCell(
                         verticalAlignment: TableCellVerticalAlignment.middle,

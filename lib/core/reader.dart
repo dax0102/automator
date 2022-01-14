@@ -1,15 +1,53 @@
 import 'dart:io';
-
 import 'package:automator/characters/character.dart';
 import 'package:automator/core/ideologies.dart';
 import 'package:automator/core/position.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/translations.dart';
 
 enum ReadStrategy { single, multiple }
 
-enum Source { csv, yaml }
+enum Source { csv, yaml, history }
+
+extension SourceExtension on Source {
+  String getLocalization(BuildContext context) {
+    switch (this) {
+      case Source.csv:
+        return Translations.of(context)!.source_csv;
+      case Source.yaml:
+        return Translations.of(context)!.source_yaml;
+      case Source.history:
+        return Translations.of(context)!.source_txt;
+    }
+  }
+}
 
 class Reader {
   const Reader._();
+
+  static Future<List<String>> importFromHistory(File file) async {
+    final source = await file.readAsLines();
+    if (source.isEmpty) {
+      throw MissingContentError();
+    }
+
+    return _readFromHistory(source);
+  }
+
+  static List<String> _readFromHistory(List<String> source) {
+    List<String> names = [];
+    for (String line in source) {
+      if (line.contains('name')) {
+        line = line.trim();
+        String name =
+            line.substring(line.indexOf('"') + 1, line.lastIndexOf('"'));
+        if (!names.contains(name)) {
+          names.add(name);
+        }
+      }
+    }
+    return names;
+  }
 
   static Future<List<Character>> importNamesFromYAML(
     File file,

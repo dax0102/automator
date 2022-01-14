@@ -100,18 +100,19 @@ class _MainPageState extends State<MainPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Row(
-      children: [
-        Navigation(
-          selectedIndex: _index,
-          onDestinationChanged: (index) {
-            setState(() => _index = index);
-          },
-        ),
-        Expanded(
-          child: SizedBox(child: page, height: double.infinity),
-        )
-      ],
-    ));
+      body: Row(
+        children: [
+          Navigation(
+            selectedIndex: _index,
+            onDestinationChanged: (index) {
+              setState(() => _index = index);
+            },
+          ),
+          Expanded(
+            child: SizedBox(child: page, height: double.infinity),
+          )
+        ],
+      ),
+    );
   }
 }
