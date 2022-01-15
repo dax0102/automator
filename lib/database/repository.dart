@@ -27,7 +27,7 @@ class CharacterRepository extends Repository<Character> {
 
   @override
   Future put(data) async {
-    final index = _characters.indexWhere((c) => c.name == data.name);
+    final index = _characters.indexWhere((c) => c.id == data.id);
     // if exists in the entries
     if (index > -1) {
       _characters[index] = data;
@@ -40,7 +40,7 @@ class CharacterRepository extends Repository<Character> {
 
   @override
   Future remove(data) async {
-    _characters.removeWhere((c) => c.name == data.name);
+    _characters.removeWhere((c) => c.id == data.id);
     await _box.clear();
     return await _box.addAll(_characters);
   }

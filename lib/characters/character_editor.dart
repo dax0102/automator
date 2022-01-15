@@ -114,6 +114,7 @@ class _CharacterEditorState extends State<CharacterEditor> {
     final tag = _tagController.text;
 
     final character = Character(
+      id: widget.character?.id,
       name: _nameController.text,
       tag: tag,
       ideology: _ideology,
