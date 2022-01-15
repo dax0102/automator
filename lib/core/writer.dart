@@ -291,7 +291,7 @@ class Writer {
         // Country Leader
 
         if (character.leaderRoles.isNotEmpty) {
-          for (Ideology ideology in Ideology.values) {
+          for (Ideology ideology in character.leaderRoles) {
             await output.writeAsString(_countryLeader, mode: _mode);
             await output.writeAsString('$_ideology ${ideology.token}_subtype',
                 mode: _mode);
@@ -447,8 +447,10 @@ class Writer {
         await output.writeAsString(token, mode: _mode);
         await output.writeAsString(_traits, mode: _mode);
         await output.writeAsString('\n\t\t\t\t${position.token}', mode: _mode);
-        await output.writeAsString('\n\t\t\t\t${character.ideology.token}',
-            mode: _mode);
+        if (character.ideology != Ideology.none) {
+          await output.writeAsString('\n\t\t\t\t${character.ideology.token}',
+              mode: _mode);
+        }
         await output.writeAsString('\n\t\t\t\t$trait', mode: _mode);
         await output.writeAsString('\n\t\t\t}', mode: _mode); // close traits
         await output.writeAsString('\n\t\t}', mode: _mode); // close idea
