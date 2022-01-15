@@ -31,10 +31,10 @@ class Reader {
       throw MissingContentError();
     }
 
-    return _readFromHistory(source);
+    return readFromHistory(source);
   }
 
-  static List<String> _readFromHistory(List<String> source) {
+  static List<String> readFromHistory(List<String> source) {
     List<String> names = [];
     for (String line in source) {
       if (line.contains('name')) {
@@ -63,6 +63,10 @@ class Reader {
       throw MissingContentError();
     }
 
+    return readFromYAML(source);
+  }
+
+  static List<Character> readFromYAML(List<String> source) {
     List<Character> characters = [];
     for (String line in source) {
       if (line.contains('_${Position.headOfGovernment.prefix}') ||
@@ -74,7 +78,7 @@ class Reader {
           line.contains('_${Position.chiefOfNavy.prefix}') ||
           line.contains('_${Position.chiefOfAirForce.prefix}')) {
         String name =
-            line.substring(line.indexOf('"') + 1, line.lastIndexOf('"'));
+        line.substring(line.indexOf('"') + 1, line.lastIndexOf('"'));
         Ideology ideology = Ideology.none;
 
         if (line.contains('_${Ideology.vanguardist.prefix}') ||
@@ -108,6 +112,10 @@ class Reader {
       throw MissingContentError();
     }
 
+    return readFromCSV(source);
+  }
+
+  static List<String> readFromCSV(String source) {
     List<String> names = source.split(',');
     names = names.map((name) => name.trim()).toList();
     return names;
