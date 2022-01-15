@@ -61,6 +61,7 @@ class _MinisterEditorState extends State<MinisterEditor> {
     final tag = _tagController.text;
 
     final minister = Minister(
+      id: widget.minister?.id,
       name: _nameController.text,
       ideology: _ideology,
       tag: tag,

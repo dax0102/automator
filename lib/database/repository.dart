@@ -63,7 +63,7 @@ class MinisterRepository extends Repository<Minister> {
 
   @override
   Future put(Minister data) async {
-    final index = _ministers.indexWhere((m) => m.name == data.name);
+    final index = _ministers.indexWhere((m) => m.id == data.id);
 
     if (index > -1) {
       _ministers[index] = data;
@@ -76,7 +76,7 @@ class MinisterRepository extends Repository<Minister> {
 
   @override
   Future remove(Minister data) async {
-    _ministers.removeWhere((m) => m.name == data.name);
+    _ministers.removeWhere((m) => m.id == data.id);
     await _box.clear();
     return await _box.addAll(_ministers);
   }

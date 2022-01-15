@@ -1,5 +1,6 @@
 import 'package:automator/core/ideologies.dart';
 import 'package:automator/core/position.dart';
+import 'package:automator/shared/tools.dart';
 import 'package:hive/hive.dart';
 
 part 'minister.g.dart';
@@ -7,15 +8,17 @@ part 'minister.g.dart';
 @HiveType(typeId: 3)
 class Minister {
   @HiveField(0)
-  final String name;
+  String name;
   @HiveField(1)
-  final String tag;
+  String tag;
   @HiveField(2)
-  final IdeologyKR ideology;
+  IdeologyKR ideology;
   @HiveField(3)
-  final List<Position> positions;
+  List<Position> positions;
   @HiveField(4)
-  final List<String> traits;
+  List<String> traits;
+  @HiveField(5)
+  String? id;
 
   Minister({
     required this.name,
@@ -23,7 +26,10 @@ class Minister {
     required this.ideology,
     required this.positions,
     required this.traits,
-  });
+    this.id,
+  }) {
+    id ??= randomId();
+  }
 
   String get token {
     return buildToken(tag, name);

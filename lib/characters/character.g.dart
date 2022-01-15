@@ -20,6 +20,7 @@ class CharacterAdapter extends TypeAdapter<Character> {
       name: fields[0] as String,
       tag: fields[1] as String,
       ideology: fields[2] as Ideology,
+      id: fields[25] as String?,
       positions: (fields[3] as List).cast<Position>(),
       leaderTraits: (fields[4] as List).cast<String>(),
       commanderLandTraits: (fields[5] as List).cast<String>(),
@@ -48,7 +49,7 @@ class CharacterAdapter extends TypeAdapter<Character> {
   @override
   void write(BinaryWriter writer, Character obj) {
     writer
-      ..writeByte(25)
+      ..writeByte(26)
       ..writeByte(0)
       ..write(obj.name)
       ..writeByte(1)
@@ -98,7 +99,9 @@ class CharacterAdapter extends TypeAdapter<Character> {
       ..writeByte(23)
       ..write(obj.leaderRoles)
       ..writeByte(24)
-      ..write(obj.otherTags);
+      ..write(obj.otherTags)
+      ..writeByte(25)
+      ..write(obj.id);
   }
 
   @override
