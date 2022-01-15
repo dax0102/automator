@@ -40,6 +40,7 @@ class _CharacterImportState extends State<CharacterImport> {
   void _onUpdateCharacters(List<Character> characters) {
     List<Character> result = _characters;
     for (Character character in characters) {
+      character.tag = _tagController.text;
       if (result.indexWhere((c) => character.name == c.name) < 0) {
         result.add(character);
       }
