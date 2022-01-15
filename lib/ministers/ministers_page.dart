@@ -1,5 +1,4 @@
 import 'package:animations/animations.dart';
-import 'package:automator/core/position.dart';
 import 'package:automator/core/writer.dart';
 import 'package:automator/ministers/minister.dart';
 import 'package:automator/ministers/minister_editor.dart';
@@ -110,9 +109,6 @@ class _MinistersPageState extends State<MinistersPage> {
   void _onExport() async {
     final List<Minister> ministers =
         Provider.of<MinistersNotifier>(context, listen: false).ministers;
-    ministers.forEach((minister) {
-      minister.positions.forEach(print);
-    });
 
     if (ministers.isNotEmpty) {
       String? core = await FilePicker.platform.saveFile(
