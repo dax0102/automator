@@ -38,11 +38,17 @@ class Reader {
     List<String> names = [];
     for (String line in source) {
       if (line.contains('name')) {
-        line = line.trim();
-        String name =
-            line.substring(line.indexOf('"') + 1, line.lastIndexOf('"'));
-        if (!names.contains(name)) {
-          names.add(name);
+        String prev = source[source.indexOf(line) - 1];
+        if (prev.contains('create_country_leader') ||
+            prev.contains('create_field_marshal') ||
+            prev.contains('create_corps_commander') ||
+            prev.contains('create_navy_leader')) {
+          line = line.trim();
+          String name =
+              line.substring(line.indexOf('"') + 1, line.lastIndexOf('"'));
+          if (!names.contains(name)) {
+            names.add(name);
+          }
         }
       }
     }
