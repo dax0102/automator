@@ -52,7 +52,7 @@ class _CharacterImportState extends State<CharacterImport> {
       return;
     }
 
-    for (Character character in widget.characters) {
+    for (Character character in _characters) {
       Provider.of<CharactersNotifier>(context, listen: false).put(character);
     }
     Navigator.pop(context);
