@@ -86,7 +86,7 @@ class Reader {
             line.contains('_${Ideology.socialConservative.prefix}') ||
             line.contains('_${Ideology.authoritarianDemocrat.prefix}') ||
             line.contains('_${Ideology.paternalAutocrat.prefix}') ||
-            line.contains('_${Ideology.nationalPopulist}') ||
+            line.contains('_${Ideology.nationalPopulist.prefix}') ||
             line.contains('_${Ideology.valkist.prefix}')) {
           int index = line.lastIndexOf('_');
           String prefix = line.substring(index + 1, line.indexOf(':'));
