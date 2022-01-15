@@ -580,7 +580,7 @@ class _CharacterImportState extends State<CharacterImport> {
                 ),
                 columnWidths: const {
                   0: FractionColumnWidth(0.2),
-                  1: FractionColumnWidth(0.15),
+                  1: FractionColumnWidth(0.1),
                   2: FractionColumnWidth(0.15),
                   3: FractionColumnWidth(0.25)
                 },
@@ -659,6 +659,16 @@ class _CharacterImportState extends State<CharacterImport> {
                         padding: const EdgeInsets.all(8),
                         child: Text(
                           Translations.of(context)!.hint_admiral,
+                          textAlign: ThemeComponents.textAlignment,
+                        ),
+                      ),
+                    ),
+                    TableCell(
+                      verticalAlignment: ThemeComponents.cellAlignment,
+                      child: Padding(
+                        padding: const EdgeInsets.all(8),
+                        child: Text(
+                          Translations.of(context)!.button_remove,
                           textAlign: ThemeComponents.textAlignment,
                         ),
                       ),
@@ -870,6 +880,17 @@ class _CharacterImportState extends State<CharacterImport> {
                               }
                             }
 
+                            setState(() => _characters = characters);
+                          },
+                        ),
+                      ),
+                      TableCell(
+                        verticalAlignment: TableCellVerticalAlignment.fill,
+                        child: IconButton(
+                          icon: const Icon(Icons.delete_outline),
+                          onPressed: () {
+                            final characters = _characters;
+                            characters.removeWhere((c) => c.id == character.id);
                             setState(() => _characters = characters);
                           },
                         ),
