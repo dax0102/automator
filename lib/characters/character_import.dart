@@ -38,14 +38,13 @@ class _CharacterImportState extends State<CharacterImport> {
   }
 
   void _onUpdateCharacters(List<Character> characters) {
-    List<Character> result = _characters;
+    List<Character> merged = _characters;
     for (Character character in characters) {
-      character.tag = _tagController.text;
-      if (result.indexWhere((c) => character.name == c.name) < 0) {
-        result.add(character);
+      if (merged.indexWhere((c) => character.name == c.name) < 0) {
+        merged.add(character);
       }
     }
-    setState(() => _characters = result);
+    setState(() => _characters = merged);
   }
 
   void _onSave() {
@@ -54,6 +53,7 @@ class _CharacterImportState extends State<CharacterImport> {
     }
 
     for (Character character in _characters) {
+      character.tag = _tagController.text;
       Provider.of<CharactersNotifier>(context, listen: false).put(character);
     }
     Navigator.pop(context);
