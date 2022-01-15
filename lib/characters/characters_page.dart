@@ -48,6 +48,32 @@ class _CharactersPageState extends State<CharactersPage> {
     );
   }
 
+  Future<Source?> _showSourcePicker() async {
+    return await showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text(Translations.of(context)!.dialog_import_source),
+          content: SizedBox(
+            width: 256,
+            height: 128,
+            child: ListView(
+              shrinkWrap: true,
+              children: Source.values.map((source) {
+                return ListTile(
+                  title: Text(source.getLocalization(context)),
+                  onTap: () {
+                    Navigator.pop(context, source);
+                  },
+                );
+              }).toList(),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
   Future _onBrowsePrompt() async {
     return await showDialog(
       context: context,
@@ -207,60 +233,125 @@ class _CharactersPageState extends State<CharactersPage> {
   }
 
   void _onImport() async {
-    final result = await FilePicker.platform.pickFiles(
-      type: FileType.custom,
-      allowedExtensions: ['csv'],
-    );
-    if (result != null) {
-      try {
-        final file = File(result.files.single.path!);
-        final names = await Reader.importNamesFromCSV(file);
-        List<Character> characters = names.map((name) {
-          return Character(name: name, tag: "", ideology: Ideology.none);
-        }).toList();
-        Navigator.push(
-          context,
-          PageRouteBuilder(
-            pageBuilder: (context, _, __) => CharacterImport(
-              characters: characters,
-            ),
-            transitionsBuilder:
-                (context, animation, secondaryAnimation, child) {
-              return SharedAxisTransition(
-                animation: animation,
-                secondaryAnimation: secondaryAnimation,
-                transitionType: SharedAxisTransitionType.horizontal,
-                child: child,
-              );
-            },
-          ),
-        );
-      } on MissingContentError {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(Translations.of(context)!.feedback_empty_file),
-          ),
-        );
-      }
-    }
-  }
+    final source = await _showSourcePicker();
+    if (source != null) {
+      switch (source) {
+        case Source.csv:
+          final result = await FilePicker.platform.pickFiles(
+            type: FileType.custom,
+            allowedExtensions: ['csv'],
+          );
+          if (result != null) {
+            try {
+              final file = File(result.files.single.path!);
+              final names = await Reader.importNamesFromCSV(file);
+              List<Character> imported = names.map((name) {
+                return Character(name: name, tag: "", ideology: Ideology.none);
+              }).toList();
 
-  void _onExtract() async {
-    final result = await FilePicker.platform.pickFiles(
-      type: FileType.custom,
-      allowedExtensions: ['yaml', 'yml'],
-    );
-    if (result != null) {
-      try {
-        final file = File(result.files.single.path!);
-        final names = await Reader.importNamesFromYAML(file);
-        await _onExtractionComplete(names);
-      } on MissingContentError {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(Translations.of(context)!.feedback_empty_file),
-          ),
-        );
+              Navigator.push(
+                context,
+                PageRouteBuilder(
+                  pageBuilder: (context, _, __) => CharacterImport(
+                    characters: imported,
+                  ),
+                  transitionsBuilder:
+                      (context, animation, secondaryAnimation, child) {
+                    return SharedAxisTransition(
+                      animation: animation,
+                      secondaryAnimation: secondaryAnimation,
+                      transitionType: SharedAxisTransitionType.horizontal,
+                      child: child,
+                    );
+                  },
+                ),
+              );
+            } on MissingContentError {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(Translations.of(context)!.feedback_empty_file),
+                ),
+              );
+            }
+          }
+          break;
+        case Source.yaml:
+          final result = await FilePicker.platform.pickFiles(
+            type: FileType.custom,
+            allowedExtensions: ['yml'],
+          );
+          if (result != null) {
+            try {
+              final file = File(result.files.single.path!);
+              final imported = await Reader.importNamesFromYAML(file);
+              final names = await _onExtractionComplete(imported);
+              if (names != null) {
+                Navigator.push(
+                  context,
+                  PageRouteBuilder(
+                    pageBuilder: (context, _, __) => CharacterImport(
+                      characters: imported,
+                    ),
+                    transitionsBuilder:
+                        (context, animation, secondaryAnimation, child) {
+                      return SharedAxisTransition(
+                        animation: animation,
+                        secondaryAnimation: secondaryAnimation,
+                        transitionType: SharedAxisTransitionType.horizontal,
+                        child: child,
+                      );
+                    },
+                  ),
+                );
+              }
+            } on MissingContentError {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(Translations.of(context)!.feedback_empty_file),
+                ),
+              );
+            }
+          }
+          break;
+        case Source.history:
+          final result = await FilePicker.platform.pickFiles(
+            type: FileType.custom,
+            allowedExtensions: ['txt'],
+          );
+          if (result != null) {
+            try {
+              final file = File(result.files.single.path!);
+              final names = await Reader.importFromHistory(file);
+              List<Character> imported = names.map((name) {
+                return Character(name: name, tag: "", ideology: Ideology.none);
+              }).toList();
+
+              Navigator.push(
+                context,
+                PageRouteBuilder(
+                  pageBuilder: (context, _, __) => CharacterImport(
+                    characters: imported,
+                  ),
+                  transitionsBuilder:
+                      (context, animation, secondaryAnimation, child) {
+                    return SharedAxisTransition(
+                      animation: animation,
+                      secondaryAnimation: secondaryAnimation,
+                      transitionType: SharedAxisTransitionType.horizontal,
+                      child: child,
+                    );
+                  },
+                ),
+              );
+            } on MissingContentError {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(Translations.of(context)!.feedback_empty_file),
+                ),
+              );
+            }
+          }
+          break;
       }
     }
   }
@@ -366,11 +457,6 @@ class _CharactersPageState extends State<CharactersPage> {
           onImport: _onImport,
           onExport: _onExport,
           onReset: characters.isNotEmpty ? notifier.reset : null,
-        ),
-        ElevatedButton.icon(
-          onPressed: _onExtract,
-          icon: const Icon(Icons.read_more_outlined),
-          label: Text(Translations.of(context)!.button_extract),
         ),
         ElevatedButton.icon(
           icon: const Icon(Icons.history_edu_outlined),

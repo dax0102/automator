@@ -1,3 +1,5 @@
+import 'dart:math';
+
 extension IterableExtension<T> on Iterable<T> {
   Iterable<T> distinctBy(Object Function(T e) getComparableValue) {
     var result = <T>[];
@@ -28,4 +30,17 @@ extension DiacriticsAwareString on String {
       onNonMatch: (char) => char.isNotEmpty && diacritics.contains(char)
           ? nonDiacritics[diacritics.indexOf(char)]
           : char);
+}
+
+String randomId() {
+  final random = Random();
+  const idLength = 20;
+  const characters =
+      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+  String id = "";
+  for (int i = 0; i < idLength; i++) {
+    id += characters[random.nextInt(characters.length)];
+  }
+  return id;
 }

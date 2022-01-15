@@ -40,16 +40,15 @@ class CharacterAdapter extends TypeAdapter<Character> {
       navyLargePortrait: fields[20] as String?,
       navySmallPortrait: fields[21] as String?,
       cost: fields[22] as int,
-      spanLeftistIdeologies: fields[23] as bool?,
-      spanCentristIdeologies: fields[24] as bool?,
-      spanRightistIdeologies: fields[25] as bool?,
+      leaderRoles: (fields[23] as List).cast<Ideology>(),
+      otherTags: (fields[24] as List).cast<String>(),
     );
   }
 
   @override
   void write(BinaryWriter writer, Character obj) {
     writer
-      ..writeByte(26)
+      ..writeByte(25)
       ..writeByte(0)
       ..write(obj.name)
       ..writeByte(1)
@@ -97,11 +96,9 @@ class CharacterAdapter extends TypeAdapter<Character> {
       ..writeByte(22)
       ..write(obj.cost)
       ..writeByte(23)
-      ..write(obj.spanLeftistIdeologies)
+      ..write(obj.leaderRoles)
       ..writeByte(24)
-      ..write(obj.spanCentristIdeologies)
-      ..writeByte(25)
-      ..write(obj.spanRightistIdeologies);
+      ..write(obj.otherTags);
   }
 
   @override

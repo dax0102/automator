@@ -48,7 +48,7 @@ class _AboutPageState extends State<AboutPage> {
                           const SizedBox(height: 8),
                           Text(
                             Translations.of(context)!.about_author,
-                            style: const TextStyle(fontSize: 18),
+                            style: const TextStyle(fontSize: 16),
                           ),
                         ],
                       ),

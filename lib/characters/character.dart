@@ -39,27 +39,25 @@ class Character {
   @HiveField(14)
   bool navyPortrait;
   @HiveField(15)
-  final String? skills;
+  String? skills;
   @HiveField(16)
-  final String? civilianLargePortrait;
+  String? civilianLargePortrait;
   @HiveField(17)
-  final String? civilianSmallPortrait;
+  String? civilianSmallPortrait;
   @HiveField(18)
-  final String? armyLargePortrait;
+  String? armyLargePortrait;
   @HiveField(19)
-  final String? armySmallPortait;
+  String? armySmallPortait;
   @HiveField(20)
-  final String? navyLargePortrait;
+  String? navyLargePortrait;
   @HiveField(21)
-  final String? navySmallPortrait;
+  String? navySmallPortrait;
   @HiveField(22)
-  final int cost;
+  int cost;
   @HiveField(23)
-  final bool? spanLeftistIdeologies;
+  List<Ideology> leaderRoles;
   @HiveField(24)
-  final bool? spanCentristIdeologies;
-  @HiveField(25)
-  final bool? spanRightistIdeologies;
+  List<String> otherTags;
 
   Character({
     required this.name,
@@ -85,9 +83,8 @@ class Character {
     this.navyLargePortrait,
     this.navySmallPortrait,
     this.cost = 150,
-    this.spanLeftistIdeologies,
-    this.spanCentristIdeologies,
-    this.spanRightistIdeologies,
+    this.leaderRoles = const [],
+    this.otherTags = const [],
   });
 
   bool hasCustomPortraitPath() {

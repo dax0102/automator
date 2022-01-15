@@ -11,6 +11,7 @@ import 'package:automator/traits/traits_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/translations.dart';
 import 'package:provider/provider.dart';
+import 'package:textfield_tags/textfield_tags.dart';
 
 class CharacterEditor extends StatefulWidget {
   const CharacterEditor({Key? key, this.character}) : super(key: key);
@@ -45,9 +46,7 @@ class _CharacterEditorState extends State<CharacterEditor> {
   bool _armyPortrait = false;
   bool _navyPortrait = false;
   List<Ideology> _roles = [];
-  bool _spanToLeft = false;
-  bool _spanToCenter = false;
-  bool _spanToRight = false;
+  List<String> _otherTags = [];
 
   @override
   void initState() {
@@ -87,6 +86,8 @@ class _CharacterEditorState extends State<CharacterEditor> {
       _civilianPortrait = character?.civilianPortrait ?? false;
       _armyPortrait = character?.armyPortrait ?? false;
       _navyPortrait = character?.navyPortrait ?? false;
+      _roles = character?.leaderRoles ?? [];
+      _otherTags = character?.otherTags ?? [];
     } on InvalidPrefixError {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -148,9 +149,8 @@ class _CharacterEditorState extends State<CharacterEditor> {
       navySmallPortrait: !_customPaths || _navySmallPortrait.text.isEmpty
           ? null
           : _navySmallPortrait.text,
-      spanLeftistIdeologies: _spanToLeft,
-      spanCentristIdeologies: _spanToCenter,
-      spanRightistIdeologies: _spanToRight,
+      leaderRoles: _roles,
+      otherTags: _otherTags,
     );
     Provider.of<CharactersNotifier>(context, listen: false).put(character);
     Navigator.pop(context);
@@ -311,6 +311,48 @@ class _CharacterEditorState extends State<CharacterEditor> {
           ),
         ],
       ),
+      SizedBox(height: ThemeComponents.spacing),
+      Text(
+        Translations.of(context)!.hint_recruit_in,
+        style: const TextStyle(
+          fontWeight: FontWeight.w600,
+          fontSize: 16,
+        ),
+      ),
+      const SizedBox(height: 8),
+      TextFieldTags(
+        initialTags: _otherTags,
+        tagsStyler: TagsStyler(
+          tagDecoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(16),
+            color: Colors.blue.withOpacity(0.4),
+          ),
+          tagCancelIcon: const Icon(Icons.cancel, color: Colors.white),
+          tagTextPadding: const EdgeInsets.symmetric(horizontal: 4),
+        ),
+        textFieldStyler: TextFieldStyler(
+          hintText: Translations.of(context)!.hint_multiple_tags,
+        ),
+        onTag: (tag) {
+          final tags = _otherTags;
+          if (!tags.contains(tag)) {
+            tags.add(tag.toUpperCase());
+          }
+          setState(() => _otherTags = tags);
+        },
+        onDelete: (tag) {
+          final tags = _otherTags;
+          tags.remove(tag);
+          setState(() => _otherTags = tags);
+        },
+        validator: (tag) {
+          if (tag.length > 3) {
+            return Translations.of(context)!.feedback_invalid_tag;
+          }
+          return null;
+        },
+      ),
+      const SizedBox(height: 8),
       SizedBox(height: ThemeComponents.spacing),
       Text(
         Translations.of(context)!.hint_portraits,

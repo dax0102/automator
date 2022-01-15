@@ -145,7 +145,15 @@ class Writer {
     final directory = Directory('$path/history/countries');
     final List<FileSystemEntity> entities = await directory.list().toList();
 
-    List<String> tags = characters.map((character) => character.tag).toList();
+    List<String> tags = [];
+    tags = characters.map((character) => character.tag).toList();
+    for (Character character in characters) {
+      for (String tag in character.otherTags) {
+        if (!tags.contains(tag)) {
+          tags.add(tag);
+        }
+      }
+    }
     tags = tags.toSet().toList();
 
     final List<File> items = entities.map((e) => e as File).where((e) {
@@ -167,7 +175,7 @@ class Writer {
       String tag = name.substring(0, name.indexOf('-')).trim();
       await file.writeAsString('\n', mode: _mode);
       for (Character character in characters) {
-        if (character.tag == tag) {
+        if (character.tag == tag || character.otherTags.contains(tag)) {
           await file.writeAsString('\nrecruit_character = ${character.token}',
               mode: _mode);
         }
@@ -282,52 +290,8 @@ class Writer {
       if (character.headOfState) {
         // Country Leader
 
-        if (character.spanLeftistIdeologies == true) {
-          List<Ideology> leftistIdeologies = IdeologyExtension.left;
-
-          for (Ideology ideology in leftistIdeologies) {
-            await output.writeAsString(_countryLeader, mode: _mode);
-            await output.writeAsString('$_ideology ${ideology.token}_subtype',
-                mode: _mode);
-            if (character.leaderTraits.isNotEmpty) {
-              await output.writeAsString(_traits, mode: _mode);
-              for (String trait in character.leaderTraits) {
-                await output.writeAsString('\n\t\t\t\t$trait', mode: _mode);
-              }
-              await output.writeAsString('\n\t\t\t}',
-                  mode: _mode); // close traits
-            } else {
-              await output.writeAsString('$_traits }', mode: _mode);
-            }
-
-            await output.writeAsString('\n\t\t}', mode: _mode);
-          }
-        }
-        if (character.spanCentristIdeologies == true) {
-          List<Ideology> centristIdeologies = IdeologyExtension.center;
-
-          for (Ideology ideology in centristIdeologies) {
-            await output.writeAsString(_countryLeader, mode: _mode);
-            await output.writeAsString('$_ideology ${ideology.token}_subtype',
-                mode: _mode);
-            if (character.leaderTraits.isNotEmpty) {
-              await output.writeAsString(_traits, mode: _mode);
-              for (String trait in character.leaderTraits) {
-                await output.writeAsString('\n\t\t\t\t$trait', mode: _mode);
-              }
-              await output.writeAsString('\n\t\t\t}',
-                  mode: _mode); // close traits
-            } else {
-              await output.writeAsString('$_traits }', mode: _mode);
-            }
-
-            await output.writeAsString('\n\t\t}', mode: _mode);
-          }
-        }
-        if (character.spanRightistIdeologies == true) {
-          List<Ideology> rightistIdeologies = IdeologyExtension.right;
-
-          for (Ideology ideology in rightistIdeologies) {
+        if (character.leaderRoles.isNotEmpty) {
+          for (Ideology ideology in Ideology.values) {
             await output.writeAsString(_countryLeader, mode: _mode);
             await output.writeAsString('$_ideology ${ideology.token}_subtype',
                 mode: _mode);
@@ -346,12 +310,7 @@ class Writer {
           }
         }
 
-        if ((character.ideology.isLeft &&
-                character.spanLeftistIdeologies != true) ||
-            (character.ideology.isCenter &&
-                character.spanCentristIdeologies != true) ||
-            (character.ideology.isRight &&
-                character.spanRightistIdeologies != true)) {
+        if (!character.leaderRoles.contains(character.ideology)) {
           await output.writeAsString(_countryLeader, mode: _mode);
           await output.writeAsString(
               '$_ideology ${character.ideology.token}_subtype',
