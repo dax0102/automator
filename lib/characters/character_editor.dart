@@ -87,7 +87,6 @@ class _CharacterEditorState extends State<CharacterEditor> {
       _armyPortrait = character?.armyPortrait ?? false;
       _navyPortrait = character?.navyPortrait ?? false;
       _roles = character?.leaderRoles ?? [];
-      _otherTags = character?.otherTags ?? [];
     } on InvalidPrefixError {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -151,7 +150,6 @@ class _CharacterEditorState extends State<CharacterEditor> {
           ? null
           : _navySmallPortrait.text,
       leaderRoles: _roles,
-      otherTags: _otherTags,
     );
     Provider.of<CharactersNotifier>(context, listen: false).put(character);
     Navigator.pop(context);

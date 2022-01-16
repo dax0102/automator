@@ -147,13 +147,6 @@ class Writer {
 
     List<String> tags = [];
     tags = characters.map((character) => character.tag).toList();
-    for (Character character in characters) {
-      for (String tag in character.otherTags) {
-        if (!tags.contains(tag)) {
-          tags.add(tag);
-        }
-      }
-    }
     tags = tags.toSet().toList();
 
     final List<File> items = entities.map((e) => e as File).where((e) {
@@ -175,7 +168,7 @@ class Writer {
       String tag = name.substring(0, name.indexOf('-')).trim();
       await file.writeAsString('\n', mode: _mode);
       for (Character character in characters) {
-        if (character.tag == tag || character.otherTags.contains(tag)) {
+        if (character.tag == tag) {
           await file.writeAsString('\nrecruit_character = ${character.token}',
               mode: _mode);
         }

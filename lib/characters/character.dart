@@ -57,8 +57,6 @@ class Character {
   @HiveField(23)
   List<Ideology> leaderRoles;
   @HiveField(24)
-  List<String> otherTags;
-  @HiveField(25)
   String? id;
 
   Character({
@@ -87,7 +85,6 @@ class Character {
     this.navySmallPortrait,
     this.cost = 150,
     this.leaderRoles = const [],
-    this.otherTags = const [],
   }) {
     id ??= randomId();
   }
