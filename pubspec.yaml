@@ -22,7 +22,6 @@ dependencies:
   hive: ^2.0.4
   shared_preferences: ^2.0.11
   path: ^1.8.0
-  textfield_tags: ^1.4.2
 
 dev_dependencies:
   flutter_test:

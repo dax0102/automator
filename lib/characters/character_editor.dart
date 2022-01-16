@@ -46,7 +46,6 @@ class _CharacterEditorState extends State<CharacterEditor> {
   bool _armyPortrait = false;
   bool _navyPortrait = false;
   List<Ideology> _roles = [];
-  List<String> _otherTags = [];
 
   @override
   void initState() {
@@ -310,48 +309,6 @@ class _CharacterEditorState extends State<CharacterEditor> {
           ),
         ],
       ),
-      SizedBox(height: ThemeComponents.spacing),
-      Text(
-        Translations.of(context)!.hint_recruit_in,
-        style: const TextStyle(
-          fontWeight: FontWeight.w600,
-          fontSize: 16,
-        ),
-      ),
-      const SizedBox(height: 8),
-      TextFieldTags(
-        initialTags: _otherTags,
-        tagsStyler: TagsStyler(
-          tagDecoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(16),
-            color: Colors.blue.withOpacity(0.4),
-          ),
-          tagCancelIcon: const Icon(Icons.cancel, color: Colors.white),
-          tagTextPadding: const EdgeInsets.symmetric(horizontal: 4),
-        ),
-        textFieldStyler: TextFieldStyler(
-          hintText: Translations.of(context)!.hint_multiple_tags,
-        ),
-        onTag: (tag) {
-          final tags = _otherTags;
-          if (!tags.contains(tag)) {
-            tags.add(tag.toUpperCase());
-          }
-          setState(() => _otherTags = tags);
-        },
-        onDelete: (tag) {
-          final tags = _otherTags;
-          tags.remove(tag);
-          setState(() => _otherTags = tags);
-        },
-        validator: (tag) {
-          if (tag.length > 3) {
-            return Translations.of(context)!.feedback_invalid_tag;
-          }
-          return null;
-        },
-      ),
-      const SizedBox(height: 8),
       SizedBox(height: ThemeComponents.spacing),
       Text(
         Translations.of(context)!.hint_portraits,
