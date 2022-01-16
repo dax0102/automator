@@ -26,6 +26,7 @@ class CharactersNotifier extends ChangeNotifier {
   }
 
   reset() {
+    repository.clear();
     _characters.clear();
     notifyListeners();
   }

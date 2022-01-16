@@ -44,6 +44,10 @@ class CharacterRepository extends Repository<Character> {
     await _box.clear();
     return await _box.addAll(_characters);
   }
+
+  Future clear() async {
+    return await _box.clear();
+  }
 }
 
 class MinisterRepository extends Repository<Minister> {
@@ -79,6 +83,10 @@ class MinisterRepository extends Repository<Minister> {
     _ministers.removeWhere((m) => m.id == data.id);
     await _box.clear();
     return await _box.addAll(_ministers);
+  }
+
+  Future clear() async {
+    return await _box.clear();
   }
 }
 

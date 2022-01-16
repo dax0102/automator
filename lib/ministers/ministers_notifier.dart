@@ -26,6 +26,7 @@ class MinistersNotifier extends ChangeNotifier {
   }
 
   reset() {
+    repository.clear();
     _ministers.clear();
     notifyListeners();
   }
