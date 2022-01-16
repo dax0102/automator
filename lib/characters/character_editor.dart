@@ -11,7 +11,6 @@ import 'package:automator/traits/traits_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/translations.dart';
 import 'package:provider/provider.dart';
-import 'package:textfield_tags/textfield_tags.dart';
 
 class CharacterEditor extends StatefulWidget {
   const CharacterEditor({Key? key, this.character}) : super(key: key);
