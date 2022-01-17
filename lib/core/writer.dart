@@ -328,7 +328,7 @@ class Writer {
         await output.writeAsString(_fieldMarshal, mode: _mode);
         if (character.commanderLandTraits.isNotEmpty) {
           await output.writeAsString(_traits, mode: _mode);
-          for (String trait in character.leaderTraits) {
+          for (String trait in character.commanderLandTraits) {
             await output.writeAsString('\n\t\t\t\t$trait', mode: _mode);
           }
           await output.writeAsString('\n\t\t\t}', mode: _mode); // close traits
@@ -362,7 +362,7 @@ class Writer {
         await output.writeAsString(_corpCommander, mode: _mode);
         if (character.commanderLandTraits.isNotEmpty) {
           await output.writeAsString(_traits, mode: _mode);
-          for (String trait in character.leaderTraits) {
+          for (String trait in character.commanderLandTraits) {
             await output.writeAsString('\n\t\t\t\t$trait', mode: _mode);
           }
           await output.writeAsString('\n\t\t\t}', mode: _mode); // close traits
@@ -396,7 +396,7 @@ class Writer {
         await output.writeAsString(_admiral, mode: _mode);
         if (character.commanderSeaTraits.isNotEmpty) {
           await output.writeAsString(_traits, mode: _mode);
-          for (String trait in character.leaderTraits) {
+          for (String trait in character.commanderSeaTraits) {
             await output.writeAsString('\n\t\t\t\t$trait', mode: _mode);
           }
           await output.writeAsString('\n\t\t\t}', mode: _mode); // close traits

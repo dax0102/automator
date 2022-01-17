@@ -372,6 +372,7 @@ class _CharacterEditorState extends State<CharacterEditor> {
           padding: const EdgeInsets.symmetric(horizontal: 8),
           child: Wrap(
             spacing: 4,
+            runSpacing: 4,
             children: _headOfStateSpanning,
           ),
         ),

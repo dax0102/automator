@@ -267,8 +267,7 @@ class _CharacterImportState extends State<CharacterImport> {
             traits = character.commanderSeaTraits;
             break;
         }
-        final traitController = TextEditingController(text: traits.join(','));
-        debugPrint(traits.map((t) => t).toString());
+        final traitController = TextEditingController(text: traits.join(' '));
 
         return StatefulBuilder(
           builder: (BuildContext context, StateSetter setState) {
@@ -299,7 +298,7 @@ class _CharacterImportState extends State<CharacterImport> {
                     if (traits.isEmpty) {
                       Navigator.pop(context);
                     } else {
-                      Navigator.pop(context, traitController.text.split(','));
+                      Navigator.pop(context, traitController.text.split(' '));
                     }
                   },
                 ),
