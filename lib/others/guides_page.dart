@@ -27,11 +27,7 @@ This build of Automator is specifically built for Führerredux (and maybe
 sibling mods such as Kaiserredux and the OG Führerreich. This tool aims 
 to lift the workload of the modders in creating the characters for a 
 specified country. However, the ideologies using by Führerredux are hard-coded
-in this tool, and there maybe plans to override this behavior. Do note that 
-this tool does NOT currently that the data is not persistent; meaning closing
-this tool will result in loss of data inserted unto it. Also please be gentle 
-as this tool is currently in BETA; and some bugs might exist through-out
-(Hopefully not). 
+in this tool, and there maybe plans to override this behavior.
 
 ---
 
