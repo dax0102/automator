@@ -23,6 +23,8 @@ enum Position {
   chiefOfNavy,
   @HiveField(7)
   chiefOfAirForce,
+  @HiveField(8)
+  theorist
 }
 
 extension PositionExtension on Position {
@@ -34,6 +36,7 @@ extension PositionExtension on Position {
   static const prefixChiefOfArmy = "carm";
   static const prefixChiefOfNavy = "cnav";
   static const prefixChiefOfAirForce = "cair";
+  static const prefixTheorist = "theorist";
   static const tokenHeadOfGovernment = "head_of_government";
   static const tokenForeignMinister = "foreign_minister";
   static const tokenEconomyMinister = "economy_minister";
@@ -42,6 +45,7 @@ extension PositionExtension on Position {
   static const tokenChiefOfArmy = "chief_of_army";
   static const tokenChiefOfNavy = "chief_of_navy";
   static const tokenChiefOfAirForce = "chief_of_air_force";
+  static const tokenTheorist = "theorist";
 
   bool isGovernment() {
     return this == Position.headOfGovernment ||
@@ -116,6 +120,8 @@ extension PositionExtension on Position {
         return Translations.of(context)!.position_cnav;
       case Position.chiefOfAirForce:
         return Translations.of(context)!.position_cair;
+      case Position.theorist:
+        return Translations.of(context)!.position_theorist;
     }
   }
 
@@ -137,6 +143,8 @@ extension PositionExtension on Position {
         return tokenChiefOfNavy;
       case Position.chiefOfAirForce:
         return tokenChiefOfAirForce;
+      case Position.theorist:
+        return tokenTheorist;
     }
   }
 
@@ -158,6 +166,8 @@ extension PositionExtension on Position {
         return prefixChiefOfNavy;
       case Position.chiefOfAirForce:
         return prefixChiefOfAirForce;
+      case Position.theorist:
+        return prefixTheorist;
     }
   }
 }
