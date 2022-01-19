@@ -173,6 +173,7 @@ class Writer {
               mode: _mode);
         }
       }
+      await file.writeAsString('\n', mode: _mode);
     }
   }
 
