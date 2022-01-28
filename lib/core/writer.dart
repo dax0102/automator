@@ -132,7 +132,7 @@ class Writer {
           await output.writeAsString('\n\t\tname = "GFX_idea_$token"',
               mode: _mode);
           await output.writeAsString(
-              '\n\t\ttexturefile = "gfx/interface/ministers/${minister.tag}/${minister.token}.tga"',
+              '\n\t\ttexturefile = "gfx/interface/ministers/${minister.tag}/${minister.token}.png"',
               mode: _mode);
           await output.writeAsString('\n\t}', mode: _mode);
         }
@@ -492,5 +492,5 @@ class Writer {
   static const _mode = FileMode.append;
   static const portraitLargePrefix = "gfx/leaders/";
   static const portraitSmallPrefix = "gfx/interface/ministers/";
-  static const portraitSuffix = ".tga";
+  static const portraitSuffix = ".png";
 }
