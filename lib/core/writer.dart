@@ -438,7 +438,19 @@ class Writer {
         await output.writeAsString('$_cost ${character.cost}', mode: _mode);
         await output.writeAsString('$_slot ${position.token}', mode: _mode);
         await output.writeAsString(_available, mode: _mode);
+        await output.writeAsString(
+            '\n\t\t\t\thidden_trigger = { has_country_flag = ${token}_hired }',
+            mode: _mode);
+        await output.writeAsString('\n\t\t\t}', mode: _mode);
+
         await output.writeAsString(token, mode: _mode);
+        await output.writeAsString(
+            '\n\t\t\ton_add = { set_country_flag = ${token}_hired }',
+            mode: _mode);
+        await output.writeAsString(
+            '\n\t\t\ton_remove = { clr_country_flag = ${token}_hired }',
+            mode: _mode);
+
         await output.writeAsString(_traits, mode: _mode);
         await output.writeAsString('\n\t\t\t\t${position.token}', mode: _mode);
         if (character.ideology != Ideology.none) {
@@ -486,7 +498,7 @@ class Writer {
   static const _advisor = "\n\t\tadvisor = {";
   static const _cost = "\n\t\t\tcost =";
   static const _slot = "\n\t\t\tslot =";
-  static const _available = "\n\t\t\tavailable = { can_replace_minister = no }";
+  static const _available = "\n\t\t\tavailable = {";
   static const _ideaToken = "\n\t\t\tidea_token =";
 
   static const _mode = FileMode.append;
