@@ -431,8 +431,8 @@ class Writer {
         String trait = character.ministerTraits
             .firstWhere((trait) => trait.startsWith(position.prefix));
         String token = character.ideology != Ideology.none
-            ? '$_ideaToken ${character.token}_${position.prefix}_${character.ideology.prefix}'
-            : '$_ideaToken ${character.token}_${position.prefix}';
+            ? '${character.token}_${position.prefix}_${character.ideology.prefix}'
+            : '${character.token}_${position.prefix}';
 
         await output.writeAsString(_advisor, mode: _mode);
         await output.writeAsString('$_cost ${character.cost}', mode: _mode);
@@ -442,8 +442,7 @@ class Writer {
             '\n\t\t\t\thidden_trigger = { has_country_flag = ${token}_hired }',
             mode: _mode);
         await output.writeAsString('\n\t\t\t}', mode: _mode);
-
-        await output.writeAsString(token, mode: _mode);
+        await output.writeAsString('\t\t\t$_ideaToken $token', mode: _mode);
         await output.writeAsString(
             '\n\t\t\ton_add = { set_country_flag = ${token}_hired }',
             mode: _mode);
