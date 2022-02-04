@@ -437,18 +437,24 @@ class Writer {
         await output.writeAsString(_advisor, mode: _mode);
         await output.writeAsString('$_cost ${character.cost}', mode: _mode);
         await output.writeAsString('$_slot ${position.token}', mode: _mode);
-        await output.writeAsString(_available, mode: _mode);
-        await output.writeAsString(
-            '\n\t\t\t\thidden_trigger = { has_country_flag = ${token}_hired }',
-            mode: _mode);
-        await output.writeAsString('\n\t\t\t}', mode: _mode);
+        if (position.isGovernment()) {
+          await output.writeAsString(_available, mode: _mode);
+          await output.writeAsString(
+              '\n\t\t\t\thidden_trigger = { has_country_flag = ${token}_hired }',
+              mode: _mode);
+          await output.writeAsString('\n\t\t\t}', mode: _mode);
+        }
+
         await output.writeAsString('\t\t\t$_ideaToken $token', mode: _mode);
-        await output.writeAsString(
-            '\n\t\t\ton_add = { set_country_flag = ${token}_hired }',
-            mode: _mode);
-        await output.writeAsString(
-            '\n\t\t\ton_remove = { clr_country_flag = ${token}_hired }',
-            mode: _mode);
+
+        if (position.isGovernment()) {
+          await output.writeAsString(
+              '\n\t\t\ton_add = { set_country_flag = ${token}_hired }',
+              mode: _mode);
+          await output.writeAsString(
+              '\n\t\t\ton_remove = { clr_country_flag = ${token}_hired }',
+              mode: _mode);
+        }
 
         await output.writeAsString(_traits, mode: _mode);
         await output.writeAsString('\n\t\t\t\t${position.token}', mode: _mode);
