@@ -39,14 +39,18 @@ class Writer {
               '\n\t\t\tallowed = { original_tag = ${minister.tag} }',
               mode: _mode);
 
-          await output.writeAsString('\n\t\t\tavailable = {', mode: _mode);
-          await output.writeAsString('\n\t\t\t\tcustom_trigger_tooltip = {',
-              mode: _mode);
-          await output.writeAsString('\n\t\t\t\t\ttooltip = $trigger',
-              mode: _mode);
-          await output.writeAsString('\n\t\t\t\t\talways = no', mode: _mode);
-          await output.writeAsString('\n\t\t\t\t}', mode: _mode);
-          await output.writeAsString('\n\t\t\t}', mode: _mode);
+          if (position.isGovernment()) {
+            await output.writeAsString('\n\t\t\tavailable = {', mode: _mode);
+            await output.writeAsString('\n\t\t\t\tcustom_trigger_tooltip = {',
+                mode: _mode);
+            await output.writeAsString('\n\t\t\t\t\ttooltip = $trigger',
+                mode: _mode);
+            await output.writeAsString('\n\t\t\t\t\talways = no', mode: _mode);
+            await output.writeAsString('\n\t\t\t\t}', mode: _mode);
+            await output.writeAsString('\n\t\t\t}', mode: _mode);
+            await output.writeAsString('\n\t\t\tcancel_if_invalid = no',
+                mode: _mode);
+          }
 
           if (position.isMilitary()) {
             await output.writeAsString('\n\t\t\tvisible = {', mode: _mode);

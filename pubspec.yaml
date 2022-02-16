@@ -2,7 +2,7 @@ name: automator
 description: Component Generation Tool for Fuhrerredux and Kaiserredux.
 
 publish_to: 'none'
-version: 2.0.0
+version: 2.0.1
 
 environment:
   sdk: ">=2.12.0 <3.0.0"
