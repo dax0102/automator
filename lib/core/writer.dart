@@ -462,7 +462,7 @@ class Writer {
 
         await output.writeAsString(_traits, mode: _mode);
         await output.writeAsString('\n\t\t\t\t${position.token}', mode: _mode);
-        if (character.ideology != Ideology.none) {
+        if (character.ideology != Ideology.none && position.isGovernment()) {
           await output.writeAsString('\n\t\t\t\t${character.ideology.token}',
               mode: _mode);
         }
